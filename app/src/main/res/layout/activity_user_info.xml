@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/action_bar"/>
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/textViewName"
+            android:text="@string/Hello"
+            android:singleLine="true"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/colorPrimaryDark"
+            android:layout_marginTop="5dp"
+            android:layout_alignParentBottom="true"
+            />
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp"
+        android:paddingLeft="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="5dp"
+        android:text="@string/text_account_info"
+        android:textColor="@android:color/black" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/colorPrimaryDark"
+        android:layout_marginTop="5dp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewUsers"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:layout_marginRight="2.5dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:id="@+id/btn_edit"
+            android:textSize="20sp"
+            android:textAllCaps="false"
+            android:background="@color/colorPrimaryDark"
+            android:text="@string/edit"
+            android:layout_marginEnd="2.5dp" />
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:layout_gravity="bottom|center_horizontal"
+            android:id="@+id/btn_change_password"
+            android:textSize="20sp"
+            android:textAllCaps="false"
+            android:background="@color/colorPrimaryDark"
+            android:text="@string/change_password" />
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:layout_marginLeft="2.5dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:id="@+id/btn_logout"
+            android:textSize="20sp"
+            android:textAllCaps="false"
+            android:background="@color/colorPrimaryDark"
+            android:text="@string/logout"
+            android:layout_marginStart="2.5dp" />
+    </android.support.v7.widget.LinearLayoutCompat>
+
+</LinearLayout>
+

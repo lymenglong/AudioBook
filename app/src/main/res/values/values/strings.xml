@@ -1,0 +1,99 @@
+<resources>
+    <string name="app_name">Sách Nói BKIC</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="speech_prompt">Đọc từ cần tìm&#8230;</string>
+    <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
+
+    <string name="text_splash">
+        <![CDATA[<b>
+            <font color = "#FF7033" size=+3>Sách</font>
+            <font color = "#4A34C4" size=+3>Nói</font>
+            <font color = "#097CD1" size=+3>BKIC</font>]]>
+    </string>
+
+    <string name="text_creator">
+        <![CDATA[<b>
+            <font color = "#FF7033" size=+3>By:</font>
+            <font color = "#4A34C4" size=+3>Android</font>
+            <font color = "#097CD1" size=+3>BKIC</font>]]>
+    </string>
+    <string name="text_login">Đăng nhập</string>
+    <string name="text_not_member">Chưa có tài khoản? Tạo một</string>
+    <string name="text_accounts">All Accounts</string>
+    <string name="text_account_info">Thông Tin Tải Khoản</string>
+    <string name="hint_welcome">Chào mừng bạn đến với ứng dụng sách nói</string>
+    <string name="hint_help">Hướng dẫn</string>
+    <string name="hint_accountInfo">Thông tin tài khoản</string>
+    <string name="hint_login">Xin mời đăng nhập tài khoản</string>
+    <string name="hint_register">Đăng ký tài khoản mới</string>
+    <string name="hint_name">Tên</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_email_or_username">Email hoặc tên đăng nhập</string>
+    <string name="hint_address">Địa chỉ</string>
+    <string name="hint_username">Tên đăng nhập</string>
+    <string name="hint_phone_number">Số điện thoại</string>
+    <string name="hint_birthday">Birthday</string>
+    <string name="hint_identity_number">ID Number</string>
+    <string name="hint_password">Mật khầu</string>
+    <string name="hint_confirm_password">Xác nhận mật khẩu</string>
+    <string name="text_register">Đăng ký</string>
+    <string name="error_message_name">Điền tên của bạn</string>
+    <string name="error_message_username">Điền tên đăng nhập</string>
+    <string name="error_message_phone_number">Điền số điện thoại</string>
+    <string name="error_message_address">Điền địa chỉ</string>
+    <string name="error_message_email">Điền Email</string>
+    <string name="error_message_email_or_username">Điền Email hoặc tên đăng nhập</string>
+    <string name="error_message_age">Enter Age</string>
+    <string name="error_message_password">Điền mật khẩu</string>
+    <string name="success_message">Registration Successful</string>
+    <string name="text_already_member">Là hội viên? Đăng nhập</string>
+    <string name="error_email_exists">Email Already Exists</string>
+    <string name="error_password_match">Password Does Not Matches</string>
+    <string name="error_valid_email_password">Wrong Email or Password</string>
+    <string name="text_hello">Hello,</string>
+    <string name="tv_now_playing">NOW PLAYING</string>
+    <string name="play">Chạy sách nói</string>
+    <string name="pause">Đừng lại</string>
+    <string name="stop">Nghe lại từ đầu</string>
+    <string name="next">Sách nói tiếp theo</string>
+    <string name="previous">Sách nói trước đây</string>
+    <string name="backward">Lùi lại 10 giây</string>
+    <string name="forward">Lùi đi 10 giây</string>
+
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="address">Address</string>
+    <string name="date_of_birth_dd_mm_yyyy">Date Of Birth (dd/mm/yyyy)</string>
+    <string name="register">REGISTER</string>
+    <string name="search">search</string>
+    <string name="refresh">refresh</string>
+    <string name="back">Quay Lại</string>
+    <string name="welcome">Welcome</string>
+    <string name="username">Tên đăng nhập</string>
+    <string name="confirm_password">Xác nhận mật khẩu</string>
+    <string name="add_to_favorite">Ghim vào yêu thích</string>
+    <string name="logout">Đăng Xuất</string>
+    <string name="sach_noi_bkic">Sách Nói BKIC</string>
+    <string name="add_favorite">Ghim vào yêu thích</string>
+    <string name="already_a_member_login">Đã có tài khoản, Đăng nhập</string>
+    <string name="hint_home_screen">Giao diện chủ</string>
+    <string name="time">00:00</string>
+    <string name="creator">Creator</string>
+    <string name="application_icon">Application icon</string>
+    <string name="Hello">Chào bạn,</string>
+
+</resources>

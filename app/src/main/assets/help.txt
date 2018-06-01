@@ -1,0 +1,8 @@
+Thao tác - Cử chỉ
+    • Di chuyển đến mục tiếp theo trên màn hình - Vuốt sang phải
+    • Di chuyển đến mục trước trên màn hình - Vuốt sang trái
+    • Duyệt qua cài đặt điều hướng - Vuốt lên hoặc xuống
+    • Chọn mục được đặt tiêu điểm - Nhấn đúp
+Tất cả các cử chỉ trong TalkBack đều sử dụng một ngón tay. TalkBack chỉ hiểu thao tác chạm hoặc cử chỉ của bạn khi bạn chỉ sử dụng một ngón tay trên màn hình.
+Khi bạn dùng hai hay nhiều ngón tay, thao tác chạm hoặc cử chỉ của bạn sẽ áp dụng trực tiếp cho ứng dụng chứ không phải cho TalkBack. Ví dụ: bạn có thể cuộn bằng cách kéo hai ngón tay.
+

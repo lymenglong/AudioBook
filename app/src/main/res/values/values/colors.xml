@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="red">#D8202A</color>
+    <color name="white">#FEFEFE</color>
+    <color name="green">#A4C639</color>
+
+
+    <color name="label_normal">#6a7980</color>
+    <color name="label_selected">#00ffff</color>
+    <color name="label_pressed">#5c90cc</color>
+
+    <!--color copy-->
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorText">#565656</color>
+    <color name="colorTextHint">#51d8c7</color>
+    <color name="colorWelcome">#00bbff</color>
+    <!--end color copy-->
+</resources>
