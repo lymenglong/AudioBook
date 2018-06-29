@@ -36,6 +36,7 @@ public class HelpActivity
         getDataFromIntent();
         initView();
         initObject();
+
     }
 
 

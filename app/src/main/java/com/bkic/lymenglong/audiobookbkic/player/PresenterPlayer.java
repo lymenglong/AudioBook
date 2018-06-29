@@ -35,7 +35,7 @@ public class PresenterPlayer
     private Boolean isPreparingCancel = false;
     private Boolean isShowingDialog = false;
 
-    public PresenterPlayer(PlayControl playControlActivity) {
+    PresenterPlayer(PlayControl playControlActivity) {
         this.playControlActivity = playControlActivity;
     }
 
@@ -365,6 +365,7 @@ public class PresenterPlayer
         }
     };
     //endregion
+
 
     @Override
     public void ReleaseTimeLabel(){

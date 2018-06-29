@@ -22,7 +22,7 @@ public class PresenterUpdateFavorite implements PresenterUpdateFavoriteImp {
         this.playControlActivity = playControlActivity;
     }
 
-    public PresenterUpdateFavorite(ListFavorite listFavoriteActivity) {
+    PresenterUpdateFavorite(ListFavorite listFavoriteActivity) {
         this.listFavoriteActivity = listFavoriteActivity;
     }
 
