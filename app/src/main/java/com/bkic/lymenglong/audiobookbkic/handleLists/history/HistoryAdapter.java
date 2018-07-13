@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.bkic.lymenglong.audiobookbkic.database.DBHelper;
 import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Book;
+import com.bkic.lymenglong.audiobookbkic.overrideTalkBack.PresenterOverrideTalkBack;
 import com.bkic.lymenglong.audiobookbkic.utils.Const;
 import com.bkic.lymenglong.audiobookbkic.R;
 
@@ -25,7 +26,7 @@ public class HistoryAdapter extends RecyclerView.Adapter {
     private int bookId, bookLength;
     private String bookTitle, bookImage, bookAuthor;
 
-    public HistoryAdapter(Activity activity, ArrayList<Book> books) {
+    HistoryAdapter(Activity activity, ArrayList<Book> books) {
         this.books = books;
         this.activity = activity;
     }
@@ -42,7 +43,6 @@ public class HistoryAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ChapterHolder) {
             ChapterHolder chapterHolder = (ChapterHolder) holder;
-
             chapterHolder.name.setText(books.get(position).getTitle());
         }
 
@@ -59,17 +59,24 @@ public class HistoryAdapter extends RecyclerView.Adapter {
     }
 
     class ChapterHolder extends RecyclerView.ViewHolder {
-
         private TextView name;
 //        private ImageView imgNext;
+        private PresenterOverrideTalkBack presenterOverrideTalkBack = new PresenterOverrideTalkBack(activity);
+
 
         ChapterHolder(View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.nameStory);
+            name = itemView.findViewById(R.id.nameItem);
 //            imgNext = itemView.findViewById(R.id.imgNext);
 
             itemView.setOnClickListener(onClickListener);
             itemView.setOnLongClickListener(onLongClickListener);
+
+            //Do allow talk back to read content when user touch screen
+            presenterOverrideTalkBack.DisableTouchForTalkBack(itemView);
+            presenterOverrideTalkBack.DisableTouchForTalkBack(itemView.findViewById(R.id.nameItem));
+            presenterOverrideTalkBack.DisableTouchForTalkBack(itemView.findViewById(R.id.imgNext));
+
         }
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override

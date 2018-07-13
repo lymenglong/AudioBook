@@ -152,12 +152,22 @@ public class ListOfflineChapter
     //region Method to get data for database
     private void GetCursorData() {
         list.clear();
-        Cursor cursor = dbHelper.GetData
+       /* Cursor cursor = dbHelper.GetData
                 (
                         "SELECT * " +
                                 "FROM chapter " +
                                     "WHERE BookId = '"+ bookIntent.getId() +"' AND ChapterStatus = '1';"
-                );
+                );*/
+       Cursor cursor = dbHelper.GetData(
+               "SELECT * FROM chapter, downloadStatus " +
+                       "WHERE " +
+                            "chapter.ChapterId = downloadStatus.ChapterId " +
+                            "AND " +
+                            "chapter.BookId = '"+bookIntent.getId()+"'" +
+                            "AND " +
+                            "downloadStatus.DownloadedStatus = 1" +
+                       ";"
+       );
         if(cursor.moveToFirst()){
             do{
                 Chapter chapterModel = new Chapter();

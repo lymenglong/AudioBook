@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,6 +9,19 @@
     <include
         android:id="@+id/action_bar"
         layout="@layout/action_bar_home" />
+    <TextView
+        android:id="@+id/txt_bar"
+        android:importantForAccessibility="no"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/label_normal"
+        android:text="@string/TalkBack_Not_Active"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:padding="2dp"
+        android:textSize="12sp"
+        tools:targetApi="jelly_bean"
+        android:visibility="gone"/>
    <include layout="@layout/custom_list"/>
 
 </LinearLayout>

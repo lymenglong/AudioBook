@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bkic.lymenglong.audiobookbkic.account.utils.InputValidation;
 import com.bkic.lymenglong.audiobookbkic.checkInternet.ConnectivityReceiver;
 import com.bkic.lymenglong.audiobookbkic.R;
 import com.bkic.lymenglong.audiobookbkic.account.register.ViewRegisterActivity;
@@ -149,6 +150,7 @@ public class ViewLoginActivity extends AppCompatActivity implements ViewLoginImp
     @Override
     public void LoginSuccess(String message) {
         SetWaitingLogin(false);
+//        String ms = "Xin chào bạn";
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
         Intent accountsIntent = new Intent(activity, MainActivity.class);
         accountsIntent.putExtra("EMAIL", textInputEditTextEmail.getText().toString().trim());

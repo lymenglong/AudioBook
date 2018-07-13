@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.bkic.lymenglong.audiobookbkic.account.login.InputValidation;
+import com.bkic.lymenglong.audiobookbkic.account.utils.InputValidation;
 import com.bkic.lymenglong.audiobookbkic.account.utils.User;
 import com.bkic.lymenglong.audiobookbkic.checkInternet.ConnectivityReceiver;
 import com.bkic.lymenglong.audiobookbkic.R;
@@ -141,6 +141,7 @@ public class ViewRegisterActivity extends AppCompatActivity implements ViewRegis
                 break;
             case R.id.appCompatButtonRegister:
                 User userModel = new User();
+                //<editor-fold desc="Check validation">
                 if (!inputValidation.isInputEditTextFilled(textInputEditTextFirstName, textInputLayoutFirstName, getString(R.string.error_message_first_name))) {
                     break;
                 } else {
@@ -178,29 +179,17 @@ public class ViewRegisterActivity extends AppCompatActivity implements ViewRegis
                 } else{
                   userModel.setPassword(textInputEditTextPassword.getText().toString());
                 }
+                if(!inputValidation.isInputEditTextEmail(textInputEditTextEmail,textInputLayoutEmail,getString(R.string.error_invalid_email)))
+                    break;
+                if(!inputValidation.isPhoneNumber(textInputEditTextPhoneNumber,textInputLayoutPhoneNumber,getString(R.string.error_invalid_phone)))
+                    break;
                 if (!inputValidation.isInputEditTextMatches(textInputEditTextPassword, textInputEditTextConfirmPassword,
                         textInputLayoutConfirmPassword, getString(R.string.error_password_match))) {
                     break;
                 } else userModel.setConfirmPassword(textInputEditTextConfirmPassword.getText().toString());
+                //</editor-fold>
                 if (ConnectivityReceiver.isConnected()) {
-                    HashMap<String, String> ResultHash = new HashMap<>();
-                    // GetUserDetail
-                    String keyPost = "json";
-                    String valuePost =
-                            "{" +
-                                    "\"Action\":\"register\", " +
-                                    "\"UserName\":\""+ userModel.getUsername()+"\"," +
-                                    "\"UserMail\":\""+ userModel.getEmail()+"\", " +
-                                    "\"UserFirstName\":\""+ userModel.getFirstName() +"\", " +
-                                    "\"UserLastName\":\""+ userModel.getLastName() +"\"," +
-                                    "\"UserPassword\":\""+ userModel.getPassword()+"\"," +
-                                    "\"UserAddress\":\""+ userModel.getAddress()+"\", " +
-                                    "\"UserPhone\":\""+ userModel.getPhonenumber()+"\" " +
-                            "}";
-                    ResultHash.put(keyPost,valuePost);
-                    Toast.makeText(registerActivity, "Please Wait..", Toast.LENGTH_SHORT).show();
-                    presenterRegisterLogic.Register(registerActivity, ResultHash, HttpURL_API);
-                    SetWaitingRegister(true);
+                    RequestRegisterAccount(userModel);
                 } else {
                     String message = getString(R.string.message_internet_not_connected);
                     Toast.makeText(registerActivity, message, Toast.LENGTH_SHORT).show();
@@ -208,6 +197,27 @@ public class ViewRegisterActivity extends AppCompatActivity implements ViewRegis
 
                 break;
         }
+    }
+
+    private void RequestRegisterAccount(User userModel) {
+        HashMap<String, String> ResultHash = new HashMap<>();
+        // GetUserDetail
+        String keyPost = "json";
+        String valuePost =
+                "{" +
+                        "\"Action\":\"register\", " +
+                        "\"UserName\":\""+ userModel.getUsername()+"\"," +
+                        "\"UserMail\":\""+ userModel.getEmail()+"\", " +
+                        "\"UserFirstName\":\""+ userModel.getFirstName() +"\", " +
+                        "\"UserLastName\":\""+ userModel.getLastName() +"\"," +
+                        "\"UserPassword\":\""+ userModel.getPassword()+"\"," +
+                        "\"UserAddress\":\""+ userModel.getAddress()+"\", " +
+                        "\"UserPhone\":\""+ userModel.getPhonenumber()+"\" " +
+                        "}";
+        ResultHash.put(keyPost,valuePost);
+        Toast.makeText(registerActivity, "Please Wait..", Toast.LENGTH_SHORT).show();
+        presenterRegisterLogic.Register(registerActivity, ResultHash, HttpURL_API);
+        SetWaitingRegister(true);
     }
 
     private void IntentViewLoginActivity() {

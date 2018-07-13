@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Chapter;
 import com.bkic.lymenglong.audiobookbkic.R;
+import com.bkic.lymenglong.audiobookbkic.overrideTalkBack.PresenterOverrideTalkBack;
 import com.bkic.lymenglong.audiobookbkic.player.PlayControl;
 
 import java.util.ArrayList;
@@ -60,12 +61,19 @@ public class ChapterAdapter extends RecyclerView.Adapter {
         private TextView name;
 //        private ImageView imgNext;
 
+        private PresenterOverrideTalkBack presenterOverrideTalkBack = new PresenterOverrideTalkBack(activity);
+
         ChapterHolder(View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.nameStory);
+            name = itemView.findViewById(R.id.nameItem);
 //            imgNext = itemView.findViewById(R.id.imgNext);
 
             itemView.setOnClickListener(this);
+
+            //Do allow talk back to read content when user touch screen
+            presenterOverrideTalkBack.DisableTouchForTalkBack(itemView);
+            presenterOverrideTalkBack.DisableTouchForTalkBack(itemView.findViewById(R.id.nameItem));
+            presenterOverrideTalkBack.DisableTouchForTalkBack(itemView.findViewById(R.id.imgNext));
         }
 
         @Override

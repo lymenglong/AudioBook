@@ -236,8 +236,6 @@ public class ListFavorite
         dbHelper.QueryData(UPDATE_DATA);
     }
 
-    @Override
-    public void CompareDataPhoneWithServer(JSONArray jsonArray) { }
 
     @Override
     public void SetTableSelectedData(JSONObject jsonObject) throws JSONException {

@@ -278,13 +278,18 @@ public class PresenterReview
             rateNumber = 4;
         } else if(radioButton5.isChecked()){
             rateNumber = 5;
-        }
+        } else rateNumber = 0;
         playControlActivity.setRateNumber(rateNumber);
         playControlActivity.setReview("");//todo add Comment Review Of User
 //            playControlActivity.AddReviewBookToServer();
-        playControlActivity.UpdateReviewTable();
-        playControlActivity.AddReviewChapterToServer();
-        dialog.dismiss();
+        if(rateNumber != 0){
+            playControlActivity.UpdateReviewTable();
+            playControlActivity.AddReviewChapterToServer();
+            dialog.dismiss();
+        } else {
+            String ms = playControlActivity.getString(R.string.message_no_rate_value);
+            playControlActivity.mToastMessage(ms);
+        }
     }
 
     @Override

@@ -12,14 +12,14 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
+import com.bkic.lymenglong.audiobookbkic.R;
+import com.bkic.lymenglong.audiobookbkic.account.login.ViewLoginActivity;
 import com.bkic.lymenglong.audiobookbkic.checkInternet.ConnectivityReceiver;
 import com.bkic.lymenglong.audiobookbkic.checkInternet.MyApplication;
 import com.bkic.lymenglong.audiobookbkic.database.DBHelper;
 import com.bkic.lymenglong.audiobookbkic.download.DownloadReceiver;
-import com.bkic.lymenglong.audiobookbkic.R;
-import com.bkic.lymenglong.audiobookbkic.account.login.ViewLoginActivity;
+import com.bkic.lymenglong.audiobookbkic.overrideTalkBack.PresenterOverrideTalkBack;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity
                     ConnectivityReceiver.ConnectivityReceiverListener,
                     DownloadReceiver.DownloadReceiverListener{
 //    PresenterMain presenterMain = new PresenterMain(this);
+    private PresenterOverrideTalkBack presenterOverrideTalkBack = new PresenterOverrideTalkBack(this);
+    private PresenterMain presenterMain = new PresenterMain(this);
     private static final String TAG = "MainActivity";
     private RecyclerView homeList;
     private MainAdapter mainAdapter;
@@ -54,6 +56,12 @@ public class MainActivity extends AppCompatActivity
         GetCursorData();
         //get data from json parsing
 //        presenterMain.GetHttpResponse(HttpUrl_ALLMenuData);
+    }
+
+    private void CheckTalkBackAccessibility() {
+        Boolean enable = presenterOverrideTalkBack.talkBackEnable(this);
+        if (!enable) findViewById(R.id.txt_bar).setVisibility(View.VISIBLE);
+        else findViewById(R.id.txt_bar).setVisibility(View.GONE);
     }
 
     //region BroadCasting
@@ -76,6 +84,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+
+        CheckTalkBackAccessibility();
+
         // register receiver
         registerReceiver(receiver, intentFilter);
         registerReceiver(downloadReceiver, filter);
@@ -182,13 +193,14 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "SetMenuData");
     }
 
-    private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
+/*    private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
     private long mBackPressed;
-    private Toast backToast;
+    private Toast backToast;*/
     @Override
     public void onBackPressed()
     {
-        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis())
+        //Press again to exit
+        /*if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis())
         {
             backToast.cancel();
             super.onBackPressed();
@@ -197,6 +209,8 @@ public class MainActivity extends AppCompatActivity
             backToast = Toast.makeText(getBaseContext(), R.string.message_exit, Toast.LENGTH_SHORT);
             backToast.show();
         }
-        mBackPressed = System.currentTimeMillis();
+        mBackPressed = System.currentTimeMillis();*/
+
+        presenterMain.ShowDialogExit();
     }
 }

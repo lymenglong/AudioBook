@@ -30,7 +30,7 @@
     <string name="text_login">Đăng nhập</string>
     <string name="text_not_member">Chưa có tài khoản? Tạo một</string>
     <string name="text_accounts">All Accounts</string>
-    <string name="text_account_info">Thông Tin Tải Khoản</string>
+    <string name="text_account_info">Thông Tin Tài Khoản</string>
     <string name="hint_welcome">Chào mừng bạn đến với ứng dụng sách nói</string>
     <string name="hint_help">Hướng dẫn</string>
     <string name="hint_accountInfo">Thông tin tài khoản</string>
@@ -63,13 +63,14 @@
     <string name="error_password_match">Password Does Not Matches</string>
     <string name="error_valid_email_password">Wrong Email or Password</string>
     <string name="text_already_member">Là hội viên? Đăng nhập</string>
-    <string name="text_hello">Hello,</string>
+    <string name="text_hello">Chào bạn,</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_email">Email không dúng</string>
+    <string name="error_invalid_phone">Số điện thoại không dúng</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
@@ -98,8 +99,8 @@
     <string name="nextChapter">Chương tiếp theo</string>
     <string name="previousChapter">Chương trước đây</string>
     <string name="download">Tải xuống</string>
-    <string name="backward">Lùi lại 10 giây</string>
-    <string name="forward">Tiến tới 10 giây</string>
+    <string name="backward">Lùi lại mười giây</string>
+    <string name="forward">Tiến tới mười giây</string>
     <string name="add_book_to_favorite">Ghim sách vào yêu thích</string>
     <string name="add_favorite_book">Ghim Sách Vào Yêu Thích</string>
     <string name="time">00:00</string>
@@ -108,7 +109,7 @@
     <!--region Action Bar-->
     <string name="toolbar">Toolbar</string>
     <string name="search">search</string>
-    <string name="refresh">refresh</string>
+    <string name="refresh">Làm mới</string>
     <string name="back">Quay Lại</string>
     <!--endregion-->
 
@@ -131,7 +132,7 @@
     <string name="message_logout_failed">Bạn xác định không đăng xuất.</string>
     <string name="message_logout_success">Đăng Xuất Thành Công</string>
     <string name="no_data">Chưa cấp nhật dữ liệu</string>
-    <string name="buffering_data">Buffering…</string>
+    <string name="buffering_data">Đang tải…</string>
     <!--endregion-->
     <string name="prompt_review_question">bạn cảm thấy quyển sách này có chất lượng thế nào</string>
     <string name="text_review_book">Đánh giá sách</string>
@@ -183,5 +184,9 @@
     <string name="message_please_wait">Vui lòng chờ..</string>
     <string name="message_play_complete_chapter">Bạn đã nghe xong chương này</string>
     <string name="message_play_next_chapter_or_not">Bạn có muốn nghe chương tiếp theo không?</string>
+    <string name="option">Option</string>
+    <string name="message_no_more_chapter">Không còn chương nào</string>
+    <string name="message_no_rate_value">Bạn chưa chọn số mực đánh giá</string>
+    <string name="TalkBack_Not_Active">Bạn chưa bật Talk Back</string>
 
 </resources>

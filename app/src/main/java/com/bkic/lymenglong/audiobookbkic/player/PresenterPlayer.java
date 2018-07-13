@@ -243,7 +243,8 @@ public class PresenterPlayer
                 });
                 if (mediaPlayer.getCurrentPosition() < playControlActivity.getResumeTime()) {
                     if(isShowingDialog) {
-                        if(0 < playControlActivity.getResumeTime() && playControlActivity.getResumeTime() < mediaPlayer.getDuration()-1000) {
+                        int resumeMinTime = 30000;
+                        if(resumeMinTime < playControlActivity.getResumeTime() && playControlActivity.getResumeTime() < mediaPlayer.getDuration()-1000) {
                             ResumeMediaDialog(playControlActivity);
                             isShowingDialog = false;
                         } else if(playControlActivity.getResumeTime() >= mediaPlayer.getDuration()-1000){

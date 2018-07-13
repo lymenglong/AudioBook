@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Book;
 import com.bkic.lymenglong.audiobookbkic.R;
 import com.bkic.lymenglong.audiobookbkic.handleLists.listChapter.ListChapter;
+import com.bkic.lymenglong.audiobookbkic.overrideTalkBack.PresenterOverrideTalkBack;
 
 import java.util.ArrayList;
 
@@ -41,8 +42,6 @@ private String getTitleChapter, getContentChapter, getfileUrlChapter;
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ChapterHolder) {
             ChapterHolder chapterHolder = (ChapterHolder) holder;
-
-
             chapterHolder.name.setText(books.get(position).getTitle());
         }
 
@@ -62,13 +61,17 @@ private String getTitleChapter, getContentChapter, getfileUrlChapter;
 
         private TextView name;
 //        private ImageView imgNext;
-
+        private PresenterOverrideTalkBack presenterOverrideTalkBack = new PresenterOverrideTalkBack(activity);
         ChapterHolder(View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.nameStory);
+            name = itemView.findViewById(R.id.nameItem);
 //            imgNext = itemView.findViewById(R.id.imgNext);
 
             itemView.setOnClickListener(this);
+            //Do allow talk back to read content when user touch screen
+            presenterOverrideTalkBack.DisableTouchForTalkBack(itemView);
+            presenterOverrideTalkBack.DisableTouchForTalkBack(itemView.findViewById(R.id.nameItem));
+            presenterOverrideTalkBack.DisableTouchForTalkBack(itemView.findViewById(R.id.imgNext));
         }
 
         @Override

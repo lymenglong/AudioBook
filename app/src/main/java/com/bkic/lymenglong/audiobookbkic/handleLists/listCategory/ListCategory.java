@@ -202,8 +202,10 @@ public class ListCategory extends AppCompatActivity
         imRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ConnectivityReceiver.isConnected() && !isLoading)
+                if(ConnectivityReceiver.isConnected() && !isLoading) {
+                    RefreshCategoryTable();
                     RefreshLoadingData();
+                }
                 else Toast.makeText(activity, getString(R.string.message_internet_not_connected), Toast.LENGTH_SHORT).show();
             }
         });
@@ -215,10 +217,18 @@ public class ListCategory extends AppCompatActivity
         GetCursorData(parentId);
         //get data from json parsing
         if(list.isEmpty()&& ConnectivityReceiver.isConnected()){
+            RefreshCategoryTable();
             RefreshLoadingData();
         } else {
             progressBar.setVisibility(View.GONE);
         }
+    }
+
+    private void RefreshCategoryTable() {
+        String DELETE_DATA =
+                "DELETE FROM category";
+        dbHelper.QueryData(DELETE_DATA);
+        dbHelper.close();
     }
 
     private void RefreshLoadingData() {

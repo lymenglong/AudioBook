@@ -5,26 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    android:paddingBottom="20dp"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
-    android:paddingTop="20dp"
+    android:padding="20dp"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".account.login.ViewLoginActivity">
-
+    tools:context=".account.login.ViewLoginActivity"
+    android:isScrollContainer="true">
     <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical"
         android:id="@+id/masked">
-
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/textInputLayoutEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
             android:contentDescription="@string/hint_email_or_username">
 
             <android.support.design.widget.TextInputEditText

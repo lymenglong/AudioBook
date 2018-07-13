@@ -56,7 +56,7 @@ public class ListChapter extends AppCompatActivity
     private int mLastPAGE;
     private Boolean isFinalPage = false;
     private boolean isLoadingData = false;
-    private Toast mToast;
+    private Toast mToast = null;
     private boolean isShowingToast = false;
 
     @Override
@@ -106,7 +106,7 @@ public class ListChapter extends AppCompatActivity
         unregisterReceiver(receiver);
         unregisterReceiver(downloadReceiver);
         //Cancel Toast Notification
-        if(isShowingToast) mToast.cancel();
+        if(isShowingToast&&mToast!=null) mToast.cancel();
     }
 
     @Override
@@ -427,7 +427,9 @@ public class ListChapter extends AppCompatActivity
     public void LoadListDataFailed(String jsonMessage) {
         mPAGE--;
         isFinalPage = true;
-        isShowingToast = isShowingToastNotification(jsonMessage);
+        String ms = getString(R.string.message_no_more_chapter);
+        isShowingToast = isShowingToastNotification(ms);
+//        isShowingToast = isShowingToastNotification(jsonMessage);
     }
 
     private boolean isShowingToastNotification(String jsonMessage){

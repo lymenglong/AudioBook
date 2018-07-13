@@ -34,6 +34,7 @@ import com.bkic.lymenglong.audiobookbkic.download.Utils;
 import com.bkic.lymenglong.audiobookbkic.handleLists.history.PlaybackHistory;
 import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Book;
 import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Chapter;
+import com.bkic.lymenglong.audiobookbkic.overrideTalkBack.PresenterOverrideTalkBack;
 import com.bkic.lymenglong.audiobookbkic.utils.Const;
 import com.bkic.lymenglong.audiobookbkic.download.PresenterDownloadTaskManager;
 import com.bkic.lymenglong.audiobookbkic.handleLists.favorite.PresenterUpdateFavorite;
@@ -58,6 +59,7 @@ public class PlayControl extends AppCompatActivity
     private PresenterPlayer presenterPlayer = new PresenterPlayer(this);
     private PresenterUpdateHistory presenterUpdateHistory = new PresenterUpdateHistory(this);
     private PresenterUpdateFavorite presenterUpdateFavorite = new PresenterUpdateFavorite(this);
+    private PresenterOverrideTalkBack presenterOverrideTalkBack = new PresenterOverrideTalkBack(this);
     private PresenterReview presenterReview = new PresenterReview(this);
     private PresenterDownloadTaskManager presenterDownloadTaskManager = new PresenterDownloadTaskManager();
     @SuppressLint("StaticFieldLeak")
@@ -74,6 +76,7 @@ public class PlayControl extends AppCompatActivity
     private String Review;
     private Chapter chapterFromIntent;
     private String AudioUrl;
+    private Boolean isFavoritedBook = false;
 
 
     public int getResumeTime() {
@@ -142,6 +145,23 @@ public class PlayControl extends AppCompatActivity
         initPlayHistoryState();
         initCheckAudioUrl();
         intListener();
+        initCheckFavoriteBookState();
+    }
+
+    private void initEnableButton(Button btn) {
+        if(isFavoritedBook) btn.setEnabled(false);
+        else btn.setEnabled(true);
+    }
+
+    private void initCheckFavoriteBookState() {
+        String SELECT_DATA = "SELECT * FROM favorite WHERE BookId = '"+chapterFromIntent.getBookId()+"'";
+        Cursor cursor = dbHelper.GetData(SELECT_DATA);
+        if(cursor.moveToFirst())
+            if(cursor.getCount()!=0){
+                isFavoritedBook = true;
+                initEnableButton(btnFavorite);
+            }
+
     }
 
     //Module checkIfAlreadyHavePermission() is implemented as :
@@ -418,7 +438,7 @@ public class PlayControl extends AppCompatActivity
         setTitle(ChapterTitle);
         CustomActionBar actionBar = new CustomActionBar();
         actionBar.eventToolbar(this, ChapterTitle, false);
-        findViewById(R.id.imBack).setVisibility(View.GONE);
+//        findViewById(R.id.imBack).setVisibility(View.GONE);
 
     }
 
@@ -435,6 +455,21 @@ public class PlayControl extends AppCompatActivity
         seekBar = findViewById(R.id.seekBar);
         txtSongTotal = findViewById(R.id.text_total_duration_label);
         txtCurrentDuration = findViewById(R.id.text_current_duration_label);
+
+        //Do allow talk back to read content when user touch screen
+        presenterOverrideTalkBack.DisableTouchForTalkBack(btnFavorite);
+        presenterOverrideTalkBack.DisableTouchForTalkBack(btnPlay);
+        presenterOverrideTalkBack.DisableTouchForTalkBack(btnPause);
+        presenterOverrideTalkBack.DisableTouchForTalkBack(btnForward);
+        presenterOverrideTalkBack.DisableTouchForTalkBack(btnBackward);
+        presenterOverrideTalkBack.DisableTouchForTalkBack(btnNext);
+        presenterOverrideTalkBack.DisableTouchForTalkBack(btnPrev);
+        presenterOverrideTalkBack.DisableTouchForTalkBack(btnStop);
+        presenterOverrideTalkBack.DisableTouchForTalkBack(btnDownload);
+        presenterOverrideTalkBack.DisableTouchForTalkBack(seekBar);
+        presenterOverrideTalkBack.DisableTouchForTalkBack(txtSongTotal);
+        presenterOverrideTalkBack.DisableTouchForTalkBack(txtCurrentDuration);
+
         ViewCompat.setImportantForAccessibility(getWindow().findViewById(R.id.seekBar), ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
         //todo fix talk back read wrong mm:ss
         ViewCompat.setImportantForAccessibility(getWindow().findViewById(R.id.text_current_duration_label), ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
@@ -553,7 +588,7 @@ public class PlayControl extends AppCompatActivity
         unregisterReceiver(receiver);
         unregisterReceiver(downloadReceiver);
         //Pause Media
-        presenterPlayer.PauseMedia();
+//        presenterPlayer.PauseMedia();
     }
 
     @Override
@@ -662,8 +697,8 @@ public class PlayControl extends AppCompatActivity
             }
         }
         dbHelper.close();
+        initCheckFavoriteBookState();
         //endregion
-        Toast.makeText(playControlActivity, getString(R.string.message_success), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -895,7 +930,7 @@ public class PlayControl extends AppCompatActivity
                 if(cursor.getCount()!=0) return;
             }
         } catch (Exception e) {
-            dbHelper.QueryData("DROP TABLE IF EXISTS review");
+            dbHelper.QueryData("DROP TABLE IF EXISTS review"); // to drop old version of review table
             dbHelper.QueryData(Const.CREATE_TABLE_REVIEW);
         }
         dbHelper.QueryData(
@@ -941,5 +976,9 @@ public class PlayControl extends AppCompatActivity
             btnDownload.setEnabled(false);
             btnDownload.setText(R.string.downloadCompleted);//If Download completed then change button text
         }
+    }
+
+    public void mToastMessage(String ms) {
+        Toast.makeText(playControlActivity, ms, Toast.LENGTH_SHORT).show();
     }
 }

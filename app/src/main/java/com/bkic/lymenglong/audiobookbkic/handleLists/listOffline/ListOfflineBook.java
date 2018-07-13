@@ -51,7 +51,6 @@ public class ListOfflineBook
         setTitle(menuTitle);
         initView();
         initDatabase();
-        initUpdateBookDownloadStatus();
         initObject();
     }
 
@@ -101,6 +100,7 @@ public class ListOfflineBook
         MyApplication.getInstance().setConnectivityListener(this);
         MyApplication.getInstance().setDownloadListener(this);
         //update list
+        initUpdateBookDownloadStatus();
         GetCursorData();
     }
 
@@ -149,22 +149,22 @@ public class ListOfflineBook
     private void GetCursorData() {
         Cursor cursor;
         list.clear();
-        cursor = dbHelper.GetData
+        /*cursor = dbHelper.GetData
                 (
                         "SELECT BookId, BookTitle, BookImage, BookLength, CategoryId " +
                                 "FROM book " +
                                     "WHERE BookStatus = '1';" // It means that some of chapter in this book is downloaded
-                );
-/*        cursor = dbHelper.GetData
+                );*/
+        cursor = dbHelper.GetData
                 (
-                        "SELECT book.BookId, book.BookTitle, book.BookImage, book.BookLength, book.CategoryId " +
+                        "SELECT DISTINCT book.BookId, book.BookTitle, book.BookImage, book.BookLength, book.CategoryId " +
                                 "FROM book, downloadStatus " +
                                     "WHERE " +
                                             "book.BookId = downloadStatus.BookId " +
                                             "AND " +
                                             "downloadStatus.DownloadedStatus = '1'" +
                         ";"
-                );*/
+                );
         while (cursor.moveToNext()) {
             int bookId = cursor.getInt(0);
             String bookTitle = cursor.getString(1);

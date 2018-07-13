@@ -116,7 +116,7 @@ public class ListBook
         unregisterReceiver(receiver);
         unregisterReceiver(downloadReceiver);
         //Cancel Toast Notification
-        if(isShowingToast) mToast.cancel();
+        if(isShowingToast&&mToast!=null) mToast.cancel();
     }
 
     @Override
@@ -379,12 +379,15 @@ public class ListBook
     public void LoadListDataFailed(String jsonMessage) {
         mPAGE--;
         isFinalPage = true;
-        isShowingToast = isShowingToastNotification(jsonMessage);
+        String ms = "Không còn sách nào";
+        isShowingToast = isShowingToastNotification(ms);
+//        isShowingToast = isShowingToastNotification(jsonMessage);
         pBarBottom.setVisibility(View.GONE);
     }
     private boolean isShowingToastNotification(String jsonMessage){
-        String mMessage = "DONE";
-        mToast = Toast.makeText(activity, jsonMessage.isEmpty()?mMessage:jsonMessage, Toast.LENGTH_SHORT);
+//        String mMessage = "DONE";
+//        mToast = Toast.makeText(activity, jsonMessage.isEmpty()?mMessage:jsonMessage, Toast.LENGTH_SHORT);
+        mToast = Toast.makeText(activity, jsonMessage, Toast.LENGTH_SHORT);
         mToast.show();
         return true;
     }

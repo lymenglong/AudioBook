@@ -1,8 +1,12 @@
 package com.bkic.lymenglong.audiobookbkic.main;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import com.bkic.lymenglong.audiobookbkic.https.HttpServicesClass;
@@ -22,6 +26,29 @@ public class PresenterMain implements PresenterMainImp {
     @Override
     public void GetHttpResponse(String httpUrl) {
         new GetHttpResponse(mainActivity).execute(httpUrl);
+    }
+
+    @Override
+    public void ShowDialogExit() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+        //        builder.setTitle("Exit");
+        builder.setMessage("Bạn có muốn thoát ứng dụng không?");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                ActivityCompat.finishAffinity(mainActivity);
+                System.exit(0);
+            }
+        });
+        builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     //region JSON parse class started from here.

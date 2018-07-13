@@ -5,7 +5,7 @@
     android:id="@+id/layout_item_story"
     android:layout_height="60dp">
     <TextView
-        android:id="@+id/nameStory"
+        android:id="@+id/nameItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
