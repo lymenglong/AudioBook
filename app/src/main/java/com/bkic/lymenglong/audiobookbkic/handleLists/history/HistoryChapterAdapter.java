@@ -48,6 +48,9 @@ public class HistoryChapterAdapter extends RecyclerView.Adapter {
 
             chapterHolder.name.setText(chapters.get(position).getTitle());
 
+            //fix content description for item list
+            chapterHolder.layoutItem.setContentDescription(chapterHolder.name.getText());
+
         }
     }
 
@@ -67,11 +70,13 @@ public class HistoryChapterAdapter extends RecyclerView.Adapter {
         private TextView name;
 //        private ImageView imgNext;
         private PresenterOverrideTalkBack presenterOverrideTalkBack = new PresenterOverrideTalkBack(activity);
+        private View layoutItem;
 
         ChapterHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.nameItem);
 //            imgNext = itemView.findViewById(R.id.imgNext);
+            layoutItem = itemView.findViewById(R.id.layout_item_list);
 
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);

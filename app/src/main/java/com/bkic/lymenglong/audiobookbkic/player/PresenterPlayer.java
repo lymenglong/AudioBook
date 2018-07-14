@@ -253,6 +253,7 @@ public class PresenterPlayer
                     }
                 } else if (playControlActivity.getResumeTime() <= mediaPlayer.getCurrentPosition()
                         && mediaPlayer.getCurrentPosition() < mediaPlayer.getDuration()) {
+                    mediaPlayer.setVolume(1.0f, 1.0f);
                     mediaPlayer.start();
                 } else {
                     ReplayMedia();

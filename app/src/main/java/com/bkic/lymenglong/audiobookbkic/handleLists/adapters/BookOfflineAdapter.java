@@ -51,8 +51,10 @@ private String getTitleChapter, getContentChapter, getfileUrlChapter;
         if (holder instanceof ChapterHolder) {
             ChapterHolder chapterHolder = (ChapterHolder) holder;
 
-
             chapterHolder.name.setText(books.get(position).getTitle());
+
+            //fix content description for item list
+            chapterHolder.layoutItem.setContentDescription(chapterHolder.name.getText());
         }
 
     }
@@ -72,9 +74,12 @@ private String getTitleChapter, getContentChapter, getfileUrlChapter;
         private TextView name;
 //        private ImageView imgNext;
         private PresenterOverrideTalkBack presenterOverrideTalkBack = new PresenterOverrideTalkBack(activity);
+        private View layoutItem;
+
         ChapterHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.nameItem);
+            layoutItem = itemView.findViewById(R.id.layout_item_list);
 //            imgNext = itemView.findViewById(R.id.imgNext);
 
             itemView.setOnClickListener(this);

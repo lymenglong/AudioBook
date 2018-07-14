@@ -76,7 +76,7 @@ public class PlayControl extends AppCompatActivity
     private String Review;
     private Chapter chapterFromIntent;
     private String AudioUrl;
-    private Boolean isFavoritedBook = false;
+    private Boolean isFavoriteBook = false;
 
 
     public int getResumeTime() {
@@ -149,7 +149,7 @@ public class PlayControl extends AppCompatActivity
     }
 
     private void initEnableButton(Button btn) {
-        if(isFavoritedBook) btn.setEnabled(false);
+        if(isFavoriteBook) btn.setEnabled(false);
         else btn.setEnabled(true);
     }
 
@@ -158,7 +158,7 @@ public class PlayControl extends AppCompatActivity
         Cursor cursor = dbHelper.GetData(SELECT_DATA);
         if(cursor.moveToFirst())
             if(cursor.getCount()!=0){
-                isFavoritedBook = true;
+                isFavoriteBook = true;
                 initEnableButton(btnFavorite);
             }
 
@@ -515,10 +515,7 @@ public class PlayControl extends AppCompatActivity
                     NextMedia();
                     break;
                 case R.id.btn_previous:
-                    presenterPlayer.ReleaseTimeLabel();
-                    UpdateHistoryData();
-                    indexChapterMap--;
-                    PrepareChapter();
+                    PrevMedia();
                     break;
                 case R.id.btn_ffw:
                     presenterPlayer.ForwardMedia();
@@ -548,6 +545,13 @@ public class PlayControl extends AppCompatActivity
             //endregion
         }
     };
+
+    private void PrevMedia() {
+        presenterPlayer.ReleaseTimeLabel();
+        UpdateHistoryData();
+        indexChapterMap--;
+        PrepareChapter();
+    }
 
     @Override
     public void NextMedia() {

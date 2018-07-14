@@ -49,6 +49,9 @@ public class MainAdapter extends RecyclerView.Adapter {
             HomeHolder homeHolder = (HomeHolder) holder;
 
             homeHolder.name.setText(menus.get(position).getTitle());
+
+            //fix content description for item list
+            homeHolder.layoutItem.setContentDescription(homeHolder.name.getText());
         }
 
     }
@@ -68,10 +71,13 @@ public class MainAdapter extends RecyclerView.Adapter {
         private PresenterOverrideTalkBack presenterOverrideTalkBack = new PresenterOverrideTalkBack(activity);
         private TextView name;
 //        private ImageView imgNext;
+        private View layoutItem;
 
         HomeHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.nameItem);
+            layoutItem = itemView.findViewById(R.id.layout_item_list);
+
 //            imgNext = itemView.findViewById(R.id.imgNext);
             itemView.setOnClickListener(this);
             //Do not allow talk back to read content when user touch screen

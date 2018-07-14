@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:gravity="center"
-    android:id="@+id/layout_item_story"
+    android:id="@+id/layout_item_list"
     android:layout_height="60dp">
     <TextView
         android:id="@+id/nameItem"
@@ -10,8 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:textColor="@color/white"
-        android:textSize="18sp"
-        android:text=""/>
+        android:textSize="18sp" />
     <ImageView
         android:id="@+id/imgNext"
         android:layout_width="wrap_content"
@@ -19,7 +18,7 @@
         android:layout_centerVertical="true"
         android:src="@drawable/next"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true" />
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
