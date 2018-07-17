@@ -118,7 +118,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter {
                 intent.putExtra("BookImage", books.get(getAdapterPosition()).getUrlImage());
                 intent.putExtra("BookLength", books.get(getAdapterPosition()).getLength());
                 intent.putExtra("BookAuthor", books.get(getAdapterPosition()).getAuthor());
-                activity.startActivity(intent);
+                activity.startActivityForResult(intent,Const.REQUEST_CODE_BACK_HOME);
             }
         }
     }

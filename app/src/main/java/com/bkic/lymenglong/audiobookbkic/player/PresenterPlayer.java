@@ -50,7 +50,6 @@ public class PresenterPlayer
                 isDownloaded = isDownloadedAudio;
                 if(!isDownloaded) {
                     progressDialog = ProgressDialog.show(playControlActivity,null,playControlActivity.getString(R.string.buffering_data),true,true);
-                    progressDialog.show();
                     progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialog) {
@@ -71,6 +70,12 @@ public class PresenterPlayer
                     mediaPlayer = new MediaPlayer();
                     mediaPlayer.reset();
                     mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    //<editor-fold desc="set audio streaming volume to max">
+//                    AudioManager audioManager = (AudioManager) playControlActivity.getSystemService(Context.AUDIO_SERVICE);
+//                    assert audioManager != null;
+//                    audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
+////                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 100, AudioManager.FLAG_PLAY_SOUND);
+                    //</editor-fold>
                     if(isDownloadedAudio){
                         try {
                             mediaPlayer.setDataSource(playControlActivity.getApplicationContext(), Uri.parse(strings[0]));
@@ -148,6 +153,8 @@ public class PresenterPlayer
         PrepareMediaPlayerClass prepareMediaPlayerClass = new PrepareMediaPlayerClass();
         prepareMediaPlayerClass.execute(httpUrlMedia);
     }
+
+
     @Override
     public void ReplayMedia() { // nghe lại từ đầu
         if (mediaIsPrepared) {

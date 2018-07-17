@@ -41,7 +41,7 @@ public class PresenterReview
     private RadioButton radioButton3;
     private RadioButton radioButton4;
     private RadioButton radioButton5;
-    private int rateNumber;
+    private int rateNumber = 0;
     private int clickCount = 0;
 
     public PresenterReview(PlayControl playControlActivity) {
@@ -61,6 +61,32 @@ public class PresenterReview
         radioButton3 = dialog.findViewById(R.id.rb3);
         radioButton4 = dialog.findViewById(R.id.rb4);
         radioButton5 = dialog.findViewById(R.id.rb5);
+        buttonSubmit.setOnClickListener(this);
+        buttonDismiss.setOnClickListener(this);
+        dialog.setOnShowListener(this);
+        dialog.setOnDismissListener(this);
+        dialog.show();
+    }
+
+    @Override
+    public void ReviewBookDialog4(Context context) {
+        dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_review4);
+        Button buttonDismiss = dialog.findViewById(R.id.button_dismiss);
+        Button buttonSubmit = dialog.findViewById(R.id.button_submit);
+        radioButton = dialog.findViewById(R.id.rb1);
+        radioButton2 = dialog.findViewById(R.id.rb2);
+        radioButton3 = dialog.findViewById(R.id.rb3);
+        radioButton4 = dialog.findViewById(R.id.rb4);
+        radioButton5 = dialog.findViewById(R.id.rb5);
+
+        radioButton.setOnClickListener(this);
+        radioButton2.setOnClickListener(this);
+        radioButton3.setOnClickListener(this);
+        radioButton4.setOnClickListener(this);
+        radioButton5.setOnClickListener(this);
+
         buttonSubmit.setOnClickListener(this);
         buttonDismiss.setOnClickListener(this);
         dialog.setOnShowListener(this);
@@ -246,15 +272,60 @@ public class PresenterReview
         switch (v.getId()){
             case R.id.button_submit:
                 if(ConnectivityReceiver.isConnected())
-                    SubmitFromDialog();
+//                    SubmitFromDialog();
+//                    SubmitFromDialog3();
+                    SubmitFromDialog4();
                 else Toast.makeText(playControlActivity, playControlActivity.getString(R.string.message_internet_not_connected), Toast.LENGTH_SHORT).show();
-//                SubmitFromDialog3();
                 break;
             case R.id.button_dismiss:
                 dialog.dismiss();
+                break;
+            case R.id.rb1:
+                ClearCheckRatingBar();
+                radioButton.setChecked(true);
+                rateNumber = 1;
+                break;
+            case R.id.rb2:
+                ClearCheckRatingBar();
+                radioButton.setChecked(true);
+                radioButton2.setChecked(true);
+                rateNumber = 2;
+                break;
+            case R.id.rb3:
+                ClearCheckRatingBar();
+                radioButton.setChecked(true);
+                radioButton2.setChecked(true);
+                radioButton3.setChecked(true);
+                rateNumber = 3;
+                break;
+            case R.id.rb4:
+                ClearCheckRatingBar();
+                radioButton.setChecked(true);
+                radioButton2.setChecked(true);
+                radioButton3.setChecked(true);
+                radioButton4.setChecked(true);
+                rateNumber = 4;
+                break;
+            case R.id.rb5:
+                ClearCheckRatingBar();
+                radioButton.setChecked(true);
+                radioButton2.setChecked(true);
+                radioButton3.setChecked(true);
+                radioButton4.setChecked(true);
+                radioButton5.setChecked(true);
+                rateNumber = 5;
+                break;
+
         }
     }
 
+    private void ClearCheckRatingBar(){
+        radioButton.setChecked(false);
+        radioButton2.setChecked(false);
+        radioButton3.setChecked(false);
+        radioButton4.setChecked(false);
+        radioButton5.setChecked(false);
+    }
 /*    private void SubmitFromDialog3() {
         SubmitBntIsClicked = true;
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
@@ -267,7 +338,7 @@ public class PresenterReview
         dialog.dismiss();
     }*/
 
-    private void SubmitFromDialog() {
+/*    private void SubmitFromDialog() {
         if(radioButton.isChecked()){
             rateNumber = 1;
         } else if(radioButton2.isChecked()){
@@ -287,6 +358,21 @@ public class PresenterReview
             playControlActivity.AddReviewChapterToServer();
             dialog.dismiss();
         } else {
+            String ms = playControlActivity.getString(R.string.message_no_rate_value);
+            playControlActivity.mToastMessage(ms);
+        }
+    }*/
+
+    private void SubmitFromDialog4() {
+        playControlActivity.setRateNumber(rateNumber);
+        playControlActivity.setReview("");//todo add Comment Review Of User
+//            playControlActivity.AddReviewBookToServer();
+        if(rateNumber != 0){
+            playControlActivity.UpdateReviewTable();
+            playControlActivity.AddReviewChapterToServer();
+            dialog.dismiss();
+        } else {
+            rateNumber = 0;
             String ms = playControlActivity.getString(R.string.message_no_rate_value);
             playControlActivity.mToastMessage(ms);
         }

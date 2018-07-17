@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -77,6 +78,7 @@ public class PlayControl extends AppCompatActivity
     private Chapter chapterFromIntent;
     private String AudioUrl;
     private Boolean isFavoriteBook = false;
+    private View imBackHome;
 
 
     public int getResumeTime() {
@@ -438,6 +440,8 @@ public class PlayControl extends AppCompatActivity
         setTitle(ChapterTitle);
         CustomActionBar actionBar = new CustomActionBar();
         actionBar.eventToolbar(this, ChapterTitle, false);
+        imBackHome = findViewById(R.id.imBackHome);
+        imBackHome.setVisibility(View.VISIBLE);
 //        findViewById(R.id.imBack).setVisibility(View.GONE);
 
     }
@@ -487,6 +491,7 @@ public class PlayControl extends AppCompatActivity
         btnStop.setOnClickListener(onClickListener);
         btnDownload.setOnClickListener(onClickListener);
         seekBar.setOnSeekBarChangeListener(presenterPlayer);
+        imBackHome.setOnClickListener(onClickListener);
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -540,6 +545,12 @@ public class PlayControl extends AppCompatActivity
                     }else {
                         DownloadTask();
                     }
+                    break;
+                case R.id.imBackHome:
+                    Intent intent=new Intent();
+                    intent.putExtra(Const.STRING_BACK_HOME, true);
+                    setResult(Const.REQUEST_CODE_BACK_HOME, intent);
+                    finish();//finishing activity
                     break;
             }
             //endregion
@@ -710,7 +721,7 @@ public class PlayControl extends AppCompatActivity
         String message = "Chương này đã chạy xong";
         Toast.makeText(playControlActivity, message, Toast.LENGTH_SHORT).show();
         if(ConnectivityReceiver.isConnected()) {
-            presenterReview.ReviewBookDialog(playControlActivity);
+            presenterReview.ReviewBookDialog4(playControlActivity);
         }
         UpdateHistoryData();
     }

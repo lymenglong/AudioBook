@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 
 public interface PresenterReviewImp {
+    void ReviewBookDialog4(Context context);
+
     void ReviewBookDialog2(Context context);
 
     void ReviewBookDialog(Context context);

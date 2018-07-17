@@ -15,8 +15,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bkic.lymenglong.audiobookbkic.R;
 import com.bkic.lymenglong.audiobookbkic.checkInternet.ConnectivityReceiver;
 import com.bkic.lymenglong.audiobookbkic.checkInternet.MyApplication;
 import com.bkic.lymenglong.audiobookbkic.customizes.CustomActionBar;
@@ -25,7 +27,7 @@ import com.bkic.lymenglong.audiobookbkic.download.DownloadReceiver;
 import com.bkic.lymenglong.audiobookbkic.handleLists.adapters.BookAdapter;
 import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Book;
 import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Category;
-import com.bkic.lymenglong.audiobookbkic.R;
+import com.bkic.lymenglong.audiobookbkic.utils.Const;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,6 +65,7 @@ public class ListBookSearch
 //    private Boolean isFinalPage = false;
     private String keyWord = "";
     private String menuTitle;
+    private TextView TextBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,6 +158,7 @@ public class ListBookSearch
         progressBar = findViewById(R.id.progressBar);
         imSearch = findViewById(R.id.imSearch);
         imSearch.setVisibility(View.VISIBLE);
+        TextBar = findViewById(R.id.text_bar);
         ViewCompat.setImportantForAccessibility(getWindow().findViewById(R.id.tvToolbar), ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
     }
 
@@ -261,63 +265,77 @@ public class ListBookSearch
     @Override
     public void SetTableSelectedData(JSONObject jsonObject) throws JSONException {
         Book bookModel = new Book();
-        bookModel.setId(Integer.parseInt(jsonObject.getString("BookId")));
-        bookModel.setTitle(jsonObject.getString("BookTitle"));
-        bookModel.setUrlImage(jsonObject.getString("BookImage"));
-        bookModel.setLength(Integer.parseInt(jsonObject.getString("BookLength")));
-        bookModel.setCategoryId(Integer.parseInt(jsonObject.getString("Category")));
-        bookModel.setAuthor(jsonObject.getString("Author"));
-        Cursor cursor = dbHelper.GetData
-                (
-                        "SELECT BookId, KeyWord " +
-                            "FROM BookSearch " +
-                            "WHERE BookId = '"+bookModel.getId()+"' AND KeyWord = '"+keyWord+"'");
-        int mCount = 0 ;
-        if(cursor.moveToFirst()){
-            mCount = cursor.getCount();
-        }
-        if(mCount!=0)return;
-        String INSERT_DATA;
-        try {
-            INSERT_DATA =
-                    "INSERT INTO bookSearch VALUES(" +
-                            "null, "+ // ID auto increment
-                            "'"+bookModel.getId()+"', " +
-                            "'"+bookModel.getTitle()+"', " +
-                            "'"+bookModel.getAuthor()+"', " +
-                            "'"+bookModel.getUrlImage() +"', " +
-                            "'"+bookModel.getLength()+"', " +
-                            "'"+bookModel.getCategoryId()+"', " + //CategoryID
-                            "'"+keyWord+"'"+
-                            ")";
-            dbHelper.QueryData(INSERT_DATA);
-        } catch (Exception e) {
-            String UPDATE_DATA =
-                    "UPDATE " +
-                            "bookSearch " +
-                    "SET " +
-                            "BookTitle = '"+bookModel.getTitle()+"', " +
-                            "BookImage = '"+bookModel.getUrlImage()+"', " +
-                            "BookLength = '"+bookModel.getLength()+"' ," +
-                            "CategoryId = '"+bookModel.getCategoryId()+"', " + //CategoryId
-                            "BookAuthor = '"+bookModel.getAuthor()+"'"+
-                    "WHERE " +
-                            "BookId = '"+bookModel.getId()+"'";
-            dbHelper.QueryData(UPDATE_DATA);
+        String CategoryId = jsonObject.getString("Category");
+        if(!CategoryId.toLowerCase().equals("null")) {
+            bookModel.setCategoryId(Integer.parseInt(CategoryId));
+            bookModel.setCategoryId(Integer.parseInt(jsonObject.getString("Category")));
+            bookModel.setId(Integer.parseInt(jsonObject.getString("BookId")));
+            bookModel.setTitle(jsonObject.getString("BookTitle"));
+            bookModel.setUrlImage(jsonObject.getString("BookImage"));
+            bookModel.setLength(Integer.parseInt(jsonObject.getString("BookLength")));
+            bookModel.setAuthor(jsonObject.getString("Author"));
+            Cursor cursor = dbHelper.GetData
+                    (
+                            "SELECT BookId, KeyWord " +
+                                    "FROM BookSearch " +
+                                    "WHERE BookId = '"+bookModel.getId()+"' AND KeyWord = '"+keyWord+"'");
+            int mCount = 0 ;
+            if(cursor.moveToFirst()){
+                mCount = cursor.getCount();
+            }
+            if(mCount!=0)return;
+            String INSERT_DATA;
+            try {
+                INSERT_DATA =
+                        "INSERT INTO bookSearch VALUES(" +
+                                "null, "+ // ID auto increment
+                                "'"+bookModel.getId()+"', " +
+                                "'"+bookModel.getTitle()+"', " +
+                                "'"+bookModel.getAuthor()+"', " +
+                                "'"+bookModel.getUrlImage() +"', " +
+                                "'"+bookModel.getLength()+"', " +
+                                "'"+bookModel.getCategoryId()+"', " + //CategoryID
+                                "'"+keyWord+"'"+
+                                ")";
+                dbHelper.QueryData(INSERT_DATA);
+            } catch (Exception e) {
+                String UPDATE_DATA =
+                        "UPDATE " +
+                                "bookSearch " +
+                                "SET " +
+                                "BookTitle = '"+bookModel.getTitle()+"', " +
+                                "BookImage = '"+bookModel.getUrlImage()+"', " +
+                                "BookLength = '"+bookModel.getLength()+"' ," +
+                                "CategoryId = '"+bookModel.getCategoryId()+"', " + //CategoryId
+                                "BookAuthor = '"+bookModel.getAuthor()+"'"+
+                                "WHERE " +
+                                "BookId = '"+bookModel.getId()+"'";
+                dbHelper.QueryData(UPDATE_DATA);
+            }
         }
     }
 
     @Override
     public void ShowListFromSelected() {
+        ShowKeySearch(keyWord);
         GetCursorData();
         Log.d(TAG, "onPostExecute: "+ categoryIntent.getTitle());
+    }
+
+    private void ShowKeySearch(String keyWord) {
+        if(TextBar.getVisibility() == View.GONE)
+            TextBar.setVisibility(View.VISIBLE);
+        String showTxt = getString(R.string.prompt_keyWord) +" "+ keyWord;
+        TextBar.setText(showTxt);
     }
 
     @Override
     public void LoadListDataFailed(String jsonMessage) {
 //        mPAGE--;
 //        isFinalPage = true;
-        Toast.makeText(activity, jsonMessage, Toast.LENGTH_SHORT).show();
+        ShowKeySearch(keyWord);
+        String ms = "Không tồn tại";
+        Toast.makeText(activity, ms, Toast.LENGTH_SHORT).show();
     }
 
     private void promptSpeechInput() {
@@ -343,20 +361,23 @@ public class ListBookSearch
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            case REQ_CODE_SPEECH_INPUT: {
-                if (resultCode == RESULT_OK && null != data) {
-                    ArrayList<String> result = data
-                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    keyWord=result.get(0);
-                    Log.d(TAG, "onActivityResult: KeyWord: " +keyWord );
-                    RequestLoadingData(keyWord);
-                }
-                break;
-            }
-
+        //For speech input
+        if(requestCode == REQ_CODE_SPEECH_INPUT )
+            if (resultCode == RESULT_OK && null != data) {
+            ArrayList<String> result = data
+                    .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            keyWord = result.get(0);
+            Log.d(TAG, "onActivityResult: KeyWord: " + keyWord);
+            RequestLoadingData(keyWord);
         }
+        // check if the request code is same as what is passed  here
+        if(requestCode == Const.REQUEST_CODE_BACK_HOME)
+            if (data != null)
+                if (data.getBooleanExtra(Const.STRING_BACK_HOME, false)) {
+                Intent intent = new Intent();
+                intent.putExtra(Const.STRING_BACK_HOME, true);
+                setResult(Const.REQUEST_CODE_BACK_HOME, intent);
+                finish();//finishing activity
+            }
     }
-
 }

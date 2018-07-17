@@ -13,6 +13,7 @@ import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Chapter;
 import com.bkic.lymenglong.audiobookbkic.R;
 import com.bkic.lymenglong.audiobookbkic.overrideTalkBack.PresenterOverrideTalkBack;
 import com.bkic.lymenglong.audiobookbkic.player.PlayControl;
+import com.bkic.lymenglong.audiobookbkic.utils.Const;
 
 import java.util.ArrayList;
 
@@ -101,7 +102,7 @@ public class ChapterAdapter extends RecyclerView.Adapter {
         intent.putExtra("ChapterUrl", ChapterUrl);
         intent.putExtra("ChapterLength", ChapterLength);
         intent.putExtra("BookId", BookId);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, Const.REQUEST_CODE_BACK_HOME);
     }
 
 

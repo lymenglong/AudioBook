@@ -2,6 +2,7 @@ package com.bkic.lymenglong.audiobookbkic.handleLists.listCategory;
 
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.bkic.lymenglong.audiobookbkic.handleLists.adapters.CategoryAdapter;
 import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Category;
 import com.bkic.lymenglong.audiobookbkic.handleLists.utils.PresenterShowList;
 import com.bkic.lymenglong.audiobookbkic.R;
+import com.bkic.lymenglong.audiobookbkic.utils.Const;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -88,6 +90,20 @@ public class ListCategory extends AppCompatActivity
         //set filter to only when download is complete and register broadcast receiver
         filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
         downloadReceiver = new DownloadReceiver();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // check if the request code is same as what is passed  here
+        if(requestCode == Const.REQUEST_CODE_BACK_HOME)
+            if (data != null)
+                if (data.getBooleanExtra(Const.STRING_BACK_HOME, false)) {
+                    Intent intent = new Intent();
+                    intent.putExtra(Const.STRING_BACK_HOME, true);
+                    setResult(Const.REQUEST_CODE_BACK_HOME, intent);
+                    finish();//finishing activity
+                }
     }
 
     @Override

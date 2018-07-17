@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
+import android.util.Patterns;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -33,7 +34,7 @@ public class PresenterUserInfo implements PresenterUserInfoImp {
 //    private static final String TAG = "PresenterUserInfo";
     private User userUpdated;
 
-    public PresenterUserInfo(UserInfoActivity userInfoActivity) {
+    PresenterUserInfo(UserInfoActivity userInfoActivity) {
         this.userInfoActivity = userInfoActivity;
     }
 
@@ -219,18 +220,56 @@ public class PresenterUserInfo implements PresenterUserInfoImp {
             public void onClick(View v) {
                 userUpdated = new User
                         (
-                               editTextFirstName.getText().toString(),
-                               editTextLastName.getText().toString(),
-                               editTextUserName.getText().toString(),
-                               editTextEmail.getText().toString(),
-                               editTextPhone.getText().toString(),
-                               editTextAddress.getText().toString()
+                               editTextFirstName.getText().toString().trim(),
+                               editTextLastName.getText().toString().trim(),
+                               editTextUserName.getText().toString().trim(),
+                               editTextEmail.getText().toString().trim(),
+                               editTextPhone.getText().toString().trim(),
+                               editTextAddress.getText().toString().trim()
                         );
-                RequestUpdateUserDetail(userUpdated);
-                dialog.dismiss();
+                if(CheckValidityDetail(userUpdated)) {
+                    RequestUpdateUserDetail(userUpdated);
+                    dialog.dismiss();
+                }
             }
         });
         dialog.show();
+    }
+
+    private Boolean CheckValidityDetail(User userUpdated) {
+        if(userUpdated.getFirstName().isEmpty()) {
+            Toast.makeText(userInfoActivity, R.string.error_message_first_name, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(userUpdated.getLastName().isEmpty()){
+            Toast.makeText(userInfoActivity, R.string.error_message_last_name, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(userUpdated.getUsername().isEmpty()){
+            Toast.makeText(userInfoActivity, R.string.error_message_username, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+         if(userUpdated.getEmail().isEmpty()){
+            Toast.makeText(userInfoActivity, R.string.error_message_email, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(!android.util.Patterns.EMAIL_ADDRESS.matcher(userUpdated.getEmail()).matches()){
+            Toast.makeText(userInfoActivity, R.string.error_invalid_email, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(userUpdated.getPhonenumber().isEmpty()){
+            Toast.makeText(userInfoActivity, R.string.error_message_phone_number, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(!Patterns.PHONE.matcher(userUpdated.getPhonenumber()).matches()){
+            Toast.makeText(userInfoActivity, R.string.error_invalid_phone, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(userUpdated.getAddress().isEmpty()){
+            Toast.makeText(userInfoActivity, R.string.error_message_address, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     private void RequestUpdateUserDetail(User user) {
@@ -270,15 +309,15 @@ public class PresenterUserInfo implements PresenterUserInfoImp {
             @Override
             public void onClick(View v) {
                 if(editTextOldPassword.getText().toString().isEmpty()) {
-                    Toast.makeText(context, "Điền mật khẩu cũ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.message_please_complete_old_password, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if(editTextNewPassword.getText().toString().isEmpty()) {
-                    Toast.makeText(context, "Điền mật khẩu mới", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.message_please_complete_new_password, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if(editTextConfirmPassword.getText().toString().isEmpty()) {
-                    Toast.makeText(context, "Điền mật xác nhận khẩu", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.message_please_complete_confirm_password, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if(editTextNewPassword.getText().toString().equals(editTextConfirmPassword.getText().toString())){
@@ -288,7 +327,7 @@ public class PresenterUserInfo implements PresenterUserInfoImp {
                         Toast.makeText(context, context.getString(R.string.message_internet_not_connected), Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 } else {
-                    Toast.makeText(context, "Xác Nhận Mật Khẩu Chưa Đúng", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.error_message_confirm_password_not_match, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -331,7 +370,7 @@ public class PresenterUserInfo implements PresenterUserInfoImp {
                         RequestConfirmPassword(editTextConfirmPassword);
                     else Toast.makeText(context, context.getString(R.string.message_internet_not_connected), Toast.LENGTH_SHORT).show();
                 else {
-                    Toast.makeText(context, "Please enter password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.message_please_complete_password, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 dialog.dismiss();

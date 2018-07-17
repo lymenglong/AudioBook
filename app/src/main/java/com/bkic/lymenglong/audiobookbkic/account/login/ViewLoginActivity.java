@@ -68,9 +68,11 @@ public class ViewLoginActivity extends AppCompatActivity implements ViewLoginImp
     }
 
     private void SetWaitingLogin(Boolean aBoolean){
-        textViewLinkRegister.setEnabled(!aBoolean);
         progressBar.setVisibility(aBoolean?View.VISIBLE:View.GONE);
+        textViewLinkRegister.setEnabled(!aBoolean);
         findViewById(R.id.appCompatButtonLogin).setEnabled(!aBoolean);
+        findViewById(R.id.textInputEditTextEmail).setEnabled(!aBoolean);
+        findViewById(R.id.textInputEditTextPassword).setEnabled(!aBoolean);
     }
 
     /**
@@ -95,7 +97,7 @@ public class ViewLoginActivity extends AppCompatActivity implements ViewLoginImp
     @Override
     protected void onPause() {
         super.onPause();
-        if(isShowToast)mToast.cancel();
+        if(isShowToast&&mToast!=null)mToast.cancel();
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.bkic.lymenglong.audiobookbkic.handleLists.listChapter;
 
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Book;
 import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Chapter;
 import com.bkic.lymenglong.audiobookbkic.handleLists.utils.PresenterShowList;
 import com.bkic.lymenglong.audiobookbkic.R;
+import com.bkic.lymenglong.audiobookbkic.utils.Const;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,6 +71,20 @@ public class ListChapter extends AppCompatActivity
         setTitle(bookIntent.getTitle());
         initDatabase();
         initObject();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // check if the request code is same as what is passed  here
+        if(requestCode == Const.REQUEST_CODE_BACK_HOME)
+            if (data != null)
+                if (data.getBooleanExtra(Const.STRING_BACK_HOME, false)) {
+                    Intent intent = new Intent();
+                    intent.putExtra(Const.STRING_BACK_HOME, true);
+                    setResult(Const.REQUEST_CODE_BACK_HOME, intent);
+                    finish();//finishing activity
+                }
     }
 
     //region BroadCasting
@@ -348,33 +364,36 @@ public class ListChapter extends AppCompatActivity
             try {
                 JSONObject jsonObject = jsonArrayChapter.getJSONObject(i);
                 Chapter chapterModel = new Chapter();
-                chapterModel.setId(Integer.parseInt(jsonObject.getString("ChapterId")));
-                chapterModel.setTitle(jsonObject.getString("ChapterTitle"));
-                chapterModel.setFileUrl(jsonObject.getString("ChapterURL"));
-                chapterModel.setLength(Integer.parseInt(jsonObject.getString("ChapterLength")));
-                int BookId = bookIntent.getId();
-                String INSERT_DATA;
-                try {
-                    INSERT_DATA =
-                            "INSERT INTO chapter VALUES" +
-                                    "(" +
-                                    "'"+chapterModel.getId()+"', " +
-                                    "'"+chapterModel.getTitle()+"', " +
-                                    "'"+chapterModel.getFileUrl() +"', " +
-                                    "'"+chapterModel.getLength() +"', " +
-                                    "'"+BookId+"', " + //BookId
-                                    "'"+0+"', " + // Status Chapter is equal 0 which mean chapter have not downloaded yet
-                                    "'"+mPAGE+"'"+
-                                    ")";
-                    dbHelper.QueryData(INSERT_DATA);
-                } catch (Exception e) {
-                    String UPDATE_DATA = "UPDATE chapter SET " +
-                            "ChapterTitle = '"+chapterModel.getTitle()+"', " +
-                            "ChapterUrl = '"+chapterModel.getFileUrl()+"', " +
-                            "ChapterLength = '"+chapterModel.getLength()+"', " +
-                            "BookId = '"+BookId+"' " + //BookId
-                            "WHERE ChapterId = '"+chapterModel.getId()+"'";
-                    dbHelper.QueryData(UPDATE_DATA);
+                String ChapterId = jsonObject.getString("ChapterId");
+                if(!ChapterId.toLowerCase().equals("null")) {
+                    chapterModel.setId(Integer.parseInt(ChapterId));
+                    chapterModel.setTitle(jsonObject.getString("ChapterTitle"));
+                    chapterModel.setFileUrl(jsonObject.getString("ChapterURL"));
+                    chapterModel.setLength(Integer.parseInt(jsonObject.getString("ChapterLength")));
+                    int BookId = bookIntent.getId();
+                    String INSERT_DATA;
+                    try {
+                        INSERT_DATA =
+                                "INSERT INTO chapter VALUES" +
+                                        "(" +
+                                        "'"+chapterModel.getId()+"', " +
+                                        "'"+chapterModel.getTitle()+"', " +
+                                        "'"+chapterModel.getFileUrl() +"', " +
+                                        "'"+chapterModel.getLength() +"', " +
+                                        "'"+BookId+"', " + //BookId
+                                        "'"+0+"', " + // Status Chapter is equal 0 which mean chapter have not downloaded yet
+                                        "'"+mPAGE+"'"+
+                                        ")";
+                        dbHelper.QueryData(INSERT_DATA);
+                    } catch (Exception e) {
+                        String UPDATE_DATA = "UPDATE chapter SET " +
+                                "ChapterTitle = '"+chapterModel.getTitle()+"', " +
+                                "ChapterUrl = '"+chapterModel.getFileUrl()+"', " +
+                                "ChapterLength = '"+chapterModel.getLength()+"', " +
+                                "BookId = '"+BookId+"' " + //BookId
+                                "WHERE ChapterId = '"+chapterModel.getId()+"'";
+                        dbHelper.QueryData(UPDATE_DATA);
+                    }
                 }
             } catch (JSONException ignored) {
                 Log.e(TAG, "onPostExecute: " + jsonArrayChapter);

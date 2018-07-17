@@ -122,7 +122,7 @@ public class HistoryChapterAdapter extends RecyclerView.Adapter {
         intent.putExtra("ChapterUrl", ChapterUrl);
         intent.putExtra("ChapterLength", ChapterLength);
         intent.putExtra("BookId", BookId);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, Const.REQUEST_CODE_BACK_HOME);
     }
     private int adapterPosition;
     private void showAlertDialog(){

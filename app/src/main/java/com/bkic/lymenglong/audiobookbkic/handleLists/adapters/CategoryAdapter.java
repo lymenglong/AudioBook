@@ -14,6 +14,7 @@ import com.bkic.lymenglong.audiobookbkic.R;
 import com.bkic.lymenglong.audiobookbkic.handleLists.listBook.ListBook;
 import com.bkic.lymenglong.audiobookbkic.handleLists.listCategory.ListCategory;
 import com.bkic.lymenglong.audiobookbkic.overrideTalkBack.PresenterOverrideTalkBack;
+import com.bkic.lymenglong.audiobookbkic.utils.Const;
 
 import java.util.ArrayList;
 
@@ -92,7 +93,7 @@ public class CategoryAdapter extends RecyclerView.Adapter {
                     intent.putExtra("CategoryDescription", categories.get(getAdapterPosition()).getDescription());
                     intent.putExtra("CategoryParent", categories.get(getAdapterPosition()).getParentId());
                     intent.putExtra("NumOfChild", categories.get(getAdapterPosition()).getNumOfChild());
-                    activity.startActivity(intent);
+                    activity.startActivityForResult(intent, Const.REQUEST_CODE_BACK_HOME);
                     /*Bundle bundle = new Bundle();
                     bundle.putInt("CategoryId", categories.get(getAdapterPosition()).getId());
                     bundle.putString("CategoryTitle", categories.get(getAdapterPosition()).getTitle());
@@ -109,7 +110,7 @@ public class CategoryAdapter extends RecyclerView.Adapter {
                     intent.putExtra("CategoryDescription", categories.get(getAdapterPosition()).getDescription());
                     intent.putExtra("CategoryParent", categories.get(getAdapterPosition()).getParentId());
                     intent.putExtra("NumOfChild", categories.get(getAdapterPosition()).getNumOfChild());
-                    activity.startActivity(intent);
+                    activity.startActivityForResult(intent, Const.REQUEST_CODE_BACK_HOME);
                 }
 
             }

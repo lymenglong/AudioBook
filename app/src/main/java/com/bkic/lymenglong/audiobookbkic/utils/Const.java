@@ -20,13 +20,19 @@ public final class Const {
 //    public static final String HttpUrl_FilterHistoryData = "http://20121969.tk/SachNoiBKIC/FilterHistoryData.php";
     //</editor-fold>
 
-    //<editor-fold desc="New API URL">
+    //region New API URL
 //    public static final String HttpURL_API = "http://jsontest123.000webhostapp.com/api/index.php";
     public static final String HttpURL_API = "http://audiobook.aseantech.org/api/";
     public static final String HttpURL_Audio = "http://audiobook.aseantech.org/wp-content/uploads/";
-    //</editor-fold>
+    //endregion
+
+    //region Back Home
+    public static int REQUEST_CODE_BACK_HOME = 1001;
+    public static final String STRING_BACK_HOME = "BACK_HOME";
+    //endregion
 
     //endregion
+
 
     //region DBHelper Constants
     public static final String DB_NAME = "audiobook.sqlite";
@@ -44,10 +50,10 @@ public final class Const {
                     "('1', 'Thể Loại Sách'), " +
                     "('2', 'Lịch Sử'), " +
                     "('3', 'Yêu Thích'), " +
-                    "('4', 'Tài Khoản'), " +
-                    "('5', 'Hướng Dẫn'), " +
-                    "('6', 'Sách Đã Tải Xuống'), " +
-                    "('7', 'Tìm Kiếm'), " +
+                    "('4', 'Sách Đã Tải Xuống'), " +
+                    "('5', 'Tìm Kiếm'), " +
+                    "('6', 'Tài Khoản'), " +
+                    "('7', 'Hướng Dẫn'), " +
                     "('100', 'Thoát')" +
                     ";";
 

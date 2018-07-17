@@ -30,7 +30,6 @@ public class CustomActionBar implements CustomActionBarImp, View.OnClickListener
             imRefresh.setVisibility(View.GONE);
         }
         imBack.setOnClickListener(this);
-        imRefresh.setOnClickListener(this);
     }
 
     @Override
@@ -38,10 +37,5 @@ public class CustomActionBar implements CustomActionBarImp, View.OnClickListener
         if(view == imBack) {
             activity.onBackPressed();
         }
-/*        if(view == imRefresh){
-            //todo: refresh list
-//            presenter.RefreshContent(activity);
-
-        }*/
     }
 }

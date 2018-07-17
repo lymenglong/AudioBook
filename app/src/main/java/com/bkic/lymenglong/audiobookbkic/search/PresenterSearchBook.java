@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.bkic.lymenglong.audiobookbkic.R;
 import com.bkic.lymenglong.audiobookbkic.https.HttpParse;
 import com.bkic.lymenglong.audiobookbkic.utils.Const;
 
@@ -21,7 +22,7 @@ public class PresenterSearchBook implements PresenterSearchImp {
     private ProgressDialog pDialog;
     private String keyWord;
 
-    public PresenterSearchBook(ListBookSearch listBookSearchActivity) {
+    PresenterSearchBook(ListBookSearch listBookSearchActivity) {
         this.listBookSearchActivity = listBookSearchActivity;
     }
 
@@ -51,7 +52,7 @@ public class PresenterSearchBook implements PresenterSearchImp {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                pDialog = ProgressDialog.show(activity,"Search..",keyWord,true,true);
+                pDialog = ProgressDialog.show(activity, activity.getString(R.string.prompt_search),keyWord,true,true);
             }
 
             @Override

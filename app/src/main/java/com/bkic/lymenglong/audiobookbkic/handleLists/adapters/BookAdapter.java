@@ -13,6 +13,7 @@ import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Book;
 import com.bkic.lymenglong.audiobookbkic.R;
 import com.bkic.lymenglong.audiobookbkic.handleLists.listChapter.ListChapter;
 import com.bkic.lymenglong.audiobookbkic.overrideTalkBack.PresenterOverrideTalkBack;
+import com.bkic.lymenglong.audiobookbkic.utils.Const;
 
 import java.util.ArrayList;
 
@@ -91,7 +92,7 @@ private String getTitleChapter, getContentChapter, getfileUrlChapter;
                 intent.putExtra("BookImage", books.get(getAdapterPosition()).getUrlImage());
                 intent.putExtra("BookLength", books.get(getAdapterPosition()).getLength());
                 intent.putExtra("CategoryId", books.get(getAdapterPosition()).getCategoryId());
-                activity.startActivity(intent);
+                activity.startActivityForResult(intent, Const.REQUEST_CODE_BACK_HOME);
             }
         }
     }

@@ -111,6 +111,14 @@ public class ViewRegisterActivity extends AppCompatActivity implements ViewRegis
         textViewLinkLogin.setEnabled(!aBoolean);
         progressBar.setVisibility(aBoolean?View.VISIBLE:View.GONE);
         findViewById(R.id.appCompatButtonRegister).setEnabled(!aBoolean);
+        textInputEditTextFirstName.setEnabled(!aBoolean);
+        textInputEditTextLastName.setEnabled(!aBoolean);
+        textInputEditTextUserName.setEnabled(!aBoolean);
+        textInputEditTextEmail.setEnabled(!aBoolean);
+        textInputEditTextPassword.setEnabled(!aBoolean);
+        textInputEditTextConfirmPassword.setEnabled(!aBoolean);
+        textInputEditTextAddress.setEnabled(!aBoolean);
+        textInputEditTextPhoneNumber.setEnabled(!aBoolean);
     }
 
     @Override

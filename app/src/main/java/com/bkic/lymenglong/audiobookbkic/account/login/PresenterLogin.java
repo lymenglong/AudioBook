@@ -22,7 +22,7 @@ public class PresenterLogin implements PresenterLoginImp {
     private String TAG = getClass().getSimpleName();
     private String messageSuccess;
 
-    public PresenterLogin(ViewLoginActivity loginActivity) {
+    PresenterLogin(ViewLoginActivity loginActivity) {
         this.loginActivity = loginActivity;
     }
 

@@ -121,7 +121,7 @@ public class HistoryAdapter extends RecyclerView.Adapter {
         intent.putExtra("BookImage", bookImage);
         intent.putExtra("BookLength", bookLength);
         intent.putExtra("BookAuthor", bookAuthor);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, Const.REQUEST_CODE_BACK_HOME);
     }
     private Book bookModel;
     private int adapterPosition;
