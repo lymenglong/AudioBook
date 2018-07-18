@@ -186,14 +186,17 @@ public class ListChapter extends AppCompatActivity
         imRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ConnectivityReceiver.isConnected()) {
-                    SetRequestUpdateBookDetail();
-                    RefreshChapterTable();
-                    isFinalPage = false;
-                    mPAGE = 1;
-                    RequestLoadList();
-                } else
-                    Toast.makeText(activity, getString(R.string.message_internet_not_connected), Toast.LENGTH_SHORT).show();
+                if (!isLoadingData)
+                    if(ConnectivityReceiver.isConnected()) {
+                        SetRequestUpdateBookDetail();
+                        RefreshChapterTable();
+                        isFinalPage = false;
+                        mPAGE = 1;
+                        RequestLoadList();
+                    } else
+                        Toast.makeText(activity, getString(R.string.message_internet_not_connected), Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(activity, getString(R.string.loading_data), Toast.LENGTH_SHORT).show();
             }
         });
     }

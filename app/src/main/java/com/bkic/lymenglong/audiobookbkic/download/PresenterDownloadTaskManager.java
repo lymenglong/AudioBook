@@ -17,6 +17,7 @@ import com.bkic.lymenglong.audiobookbkic.services.MyDownloadService;
 import com.bkic.lymenglong.audiobookbkic.R;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
@@ -106,6 +107,16 @@ public class PresenterDownloadTaskManager implements PresenterDownloadTaskManage
                     Log.d(TAG, "Directory Created.");
                 }
                 if(isDirectoryCreated) {
+                    File _nomedia = new File(apkStorage+ "/"+".nomedia");
+                    Boolean _isNoMediaCreated = false;
+                    if(!_nomedia.exists()){
+                        try {
+                            _isNoMediaCreated = _nomedia.createNewFile();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if(_isNoMediaCreated) Log.d(TAG, ".nomedia is created");
+                    }
                     //Create subdirectory
                     apkSubStorage = new File(
                             Environment.getExternalStorageDirectory() + "/"
@@ -114,19 +125,6 @@ public class PresenterDownloadTaskManager implements PresenterDownloadTaskManage
                     if(!isSubDirectoryCreated) {
                         isSubDirectoryCreated = apkSubStorage.mkdir();
                         Log.d(TAG, "Sub Directory: " + subFolderPath + " is created");
-                        /*//Create .nomedia file
-                        if(writeNoMediaFile(subFolderPath)) {
-                            Log.d(TAG, ".nomedia file created");
-                        }*/
-                        /*
-                        File dir = context.getCacheDir();
-                        File output = new File(dir, ".nomedia");
-                        try {
-                            boolean fileCreated = output.createNewFile();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        */
                     }
                     if(isSubDirectoryCreated){
                         //download file using download manager

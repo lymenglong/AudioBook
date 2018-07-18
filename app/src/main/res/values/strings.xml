@@ -133,6 +133,7 @@
     <string name="message_logout_success">Đăng Xuất Thành Công</string>
     <string name="no_data">Chưa cấp nhật dữ liệu</string>
     <string name="buffering_data">Đang tải…</string>
+    <string name="loading_data">Đang tải…</string>
     <!--endregion-->
     <string name="prompt_review_question">bạn cảm thấy quyển sách này có chất lượng thế nào</string>
     <string name="text_review_book">Đánh giá sách</string>
@@ -184,6 +185,7 @@
     <string name="message_please_wait">Vui lòng chờ..</string>
     <string name="message_play_complete_chapter">Bạn đã nghe xong chương này</string>
     <string name="message_play_next_chapter_or_not">Bạn có muốn nghe chương tiếp theo không?</string>
+    <string name="message_last_period">Bạn đã nghe tới %s, bạn có muốn nghe tiếp không?</string>
     <string name="option">Option</string>
     <string name="message_no_more_chapter">Không còn chương nào</string>
     <string name="message_no_rate_value">Bạn chưa chọn số mực đánh giá</string>
@@ -194,5 +196,14 @@
     <string name="message_please_complete_confirm_password">Điền mật xác nhận khẩu</string>
     <string name="error_message_confirm_password_not_match">"Xác Nhận Mật Khẩu Chưa Đúng"</string>
     <string name="prompt_keyWord">Từ khóa\:</string>
+    <string name="message_no_more_book">Không còn sách nào</string>
+    <string name="continue_listening">Nghe tiếp</string>
+    <string name="replay_chapter">Nghe lại</string>
+    <string name="is_playing_chapter">Sách nói đang chạy</string>
+    <string name="last_period_time_hour">%d giờ %d phút %d giây</string>
+    <string name="last_period_time_min">%d phút %d giây</string>
+    <string name="last_period_time_sec">%d giây</string>
+    <string name="message_please_check_internet_connection">Vui lòng kiểm tra lại mạng</string>
+    <string name="message_play_chapter_completed">Chương này đã chạy xong</string>
 
 </resources>

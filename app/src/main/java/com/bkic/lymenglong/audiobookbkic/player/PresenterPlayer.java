@@ -34,6 +34,8 @@ public class PresenterPlayer
     private Boolean isMissingMp3 = false;
     private Boolean isPreparingCancel = false;
     private Boolean isShowingDialog = false;
+    private Boolean mToastIsShowing = false;
+    private Toast mToast;
 
     PresenterPlayer(PlayControl playControlActivity) {
         this.playControlActivity = playControlActivity;
@@ -141,7 +143,7 @@ public class PresenterPlayer
                     PlayMedia();
                 } else{
                     if(!isPreparingCancel) {
-                        String message = "Vui lòng kiểm tra lại mạng";
+                        String message = playControlActivity.getString(R.string.message_please_check_internet_connection);
                         Toast.makeText(playControlActivity, message, Toast.LENGTH_SHORT).show();
                         isPreparingCancel = false;
                     }
@@ -245,6 +247,14 @@ public class PresenterPlayer
                         playControlActivity.getSeekBar().setSecondaryProgress(AudioBuffered);
                         Log.d(TAG, "onBufferingUpdate: percent = " + percent);
                         if(percent == 100) isBufferComplete = true;
+                        //Toast when buffered slow
+                        if(mediaPlayer.getCurrentPosition() >= AudioBuffered - 1000 && !isBufferComplete) {
+                            if (!mToastIsShowing) {
+                                mToast = Toast.makeText(playControlActivity,R.string.buffering_data,Toast.LENGTH_SHORT);
+                                mToast.show();
+                                mToastIsShowing = true;
+                            }
+                        } else mToastIsShowing = false;
 
                     }
                 });
@@ -274,7 +284,7 @@ public class PresenterPlayer
                     }
                 });
             } else { //mediaplayer.isPlaying() == true
-                Toast.makeText(playControlActivity, "Sách nói đang chạy", Toast.LENGTH_SHORT).show();
+                Toast.makeText(playControlActivity, R.string.is_playing_chapter, Toast.LENGTH_SHORT).show();
             }
         } else { //mediaIsPrepared = false;
             playControlActivity.PrepareChapter();
@@ -289,14 +299,14 @@ public class PresenterPlayer
                 context.getString(R.string.message_play_next_chapter_or_not)
         );
         builder.setCancelable(false);
-        builder.setPositiveButton("Nghe tiếp", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.continue_listening, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 playControlActivity.NextMedia();
                 dialogInterface.dismiss();
             }
         });
-        builder.setNegativeButton("Nghe lại", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.replay_chapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 mediaPlayer.seekTo(0);
@@ -322,9 +332,9 @@ public class PresenterPlayer
         String h = "" + hour;*/
 
         String time;
-        if (hour > 0) time = hour + " giờ " + min + " phút " + sec + "giây";
-        else if (min > 0) time = min + " phút " + sec + " giây";
-        else time = sec + " giây";
+        if (hour > 0) time = playControlActivity.getResources().getString(R.string.last_period_time_hour,hour,min,sec);
+        else if (min > 0) time = playControlActivity.getResources().getString(R.string.last_period_time_min,min,sec);
+        else time = playControlActivity.getResources().getString(R.string.last_period_time_sec,sec);
 
         return time;
     }
@@ -332,9 +342,11 @@ public class PresenterPlayer
     private void ResumeMediaDialog(final Context context){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 //        builder.setTitle("Chọn Dạng Sách");
-        builder.setMessage("Bạn đã nghe tới "+DurationContentDescription(playControlActivity.getResumeTime())+","+" bạn có muốn nghe tiếp không?");
+        String ms = playControlActivity.getResources().getString(R.string.message_last_period, DurationContentDescription(playControlActivity.getResumeTime()));
+//        builder.setMessage("Bạn đã nghe tới "+DurationContentDescription(playControlActivity.getResumeTime())+","+" bạn có muốn nghe tiếp không?");
+        builder.setMessage(ms);
         builder.setCancelable(false);
-        builder.setPositiveButton("Nghe tiếp", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.continue_listening, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 mediaPlayer.seekTo(playControlActivity.getResumeTime());
@@ -343,7 +355,7 @@ public class PresenterPlayer
                 dialogInterface.dismiss();
             }
         });
-        builder.setNegativeButton("Nghe lại", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.replay_chapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 mediaPlayer.seekTo(0);

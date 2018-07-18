@@ -196,14 +196,16 @@ public class ListBook
         imRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ConnectivityReceiver.isConnected()) {
-                    RefreshBookTable();
-                    isFinalPage = false;
-                    mPAGE = 1;
-                    RequestLoadingData();
-                } else {
+                if (!isLoadingData)
+                    if (ConnectivityReceiver.isConnected()) {
+                        RefreshBookTable();
+                        isFinalPage = false;
+                        mPAGE = 1;
+                        RequestLoadingData();
+                } else
                     Toast.makeText(activity, getString(R.string.message_internet_not_connected), Toast.LENGTH_SHORT).show();
-                }
+                else
+                    Toast.makeText(activity, getString(R.string.loading_data), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -395,7 +397,7 @@ public class ListBook
     public void LoadListDataFailed(String jsonMessage) {
         mPAGE--;
         isFinalPage = true;
-        String ms = "Không còn sách nào";
+        String ms = getString(R.string.message_no_more_book);
         isShowingToast = isShowingToastNotification(ms);
 //        isShowingToast = isShowingToastNotification(jsonMessage);
         pBarBottom.setVisibility(View.GONE);

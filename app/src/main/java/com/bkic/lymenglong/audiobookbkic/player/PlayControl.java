@@ -142,6 +142,10 @@ public class PlayControl extends AppCompatActivity
         initToolbar(chapterFromIntent.getTitle());
         initObject();
         initGetChapterData();
+        if(indexChapterMap==-1){
+            finish();
+            return; // to fix error when refreshing and select chapter
+        }
         initGetChapterDownloaded();
         initCheckChapterDownloadStatus();
         initPlayHistoryState();
@@ -718,7 +722,7 @@ public class PlayControl extends AppCompatActivity
 
     @Override
     public void MediaPlayerOnCompletion() {
-        String message = "Chương này đã chạy xong";
+        String message = getString(R.string.message_play_chapter_completed);
         Toast.makeText(playControlActivity, message, Toast.LENGTH_SHORT).show();
         if(ConnectivityReceiver.isConnected()) {
             presenterReview.ReviewBookDialog4(playControlActivity);
