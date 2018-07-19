@@ -10,6 +10,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 
+import com.bkic.lymenglong.audiobookbkic.R;
+
 import java.util.List;
 
 public class PresenterOverrideTalkBack
@@ -21,12 +23,22 @@ public class PresenterOverrideTalkBack
         this.context = context;
     }
 
-    @Override
+/*    @Override
     public boolean onHover(View v, MotionEvent event) {
         //Move AccessibilityManager object to the constructor
         AccessibilityManager am = (AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
         assert am != null;
         if (am.isTouchExplorationEnabled()) {
+            return onTouch(v,event);
+        } else {
+            return onHover(v,event);
+        }
+    }*/
+
+    @Override
+    public boolean onHover(View v, MotionEvent event) {
+        //Move AccessibilityManager object to the constructor
+        if (talkBackEnable(context)) {
             return onTouch(v,event);
         } else {
             return onHover(v,event);
@@ -84,5 +96,45 @@ public class PresenterOverrideTalkBack
         return enable;
     }
 
+
+    @Override
+    public String getConvertedDuration(long milliseconds) {
+        long sec = (milliseconds / 1000) % 60;
+        long min = (milliseconds / (60 * 1000)) % 60;
+        long hour = milliseconds / (60 * 60 * 1000);
+
+        String s = (sec < 10) ? "0" + sec : "" + sec;
+        String m = (min < 10) ? "0" + min : "" + min;
+        String h = "" + hour;
+
+        String time;
+        if (hour > 0) {
+            time = h + ":" + m + ":" + s;
+        } else {
+            time = m + ":" + s;
+        }
+        return time;
+    }
+
+
+    @Override
+    //fix talk back read incorrectly
+    public String DurationContentDescription(long milliseconds){
+        long sec = (milliseconds / 1000) % 60;
+        long min = (milliseconds / (60 * 1000)) % 60;
+        long hour = milliseconds / (60 * 60 * 1000);
+
+        //Format HH:mm:ss
+        /*String s = (sec < 10) ? "0" + sec : "" + sec;
+        String m = (min < 10) ? "0" + min : "" + min;
+        String h = "" + hour;*/
+
+        String time;
+        if (hour > 0) time = context.getResources().getString(R.string.last_period_time_hour,hour,min,sec);
+        else if (min > 0) time =context.getResources().getString(R.string.last_period_time_min,min,sec);
+        else time = context.getResources().getString(R.string.last_period_time_sec,sec);
+
+        return time;
+    }
 
 }

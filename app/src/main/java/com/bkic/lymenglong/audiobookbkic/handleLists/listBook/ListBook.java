@@ -39,7 +39,6 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING;
 import static com.bkic.lymenglong.audiobookbkic.utils.Const.DB_NAME;
 import static com.bkic.lymenglong.audiobookbkic.utils.Const.DB_VERSION;
 import static com.bkic.lymenglong.audiobookbkic.utils.Const.HttpURL_API;
-import static com.bkic.lymenglong.audiobookbkic.utils.Const.SELECT_ALL_BOOK_BY_CATEGORY_ID;
 
 public class ListBook
         extends AppCompatActivity
@@ -80,7 +79,6 @@ public class ListBook
         initView();
         setTitle(categoryIntent.getTitle());
         initDatabase();
-        initObject();
     }
 
     //region BroadCasting
@@ -117,6 +115,7 @@ public class ListBook
     @Override
     protected void onResume() {
         super.onResume();
+        initObject();
         // register receiver
         registerReceiver(receiver, intentFilter);
         registerReceiver(downloadReceiver, filter);
@@ -272,7 +271,10 @@ public class ListBook
     //region Method to get data for database
     private void GetCursorData() {
         list.clear();
-        String SELECT_DATA = SELECT_ALL_BOOK_BY_CATEGORY_ID(categoryIntent.getId());
+        String SELECT_DATA =
+                "SELECT " +
+                "BookId, BookTitle, BookImage, BookLength, BookAuthor " +
+                "FROM book WHERE CategoryId = '"+categoryIntent.getId()+"'";
         Cursor cursor = dbHelper.GetData(SELECT_DATA);
         while (cursor.moveToNext()){
             Book bookModel = new Book();
@@ -280,7 +282,7 @@ public class ListBook
             bookModel.setTitle(cursor.getString(1));
             bookModel.setUrlImage(cursor.getString(2));
             bookModel.setLength(cursor.getInt(3));
-            bookModel.setCategoryId(cursor.getInt(4));
+            bookModel.setAuthor(cursor.getString(4));
             list.add(bookModel);
         }
         cursor.close();
@@ -292,10 +294,6 @@ public class ListBook
     }
     //endregion
 
-    @Override
-    public void CompareDataPhoneWithServer(JSONArray jsonArray) {
-
-    }
 
     @Override
     public void SetTableSelectedData(JSONArray jsonArrayResult) {
@@ -307,6 +305,7 @@ public class ListBook
                 bookModel.setTitle(jsonObject.getString("BookTitle"));
                 bookModel.setUrlImage(jsonObject.getString("BookImage"));
                 bookModel.setLength(Integer.parseInt(jsonObject.getString("BookLength")));
+                bookModel.setAuthor(jsonObject.getString("Author"));
                 bookModel.setCategoryId(categoryIntent.getId());
                 String INSERT_DATA;
                 try {
@@ -344,47 +343,6 @@ public class ListBook
             }
         }
         if(jsonArrayResult.length()<10) isFinalPage = true;
-    }
-
-    @Override
-    public void SetTableSelectedData(JSONObject jsonObject) throws JSONException {
-        Book bookModel = new Book();
-        bookModel.setId(Integer.parseInt(jsonObject.getString("BookId")));
-        bookModel.setTitle(jsonObject.getString("BookTitle"));
-        bookModel.setUrlImage(jsonObject.getString("BookImage"));
-        bookModel.setLength(Integer.parseInt(jsonObject.getString("BookLength")));
-        bookModel.setCategoryId(categoryIntent.getId());
-        String INSERT_DATA;
-        try {
-            INSERT_DATA =
-                    "INSERT INTO book VALUES(" +
-                            "'"+bookModel.getId()+"', " +
-                            "'"+bookModel.getTitle()+"', " +
-                            "'"+bookModel.getAuthor()+"', " +
-                            "'"+bookModel.getPublishDate()+"', " +
-                            "'"+bookModel.getUrlImage() +"', " +
-                            "'"+bookModel.getContent() +"', " +
-                            "'"+bookModel.getLength()+"', " +
-                            "'"+bookModel.getFileUrl() +"', " +
-                            "'"+bookModel.getCategoryId()+"', " + //CategoryID
-                            "'"+bookModel.getNumOfChapter()+"', " +
-                            "'"+0+"', " +
-                            "'"+mPAGE+"'" +
-                            ")";
-            dbHelper.QueryData(INSERT_DATA);
-        } catch (Exception e) {
-            String UPDATE_DATA =
-                    "UPDATE " +
-                            "book " +
-                    "SET " +
-                            "BookTitle = '"+bookModel.getTitle()+"', " +
-                            "BookImage = '"+bookModel.getUrlImage()+"', " +
-                            "BookLength = '"+bookModel.getLength()+"' ," +
-                            "CategoryId = '"+bookModel.getCategoryId()+"' " + //CategoryId
-                    "WHERE " +
-                            "BookId = '"+bookModel.getId()+"'";
-            dbHelper.QueryData(UPDATE_DATA);
-        }
     }
 
     @Override

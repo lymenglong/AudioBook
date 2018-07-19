@@ -1,5 +1,6 @@
 package com.bkic.lymenglong.audiobookbkic.handleLists.history;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -18,6 +19,7 @@ import com.bkic.lymenglong.audiobookbkic.overrideTalkBack.PresenterOverrideTalkB
 import com.bkic.lymenglong.audiobookbkic.utils.Const;
 import com.bkic.lymenglong.audiobookbkic.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class HistoryAdapter extends RecyclerView.Adapter {
@@ -44,8 +46,37 @@ public class HistoryAdapter extends RecyclerView.Adapter {
         if (holder instanceof ChapterHolder) {
             ChapterHolder chapterHolder = (ChapterHolder) holder;
             chapterHolder.name.setText(books.get(position).getTitle());
-            //fix content description for item list
-            chapterHolder.layoutItem.setContentDescription(chapterHolder.name.getText());
+            String sTitle = books.get(position).getTitle();
+            String sAuthor = books.get(position).getAuthor();
+            String cdLength = null;
+            String sContentDescription;
+            int iLength = books.get(position).getLength()*1000; // response in sec convert to millisecond
+            //check book author
+            if (!sAuthor.toLowerCase().trim().equals("null")) {
+                //check book length
+                if(iLength!=0) {
+                    String sLength = chapterHolder.presenterOverrideTalkBack.getConvertedDuration(iLength);
+                    chapterHolder.sLength.setVisibility(View.VISIBLE);
+                    chapterHolder.sLength.setText(String.valueOf(sLength));
+                    cdLength = chapterHolder.presenterOverrideTalkBack.DurationContentDescription(iLength);
+                }else chapterHolder.sLength.setVisibility(View.GONE);
+
+                chapterHolder.subTitle.setText(sAuthor);
+                chapterHolder.subTitle.setVisibility(View.VISIBLE);
+
+                //fix content description for item list
+                if(cdLength != null) sContentDescription = activity.getResources().getString(
+                        R.string.item_book_cd_title_author_length, sTitle, sAuthor,cdLength);
+                else sContentDescription = activity.getResources().getString(
+                        R.string.item_book_cd_title_author, sTitle, sAuthor);
+            } else {
+                chapterHolder.subTitle.setVisibility(View.GONE);
+                //fix content description for item list
+                sContentDescription = activity.getResources().getString(
+                        R.string.item_book_cd_title_only,sTitle
+                );
+            }
+            chapterHolder.layoutItem.setContentDescription(sContentDescription);
         }
 
     }
@@ -61,6 +92,8 @@ public class HistoryAdapter extends RecyclerView.Adapter {
     }
 
     class ChapterHolder extends RecyclerView.ViewHolder {
+        private final TextView subTitle;
+        private final TextView sLength;
         private TextView name;
 //        private ImageView imgNext;
         private PresenterOverrideTalkBack presenterOverrideTalkBack = new PresenterOverrideTalkBack(activity);
@@ -69,8 +102,10 @@ public class HistoryAdapter extends RecyclerView.Adapter {
 
         ChapterHolder(View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.nameItem);
+            name = itemView.findViewById(R.id.title_item);
 //            imgNext = itemView.findViewById(R.id.imgNext);
+            subTitle = itemView.findViewById(R.id.sub_title_item);
+            sLength = itemView.findViewById(R.id.item_length);
             layoutItem = itemView.findViewById(R.id.layout_item_list);
 
 
@@ -79,7 +114,7 @@ public class HistoryAdapter extends RecyclerView.Adapter {
 
             //Do allow talk back to read content when user touch screen
             presenterOverrideTalkBack.DisableTouchForTalkBack(itemView);
-            presenterOverrideTalkBack.DisableTouchForTalkBack(itemView.findViewById(R.id.nameItem));
+            presenterOverrideTalkBack.DisableTouchForTalkBack(itemView.findViewById(R.id.title_item));
             presenterOverrideTalkBack.DisableTouchForTalkBack(itemView.findViewById(R.id.imgNext));
 
         }

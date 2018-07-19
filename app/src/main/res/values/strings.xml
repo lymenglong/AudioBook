@@ -205,5 +205,10 @@
     <string name="last_period_time_sec">%d giây</string>
     <string name="message_please_check_internet_connection">Vui lòng kiểm tra lại mạng</string>
     <string name="message_play_chapter_completed">Chương này đã chạy xong</string>
+    <string name="item_book_cd_title_author_length">Sách %s của tác giả %s có độ dài %s </string>
+    <string name="item_book_cd_title_author">Sách %s của tác giả %s</string>
+    <string name="item_book_cd_title_only">Sách %s</string>
+    <string name="item_chapter_cd_title_length">%s có độ dài %s</string>
+    <string name="_00_00_00">00:00:00</string>
 
 </resources>

@@ -284,7 +284,10 @@ public class ListChapter extends AppCompatActivity
     //region Method to get data for database
     private void GetCursorData() {
         list.clear();
-        Cursor cursor = dbHelper.GetData("SELECT * FROM chapter WHERE BookId = '"+ bookIntent.getId() +"'");
+        Cursor cursor = dbHelper.GetData(
+                "SELECT ChapterId, ChapterTitle, ChapterUrl, ChapterLength, BookId " +
+                        "FROM chapter " +
+                        "WHERE BookId = '"+ bookIntent.getId() +"'");
         while (cursor.moveToNext()){
             Chapter chapterModel = new Chapter();
             chapterModel.setId(cursor.getInt(0));

@@ -1,5 +1,6 @@
 package com.bkic.lymenglong.audiobookbkic.handleLists.adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -15,6 +16,7 @@ import com.bkic.lymenglong.audiobookbkic.overrideTalkBack.PresenterOverrideTalkB
 import com.bkic.lymenglong.audiobookbkic.player.PlayControl;
 import com.bkic.lymenglong.audiobookbkic.utils.Const;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
@@ -40,12 +42,28 @@ public class ChapterAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ChapterHolder) {
+            String sTitle = chapters.get(position).getTitle();
             ChapterHolder chapterHolder = (ChapterHolder) holder;
+            chapterHolder.name.setText(sTitle);
 
-            chapterHolder.name.setText(chapters.get(position).getTitle());
+            int iLength = chapters.get(position).getLength()*1000; //convert to millisecond
+            String cdLength = null;
+            String sContentDescription;
+            //check book length
+            if(iLength!=0) {
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss");
+                String sLength = simpleDateFormat.format(iLength);
+                chapterHolder.sLength.setVisibility(View.VISIBLE);
+                chapterHolder.sLength.setText(String.valueOf(sLength));
+                cdLength = chapterHolder.presenterOverrideTalkBack.DurationContentDescription(iLength);
+            }else chapterHolder.sLength.setVisibility(View.GONE);
 
             //fix content description for item list
-            chapterHolder.layoutItem.setContentDescription(chapterHolder.name.getText());
+            if(cdLength!=null)
+                sContentDescription = activity.getResources().getString(
+                        R.string.item_chapter_cd_title_length, sTitle, cdLength);
+            else sContentDescription = sTitle;
+            chapterHolder.layoutItem.setContentDescription(sContentDescription);
         }
 
     }
@@ -64,20 +82,22 @@ public class ChapterAdapter extends RecyclerView.Adapter {
 
         private TextView name;
 //        private ImageView imgNext;
+        private TextView sLength;
 
         private PresenterOverrideTalkBack presenterOverrideTalkBack = new PresenterOverrideTalkBack(activity);
         private View layoutItem;
 
         ChapterHolder(View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.nameItem);
+            name = itemView.findViewById(R.id.title_item);
 //            imgNext = itemView.findViewById(R.id.imgNext);
             layoutItem = itemView.findViewById(R.id.layout_item_list);
+            sLength = itemView.findViewById(R.id.item_length);
             itemView.setOnClickListener(this);
 
             //Do allow talk back to read content when user touch screen
             presenterOverrideTalkBack.DisableTouchForTalkBack(itemView);
-            presenterOverrideTalkBack.DisableTouchForTalkBack(itemView.findViewById(R.id.nameItem));
+            presenterOverrideTalkBack.DisableTouchForTalkBack(itemView.findViewById(R.id.title_item));
             presenterOverrideTalkBack.DisableTouchForTalkBack(itemView.findViewById(R.id.imgNext));
         }
 

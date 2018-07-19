@@ -70,14 +70,14 @@ public class CategoryAdapter extends RecyclerView.Adapter {
 
         ChapterHolder(View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.nameItem);
+            name = itemView.findViewById(R.id.title_item);
 //            imgNext = itemView.findViewById(R.id.imgNext);
             layoutItem = itemView.findViewById(R.id.layout_item_list);
             itemView.setOnClickListener(this);
 
             //Do allow talk back to read content when user touch screen
             presenterOverrideTalkBack.DisableTouchForTalkBack(itemView);
-            presenterOverrideTalkBack.DisableTouchForTalkBack(itemView.findViewById(R.id.nameItem));
+            presenterOverrideTalkBack.DisableTouchForTalkBack(itemView.findViewById(R.id.title_item));
             presenterOverrideTalkBack.DisableTouchForTalkBack(itemView.findViewById(R.id.imgNext));
 
         }

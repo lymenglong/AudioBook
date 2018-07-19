@@ -191,10 +191,6 @@ public final class Const {
 
     }
 
-    public static String SELECT_ALL_BOOK_BY_CATEGORY_ID(int categoryId){
-        return "SELECT * FROM book WHERE CategoryId = '"+categoryId+"'";
-    }
-
     //endregion
 
     //1 means data is synced and 0 means data is not synced
