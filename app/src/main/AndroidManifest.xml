@@ -181,7 +181,7 @@
         android:screenOrientation="portrait"/>
 
     <service
-        android:name=".services.MyDownloadService"
+        android:name=".download.MyDownloadService"
         android:enabled="true" />
 
 </application>

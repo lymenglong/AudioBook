@@ -1,6 +1,5 @@
 package com.bkic.lymenglong.audiobookbkic.handleLists.favorite;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -20,7 +19,6 @@ import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Book;
 import com.bkic.lymenglong.audiobookbkic.overrideTalkBack.PresenterOverrideTalkBack;
 import com.bkic.lymenglong.audiobookbkic.utils.Const;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class FavoriteAdapter extends RecyclerView.Adapter {

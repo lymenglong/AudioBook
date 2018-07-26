@@ -1,6 +1,5 @@
 package com.bkic.lymenglong.audiobookbkic.handleLists.adapters;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -10,13 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Book;
 import com.bkic.lymenglong.audiobookbkic.R;
 import com.bkic.lymenglong.audiobookbkic.handleLists.listChapter.ListChapter;
+import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Book;
 import com.bkic.lymenglong.audiobookbkic.overrideTalkBack.PresenterOverrideTalkBack;
 import com.bkic.lymenglong.audiobookbkic.utils.Const;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 

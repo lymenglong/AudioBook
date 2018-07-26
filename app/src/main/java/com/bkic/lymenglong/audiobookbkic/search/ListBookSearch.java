@@ -1,5 +1,6 @@
 package com.bkic.lymenglong.audiobookbkic.search;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
@@ -8,12 +9,14 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,11 +32,12 @@ import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Book;
 import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Category;
 import com.bkic.lymenglong.audiobookbkic.utils.Const;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
@@ -55,8 +59,12 @@ public class ListBookSearch
     private ArrayList<Book> list;
     private ProgressBar progressBar;
     private View imSearch;
+    private View imMic;
     private Category categoryIntent;
-/*    private String categoryTitle;
+    private int resultCount = 0;
+    private CustomActionBar actionBar;
+    private TextView txtToolbar;
+    /*    private String categoryTitle;
     private int categoryId;
     private String categoryDescription;
     private int categoryParent;
@@ -66,6 +74,9 @@ public class ListBookSearch
     private String keyWord = "";
     private String menuTitle;
     private TextView TextBar;
+    private TextView TextBarResultFound;
+    private boolean isShowingSearchToolbar = false;
+    private EditText editTextToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,14 +163,19 @@ public class ListBookSearch
     private void initView() {
         String titleToolbar = categoryIntent.getTitle()==null? menuTitle :categoryIntent.getTitle();
         setTitle(titleToolbar);
-        CustomActionBar actionBar = new CustomActionBar();
+        actionBar = new CustomActionBar();
         actionBar.eventToolbar(this, titleToolbar, false);
         listChapter = findViewById(R.id.listView);
         progressBar = findViewById(R.id.progressBar);
         imSearch = findViewById(R.id.imSearch);
         imSearch.setVisibility(View.VISIBLE);
+        imMic = findViewById(R.id.im_micro);
+        imMic.setVisibility(View.VISIBLE);
         TextBar = findViewById(R.id.text_bar);
-        ViewCompat.setImportantForAccessibility(getWindow().findViewById(R.id.tvToolbar), ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        TextBarResultFound = findViewById(R.id.text_bar_result_found);
+        editTextToolbar = activity.findViewById(R.id.edt_toolbar);
+        txtToolbar = activity.findViewById(R.id.tvToolbar);
+//        ViewCompat.setImportantForAccessibility(getWindow().findViewById(R.id.tvToolbar), ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
     }
 
     private void initDatabase() {
@@ -173,17 +189,68 @@ public class ListBookSearch
         imSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ShowSearchTextBar(false);
+                if(!isShowingSearchToolbar) {
+                    actionBar.searchToolbar(ListBookSearch.this, true);
+                    isShowingSearchToolbar = true;
+                } else {
+                    keyWord = editTextToolbar.getText().toString().trim();
+                    if(!keyWord.isEmpty()) {
+                        SearchUsingEditText(keyWord);
+                    } else {
+                        actionBar.searchToolbar(ListBookSearch.this, false);
+                        isShowingSearchToolbar = false;
+                    }
+                }
+            }
+        });
+        imMic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 if (ConnectivityReceiver.isConnected()) {
-//                    RefreshBookTable();
-//                    mPAGE = 1;
+                    actionBar.searchToolbar(ListBookSearch.this, false);
+                    isShowingSearchToolbar = false;
                     promptSpeechInput();
                 } else {
-                    Toast.makeText(activity, "Please Check Internet Connection", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, R.string.message_please_check_internet_connection, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        editTextToolbar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                // Identifier of the action. This will be either the identifier you supplied,
+                // or EditorInfo.IME_NULL if being called due to the enter key being pressed.
+                if (actionId == EditorInfo.IME_ACTION_SEARCH
+                        || actionId == EditorInfo.IME_ACTION_DONE
+                        || event.getAction() == KeyEvent.ACTION_DOWN
+                        && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    keyWord = editTextToolbar.getText().toString().trim();
+                    SearchUsingEditText(keyWord);
+                    return true;
+                }
+                // Return true if you have consumed the action, else false.
+                return false;
+            }
+        });
+        txtToolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!isShowingSearchToolbar) {
+                    actionBar.searchToolbar(ListBookSearch.this, true);
+                    isShowingSearchToolbar = true;
+                } else {
+                    actionBar.searchToolbar(ListBookSearch.this, false);
+                    isShowingSearchToolbar = false;
                 }
             }
         });
     }
 
+    private void SearchUsingEditText(String keyWord) {
+        if(!keyWord.isEmpty()) RequestLoadingData(keyWord);
+        else Toast.makeText(activity, R.string.message_no_key_word, Toast.LENGTH_SHORT).show();
+    }
     /*private void RefreshBookTable() {
         String DELETE_DATA =
                 "UPDATE book " +
@@ -231,22 +298,30 @@ public class ListBookSearch
 
     //region Method to get data for database
     private void GetCursorData() {
+        if (isShowingSearchToolbar) {
+            actionBar.searchToolbar(ListBookSearch.this, false);
+            isShowingSearchToolbar = false;
+        }
         list.clear();
         if(keyWord.isEmpty()){
             progressBar.setVisibility(View.GONE);
             return;
         }
-        String SELECT_DATA = "SELECT * FROM bookSearch WHERE KeyWord = '"+keyWord+"'";
+        //BookId, BookTitle, BookAuthor, BookImage, BookLength, CategoryId
+        String SELECT_DATA =
+                "SELECT DISTINCT BookId, BookTitle, BookAuthor, BookImage, BookLength, CategoryId "+
+                "FROM bookSearch " +
+                "WHERE KeyWord = '"+keyWord+"'";
         Cursor cursor = dbHelper.GetData(SELECT_DATA);
         while (cursor.moveToNext()){
             Book bookModel = new Book
                     (
-                            cursor.getInt(1),
+                            cursor.getInt(0),
+                            cursor.getString(1),
                             cursor.getString(2),
                             cursor.getString(3),
-                            cursor.getString(4),
-                            cursor.getInt(5),
-                            cursor.getInt(6)
+                            cursor.getInt(4),
+                            cursor.getInt(5)
                     );
             list.add(bookModel);
         }
@@ -258,13 +333,12 @@ public class ListBookSearch
     //endregion
 
     @Override
-    public void CompareDataPhoneWithServer(JSONArray jsonArray) {
-
-    }
-
-    @Override
     public void SetTableSelectedData(JSONObject jsonObject) throws JSONException {
         Book bookModel = new Book();
+        Calendar calendar = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpledateformat =
+                new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String insertTime = simpledateformat.format(calendar.getTime());
         String CategoryId = jsonObject.getString("Category");
         if(!CategoryId.toLowerCase().equals("null")) {
             bookModel.setCategoryId(Integer.parseInt(CategoryId));
@@ -274,68 +348,128 @@ public class ListBookSearch
             bookModel.setUrlImage(jsonObject.getString("BookImage"));
             bookModel.setLength(Integer.parseInt(jsonObject.getString("BookLength")));
             bookModel.setAuthor(jsonObject.getString("Author"));
+            resultCount++;
             Cursor cursor = dbHelper.GetData
                     (
                             "SELECT BookId, KeyWord " +
                                     "FROM BookSearch " +
                                     "WHERE BookId = '"+bookModel.getId()+"' AND KeyWord = '"+keyWord+"'");
             int mCount = 0 ;
-            if(cursor.moveToFirst()){
-                mCount = cursor.getCount();
+            if(cursor.moveToFirst()) mCount = cursor.getCount();
+            if(mCount!=0){
+                if(!ConnectivityReceiver.isConnected()) {
+                    String UPDATE_DATA =
+                            "UPDATE " +
+                                    "bookSearch " +
+                                    "SET " +
+                                    "BookTitle = '"+bookModel.getTitle()+"', " +
+                                    "BookImage = '"+bookModel.getUrlImage()+"', " +
+                                    "BookLength = '"+bookModel.getLength()+"' ," +
+                                    "CategoryId = '"+bookModel.getCategoryId()+"', " + //CategoryId
+                                    "BookAuthor = '"+bookModel.getAuthor()+"', "+
+                                    "InsertTime = '"+insertTime+"' "+ //make history for key search
+                                    "WHERE " +
+                                    "BookId = '"+bookModel.getId()+"'";
+                    try {
+                        dbHelper.QueryData(UPDATE_DATA);
+                    } catch (Exception e) {
+                        String ADD_COLUMN =
+                                "ALTER TABLE bookSearch ADD InsertTime VARCHAR(255);"; //update column
+                        dbHelper.QueryData(ADD_COLUMN);
+                        dbHelper.QueryData(UPDATE_DATA);
+                    }
+                } else {
+                    String DELETE_DATA = "DELETE FROM bookSearch WHERE KeyWord = '"+keyWord+"'";
+                    dbHelper.QueryData(DELETE_DATA);
+                    String INSERT_DATA = "INSERT INTO bookSearch VALUES(" +
+                            "null, "+ // ID auto increment
+                            "'"+bookModel.getId()+"', " +
+                            "'"+bookModel.getTitle()+"', " +
+                            "'"+bookModel.getAuthor()+"', " +
+                            "'"+bookModel.getUrlImage() +"', " +
+                            "'"+bookModel.getLength()+"', " +
+                            "'"+bookModel.getCategoryId()+"', " + //CategoryID
+                            "'"+keyWord+"', " +
+                            "'"+insertTime+"'"+
+                            ")";
+                    try {
+                        dbHelper.QueryData(INSERT_DATA);
+                    } catch (Exception ignored) {
+                        String ADD_COLUMN =
+                                "ALTER TABLE bookSearch ADD InsertTime VARCHAR(255);"; //update column
+                        dbHelper.QueryData(ADD_COLUMN
+                        );
+                        dbHelper.QueryData(INSERT_DATA);
+                    }
+                    dbHelper.close();
+                }
+                dbHelper.close();
+                return;
             }
-            if(mCount!=0)return;
-            String INSERT_DATA;
+            String INSERT_DATA = "INSERT INTO bookSearch VALUES(" +
+                    "null, "+ // ID auto increment
+                    "'"+bookModel.getId()+"', " +
+                    "'"+bookModel.getTitle()+"', " +
+                    "'"+bookModel.getAuthor()+"', " +
+                    "'"+bookModel.getUrlImage() +"', " +
+                    "'"+bookModel.getLength()+"', " +
+                    "'"+bookModel.getCategoryId()+"', " + //CategoryID
+                    "'"+keyWord+"', " +
+                    "'"+insertTime+"'"+
+                    ")";
             try {
-                INSERT_DATA =
-                        "INSERT INTO bookSearch VALUES(" +
-                                "null, "+ // ID auto increment
-                                "'"+bookModel.getId()+"', " +
-                                "'"+bookModel.getTitle()+"', " +
-                                "'"+bookModel.getAuthor()+"', " +
-                                "'"+bookModel.getUrlImage() +"', " +
-                                "'"+bookModel.getLength()+"', " +
-                                "'"+bookModel.getCategoryId()+"', " + //CategoryID
-                                "'"+keyWord+"'"+
-                                ")";
                 dbHelper.QueryData(INSERT_DATA);
-            } catch (Exception e) {
-                String UPDATE_DATA =
-                        "UPDATE " +
-                                "bookSearch " +
-                                "SET " +
-                                "BookTitle = '"+bookModel.getTitle()+"', " +
-                                "BookImage = '"+bookModel.getUrlImage()+"', " +
-                                "BookLength = '"+bookModel.getLength()+"' ," +
-                                "CategoryId = '"+bookModel.getCategoryId()+"', " + //CategoryId
-                                "BookAuthor = '"+bookModel.getAuthor()+"'"+
-                                "WHERE " +
-                                "BookId = '"+bookModel.getId()+"'";
-                dbHelper.QueryData(UPDATE_DATA);
+            } catch (Exception ignored) {
+                String ADD_COLUMN =
+                        "ALTER TABLE bookSearch ADD InsertTime VARCHAR(255);"; //update column
+                dbHelper.QueryData(ADD_COLUMN
+                );
+                dbHelper.QueryData(INSERT_DATA);
             }
+            dbHelper.close();
         }
     }
 
     @Override
     public void ShowListFromSelected() {
-        ShowKeySearch(keyWord);
+        ShowSearchTextBar(true);
         GetCursorData();
         Log.d(TAG, "onPostExecute: "+ categoryIntent.getTitle());
     }
 
-    private void ShowKeySearch(String keyWord) {
-        if(TextBar.getVisibility() == View.GONE)
-            TextBar.setVisibility(View.VISIBLE);
-        String showTxt = getString(R.string.prompt_keyWord) +" "+ keyWord;
+    private void ShowSearchTextBar(boolean bShow) {
+        ShowKeySearch(keyWord,bShow);
+        ShowResultFound(resultCount,bShow);
+        resultCount = 0;
+    }
+
+    private void ShowResultFound(int resultCount, boolean bShow){
+        String showTxt = String.valueOf(resultCount);
+        TextBarResultFound.setText(showTxt);
+        if(bShow) TextBarResultFound.setVisibility(View.VISIBLE);
+        else TextBarResultFound.setVisibility(View.GONE);
+    }
+
+    private void ShowKeySearch(String keyWord, boolean bShow) {
+        String showTxt = getResources().getString(R.string.prompt_keyWord,keyWord);
         TextBar.setText(showTxt);
+        if (bShow) TextBar.setVisibility(View.VISIBLE);
+        else TextBar.setVisibility(View.GONE);
     }
 
     @Override
     public void LoadListDataFailed(String jsonMessage) {
 //        mPAGE--;
 //        isFinalPage = true;
-        ShowKeySearch(keyWord);
-        String ms = "Không tồn tại";
+        ShowSearchTextBar(true);
+        ClearListSearch();
+        String ms = getString(R.string.message_not_exists);
         Toast.makeText(activity, ms, Toast.LENGTH_SHORT).show();
+    }
+
+    private void ClearListSearch() {
+        list.clear();
+        bookAdapter.notifyDataSetChanged();
     }
 
     private void promptSpeechInput() {
@@ -349,12 +483,19 @@ public class ListBookSearch
             try {
                 startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
             } catch (ActivityNotFoundException a) {
+                if(!isShowingSearchToolbar) {
+                    actionBar.searchToolbar(ListBookSearch.this, true);
+                    isShowingSearchToolbar = true;
+                } else {
+                    actionBar.searchToolbar(ListBookSearch.this, false);
+                    isShowingSearchToolbar = false;
+                }
                 Toast.makeText(getApplicationContext(),
                         getString(R.string.speech_not_supported),
                         Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(activity, "Check Internet Connection", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, getString(R.string.message_please_check_internet_connection), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -366,7 +507,7 @@ public class ListBookSearch
             if (resultCode == RESULT_OK && null != data) {
             ArrayList<String> result = data
                     .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            keyWord = result.get(0);
+            keyWord = result.get(0).trim();
             Log.d(TAG, "onActivityResult: KeyWord: " + keyWord);
             RequestLoadingData(keyWord);
         }

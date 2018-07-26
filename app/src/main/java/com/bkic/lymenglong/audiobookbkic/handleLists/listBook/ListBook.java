@@ -211,7 +211,7 @@ public class ListBook
 
     private void RefreshBookTable() {
         String DELETE_DATA =
-                "DELETE FROM book "+
+                "DELETE FROM category_book "+
                 "WHERE CategoryId = '"+categoryIntent.getId()+"'";
         dbHelper.QueryData(DELETE_DATA);
         dbHelper.close();
@@ -268,7 +268,7 @@ public class ListBook
         });
     }
 
-    //region Method to get data for database
+/*    //region Method to get data for database
     private void GetCursorData() {
         list.clear();
         String SELECT_DATA =
@@ -292,7 +292,7 @@ public class ListBook
         isLoadingData = false;
         pBarBottom.setVisibility(View.GONE);
     }
-    //endregion
+    //endregion*/
 
 
     @Override
@@ -307,43 +307,126 @@ public class ListBook
                 bookModel.setLength(Integer.parseInt(jsonObject.getString("BookLength")));
                 bookModel.setAuthor(jsonObject.getString("Author"));
                 bookModel.setCategoryId(categoryIntent.getId());
-                String INSERT_DATA;
-                try {
-                    INSERT_DATA =
-                            "INSERT INTO book VALUES(" +
-                                    "'"+bookModel.getId()+"', " +
-                                    "'"+bookModel.getTitle()+"', " +
-                                    "'"+bookModel.getAuthor()+"', " +
-                                    "'"+bookModel.getPublishDate()+"', " +
-                                    "'"+bookModel.getUrlImage() +"', " +
-                                    "'"+bookModel.getContent() +"', " +
-                                    "'"+bookModel.getLength()+"', " +
-                                    "'"+bookModel.getFileUrl() +"', " +
-                                    "'"+bookModel.getCategoryId()+"', " + //CategoryID
-                                    "'"+bookModel.getNumOfChapter()+"', " +
-                                    "'"+0+"', " +
-                                    "'"+mPAGE+"'" +
-                                    ")";
-                    dbHelper.QueryData(INSERT_DATA);
-                } catch (Exception e) {
-                    String UPDATE_DATA =
-                            "UPDATE " +
-                                    "book " +
-                                    "SET " +
-                                    "BookTitle = '"+bookModel.getTitle()+"', " +
-                                    "BookImage = '"+bookModel.getUrlImage()+"', " +
-                                    "BookLength = '"+bookModel.getLength()+"' ," +
-                                    "CategoryId = '"+bookModel.getCategoryId()+"' " + //CategoryId
-                                    "WHERE " +
-                                    "BookId = '"+bookModel.getId()+"'";
-                    dbHelper.QueryData(UPDATE_DATA);
-                }
+                UpdateDatabase(bookModel);
             } catch (JSONException ignored) {
                 Log.d(TAG, "onPostExecute: " + jsonArrayResult);
             }
         }
         if(jsonArrayResult.length()<10) isFinalPage = true;
     }
+//todo fix missing book from other category
+    private void UpdateDatabase(Book bookModel) {
+        String INSERT_DATA;
+        try {
+            INSERT_DATA =
+                    "INSERT INTO book " +
+                            "(" +
+                            "BookId, BookTitle, BookAuthor, BookPublishDate, BookImage, " +
+                            "BookContent, BookLength, BookURL, NumOfChapter, Page" +
+                            ") " +
+                            "VALUES(" +
+                            "'" + bookModel.getId() + "', " +
+                            "'" + bookModel.getTitle() + "', " +
+                            "'" + bookModel.getAuthor() + "', " +
+                            "'" + bookModel.getPublishDate() + "', " +
+                            "'" + bookModel.getUrlImage() + "', " +
+                            "'" + bookModel.getContent() + "', " +
+                            "'" + bookModel.getLength() + "', " +
+                            "'" + bookModel.getFileUrl() + "', " +
+                            "'" + bookModel.getNumOfChapter() + "', " +
+                            "'" + mPAGE + "'" +
+                            ")";
+            dbHelper.QueryData(INSERT_DATA);
+        } catch (Exception ignored){
+            String UPDATE_DATA =
+                    "UPDATE " +
+                            "book " +
+                            "SET " +
+                            "BookTitle = '"+bookModel.getTitle()+"', " +
+                            "BookAuthor = '"+bookModel.getAuthor()+"', " +
+                            "BookImage = '"+bookModel.getUrlImage()+"', " +
+                            "BookLength = '"+bookModel.getLength()+"' ," +
+                            "BookURL = '"+bookModel.getFileUrl()+"' " +
+                            "WHERE " +
+                            "BookId = '"+bookModel.getId()+"'";
+            dbHelper.QueryData(UPDATE_DATA);
+        }
+        try {
+            INSERT_DATA =
+                    "INSERT INTO category_book(CategoryId, BookId) " +
+                            "VALUES(" +
+                            "'"+bookModel.getCategoryId()+"', " +
+                            "'"+bookModel.getId()+"'" +
+                            ")";
+            dbHelper.QueryData(INSERT_DATA);
+            dbHelper.close();
+        } catch (Exception ignored) {
+        }
+    }
+
+    //region Method to get data for database
+    private void GetCursorData() {
+        list.clear();
+        String SELECT_DATA =
+                "SELECT DISTINCT " +
+                        "book.BookId, book.BookTitle, book.BookImage, book.BookLength, book.BookAuthor " +
+                        "FROM book, category_book " +
+                        "WHERE " +
+                        "book.BookId = category_book.BookId " +
+                        "AND " +
+                        "category_book.CategoryId = '"+categoryIntent.getId()+"'";
+        Cursor cursor = dbHelper.GetData(SELECT_DATA);
+        while (cursor.moveToNext()){
+            Book bookModel = new Book();
+            bookModel.setId(cursor.getInt(0));
+            bookModel.setTitle(cursor.getString(1));
+            bookModel.setUrlImage(cursor.getString(2));
+            bookModel.setLength(cursor.getInt(3));
+            bookModel.setAuthor(cursor.getString(4));
+            list.add(bookModel);
+        }
+        cursor.close();
+        bookAdapter.notifyDataSetChanged();
+        dbHelper.close();
+        progressBar.setVisibility(View.GONE);
+        isLoadingData = false;
+        pBarBottom.setVisibility(View.GONE);
+    }
+    //endregion
+
+    /*private void UpdateDatabase(Book bookModel) {
+        String INSERT_DATA;
+        try {
+            INSERT_DATA =
+                    "INSERT INTO book VALUES(" +
+                            "'"+bookModel.getId()+"', " +
+                            "'"+bookModel.getTitle()+"', " +
+                            "'"+bookModel.getAuthor()+"', " +
+                            "'"+bookModel.getPublishDate()+"', " +
+                            "'"+bookModel.getUrlImage() +"', " +
+                            "'"+bookModel.getContent() +"', " +
+                            "'"+bookModel.getLength()+"', " +
+                            "'"+bookModel.getFileUrl() +"', " +
+                            "'"+bookModel.getCategoryId()+"', " + //CategoryID
+                            "'"+bookModel.getNumOfChapter()+"', " +
+                            "'"+0+"', " +
+                            "'"+mPAGE+"'" +
+                            ")";
+            dbHelper.QueryData(INSERT_DATA);
+        } catch (Exception e) {
+            String UPDATE_DATA =
+                    "UPDATE " +
+                            "book " +
+                            "SET " +
+                            "BookTitle = '"+bookModel.getTitle()+"', " +
+                            "BookImage = '"+bookModel.getUrlImage()+"', " +
+                            "BookLength = '"+bookModel.getLength()+"' ," +
+                            "CategoryId = '"+bookModel.getCategoryId()+"' " + //CategoryId
+                            "WHERE " +
+                            "BookId = '"+bookModel.getId()+"'";
+            dbHelper.QueryData(UPDATE_DATA);
+        }
+    }*/
 
     @Override
     public void ShowListFromSelected() {

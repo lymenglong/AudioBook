@@ -1,5 +1,6 @@
 package com.bkic.lymenglong.audiobookbkic.handleLists.listChapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Intent;
@@ -31,7 +32,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
@@ -195,12 +198,25 @@ public class ListChapter extends AppCompatActivity
                         RequestLoadList();
                     } else
                         Toast.makeText(activity, getString(R.string.message_internet_not_connected), Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(activity, getString(R.string.loading_data), Toast.LENGTH_SHORT).show();
+                else{
+                    Toast mToast = Toast.makeText(activity, getString(R.string.loading_data), Toast.LENGTH_SHORT);
+                    mToast.show();
+                }
             }
         });
     }
 
+/*    private  Thread thread = new Thread(){
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(2000); // 3500 millisecond As I am using LENGTH_LONG in Toast
+                //Do something
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };*/
     private void RefreshChapterTable() {
         String DELETE_DATA =
                 "DELETE FROM chapter "+
@@ -287,7 +303,8 @@ public class ListChapter extends AppCompatActivity
         Cursor cursor = dbHelper.GetData(
                 "SELECT ChapterId, ChapterTitle, ChapterUrl, ChapterLength, BookId " +
                         "FROM chapter " +
-                        "WHERE BookId = '"+ bookIntent.getId() +"'");
+                        "WHERE BookId = '"+ bookIntent.getId() +"' " +
+                        "ORDER BY MetaInsertTime ASC"); //ORDER BY ChapterTitle COLLATE NOCASE to ignore case
         while (cursor.moveToNext()){
             Chapter chapterModel = new Chapter();
             chapterModel.setId(cursor.getInt(0));
@@ -305,11 +322,6 @@ public class ListChapter extends AppCompatActivity
         pBarBottom.setVisibility(View.GONE);
     }
     //endregion
-
-    @Override
-    public void CompareDataPhoneWithServer(JSONArray jsonArray) {
-
-    }
 
     @Override
     public void SetUpdateBookDetail(JSONObject jsonObject) throws JSONException {
@@ -377,18 +389,37 @@ public class ListChapter extends AppCompatActivity
                     chapterModel.setFileUrl(jsonObject.getString("ChapterURL"));
                     chapterModel.setLength(Integer.parseInt(jsonObject.getString("ChapterLength")));
                     int BookId = bookIntent.getId();
+                    Calendar calendar = Calendar.getInstance();
+                    @SuppressLint("SimpleDateFormat") SimpleDateFormat simpledateformat =
+                            new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                    String insertTime = simpledateformat.format(calendar.getTime());
+                    String metaInsertTime = String.valueOf(calendar.getTimeInMillis());
+                    Log.e(TAG, "SetTableSelectedData: "+ metaInsertTime);
                     String INSERT_DATA;
                     try {
                         INSERT_DATA =
-                                "INSERT INTO chapter VALUES" +
+                                "INSERT INTO chapter" +
+                                        "(" +
+                                        "ChapterId, " +
+                                        "ChapterTitle, " +
+                                        "ChapterUrl, " +
+                                        "ChapterLength, " +
+                                        "BookId, " +
+                                        "Page, " +
+                                        "InsertTime, " +
+                                        "MetaInsertTime" +
+                                        ") " +
+                                        "VALUES" +
                                         "(" +
                                         "'"+chapterModel.getId()+"', " +
                                         "'"+chapterModel.getTitle()+"', " +
                                         "'"+chapterModel.getFileUrl() +"', " +
                                         "'"+chapterModel.getLength() +"', " +
                                         "'"+BookId+"', " + //BookId
-                                        "'"+0+"', " + // Status Chapter is equal 0 which mean chapter have not downloaded yet
-                                        "'"+mPAGE+"'"+
+//                                        "'"+0+"', " + // Status Chapter is equal 0 which mean chapter have not downloaded yet
+                                        "'"+mPAGE+"', " +
+                                        "'"+insertTime+"', " +
+                                        "'"+metaInsertTime+"'"+
                                         ")";
                         dbHelper.QueryData(INSERT_DATA);
                     } catch (Exception e) {
@@ -396,7 +427,8 @@ public class ListChapter extends AppCompatActivity
                                 "ChapterTitle = '"+chapterModel.getTitle()+"', " +
                                 "ChapterUrl = '"+chapterModel.getFileUrl()+"', " +
                                 "ChapterLength = '"+chapterModel.getLength()+"', " +
-                                "BookId = '"+BookId+"' " + //BookId
+                                "BookId = '"+BookId+"' , " +//BookId
+                                "Page = '"+mPAGE+"' " +
                                 "WHERE ChapterId = '"+chapterModel.getId()+"'";
                         dbHelper.QueryData(UPDATE_DATA);
                     }

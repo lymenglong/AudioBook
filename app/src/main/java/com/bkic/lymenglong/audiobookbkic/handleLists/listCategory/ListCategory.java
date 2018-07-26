@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bkic.lymenglong.audiobookbkic.R;
 import com.bkic.lymenglong.audiobookbkic.checkInternet.ConnectivityReceiver;
 import com.bkic.lymenglong.audiobookbkic.checkInternet.MyApplication;
 import com.bkic.lymenglong.audiobookbkic.customizes.CustomActionBar;
@@ -23,7 +24,6 @@ import com.bkic.lymenglong.audiobookbkic.download.DownloadReceiver;
 import com.bkic.lymenglong.audiobookbkic.handleLists.adapters.CategoryAdapter;
 import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Category;
 import com.bkic.lymenglong.audiobookbkic.handleLists.utils.PresenterShowList;
-import com.bkic.lymenglong.audiobookbkic.R;
 import com.bkic.lymenglong.audiobookbkic.utils.Const;
 
 import org.json.JSONArray;
@@ -37,8 +37,6 @@ import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
 import static com.bkic.lymenglong.audiobookbkic.utils.Const.DB_NAME;
 import static com.bkic.lymenglong.audiobookbkic.utils.Const.DB_VERSION;
 import static com.bkic.lymenglong.audiobookbkic.utils.Const.HttpURL_API;
-import static com.bkic.lymenglong.audiobookbkic.utils.Const.SELECT_CATEGORY_BY_PARENT_ID;
-import static com.bkic.lymenglong.audiobookbkic.utils.Const.UPDATE_CATEGORY_DATA;
 
 public class ListCategory extends AppCompatActivity
         implements ListCategoryImp, ConnectivityReceiver.ConnectivityReceiverListener, DownloadReceiver.DownloadReceiverListener {
@@ -178,15 +176,15 @@ public class ListCategory extends AppCompatActivity
     }
 
     private void SetUpdateTableData(Category arrayModel) {
-        dbHelper.QueryData(
-                UPDATE_CATEGORY_DATA(
-                        arrayModel.getId(),
-                        arrayModel.getTitle(),
-                        arrayModel.getDescription(),
-                        arrayModel.getParentId(),
-                        arrayModel.getNumOfChild()
-                )
-        );
+        String UPDATE = "UPDATE category SET " +
+                "CategoryTitle = '" + arrayModel.getTitle() + "', " +
+                "CategoryDescription = '" + arrayModel.getDescription() + "', " +
+                "CategoryParent = '" + arrayModel.getParentId() + "', " +
+                "NumOfChild = '" + arrayModel.getNumOfChild() + "' " +
+                "WHERE " +
+                "CategoryId = '" + arrayModel.getId() + "';";
+        dbHelper.QueryData(UPDATE);
+        dbHelper.close();
     }
 
     private void initDatabase() {
@@ -196,7 +194,7 @@ public class ListCategory extends AppCompatActivity
     private void GetCursorData(int parentId) {
         Cursor cursor;
         list.clear();
-        String SELECT_DATA = SELECT_CATEGORY_BY_PARENT_ID(parentId);
+        String SELECT_DATA = "SELECT * FROM category WHERE CategoryParent = '"+parentId+"'";
         cursor = dbHelper.GetData(SELECT_DATA);
         while (cursor.moveToNext()){
             int id = cursor.getInt(0);
@@ -285,11 +283,15 @@ public class ListCategory extends AppCompatActivity
     public void LoadListDataFailed(String jsonMessage) {
         Toast.makeText(activity, jsonMessage, Toast.LENGTH_SHORT).show();
     }
-
+    //only 7 categories classify supported
     @Override
     public void SetTableSelectedData(JSONArray jsonArray) throws JSONException {
         JSONArray jsonArrayChild;
         JSONArray jsonArrayChild2;
+        JSONArray jsonArrayChild3;
+        JSONArray jsonArrayChild4;
+        JSONArray jsonArrayChild5;
+        JSONArray jsonArrayChild6;
         JSONObject jsonObject;
         for (int i = 0; i < jsonArray.length(); i++) {
             jsonObject = jsonArray.getJSONObject(i);
@@ -302,6 +304,26 @@ public class ListCategory extends AppCompatActivity
                 for (int k = 0; k < jsonArrayChild2.length(); k++){
                     jsonObject = jsonArrayChild2.getJSONObject(k);
                     SetDataFromJsonObject(jsonObject);
+                    jsonArrayChild3 = new JSONArray(jsonObject.getString("CategoryChildren"));
+                    for (int l = 0; l < jsonArrayChild3.length(); l++){
+                        jsonObject = jsonArrayChild3.getJSONObject(l);
+                        SetDataFromJsonObject(jsonObject);
+                        jsonArrayChild4 = new JSONArray(jsonObject.getString("CategoryChildren"));
+                        for (int m = 0; m < jsonArrayChild4.length(); m++){
+                            jsonObject = jsonArrayChild4.getJSONObject(m);
+                            SetDataFromJsonObject(jsonObject);
+                            jsonArrayChild5 = new JSONArray(jsonObject.getString("CategoryChildren"));
+                            for (int n = 0; n < jsonArrayChild5.length(); n++){
+                                jsonObject = jsonArrayChild5.getJSONObject(n);
+                                SetDataFromJsonObject(jsonObject);
+                                jsonArrayChild6 = new JSONArray(jsonObject.getString("CategoryChildren"));
+                                for (int p = 0; p < jsonArrayChild6.length(); p++){
+                                    jsonObject = jsonArrayChild6.getJSONObject(p);
+                                    SetDataFromJsonObject(jsonObject);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

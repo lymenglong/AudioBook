@@ -231,8 +231,27 @@ public class PresenterPlayer
     @Override
     public void PlayMedia() {
         if (mediaIsPrepared && !isPreparingCancel) {
+            mediaPlayer.setOnBufferingUpdateListener(new OnBufferingUpdateListener() {
+                @Override
+                public void onBufferingUpdate(MediaPlayer mp, int percent) {
+                    int AudioBuffered = mediaPlayer.getDuration() * percent / 100;
+                    playControlActivity.getSeekBar().setSecondaryProgress(AudioBuffered);
+                    Log.d(TAG, "onBufferingUpdate: percent = " + percent);
+                    if(percent == 100) isBufferComplete = true;
+                    //Toast when buffered slow
+                    if(mediaPlayer.getCurrentPosition() >= AudioBuffered - 1000 && !isBufferComplete) {
+                        if (!mToastIsShowing) {
+                            mToast = Toast.makeText(playControlActivity,R.string.buffering_data,Toast.LENGTH_SHORT);
+                            mToast.show();
+                            mToastIsShowing = true;
+                        }
+                    } else mToastIsShowing = false;
+
+                }
+            });
+            intSoundMax = mediaPlayer.getDuration();
+
             if (!mediaPlayer.isPlaying()) {
-                intSoundMax = mediaPlayer.getDuration();
                 playControlActivity.getSeekBar().setMax(intSoundMax);
                 //Update SeekBar
                 mUpdateHandler.postDelayed(mUpdate, 100);
@@ -240,37 +259,22 @@ public class PresenterPlayer
                     playControlActivity.getSeekBar().setSecondaryProgress(intSoundMax);
                     isBufferComplete = true;
                 }
-                mediaPlayer.setOnBufferingUpdateListener(new OnBufferingUpdateListener() {
-                    @Override
-                    public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                        int AudioBuffered = mediaPlayer.getDuration() * percent / 100;
-                        playControlActivity.getSeekBar().setSecondaryProgress(AudioBuffered);
-                        Log.d(TAG, "onBufferingUpdate: percent = " + percent);
-                        if(percent == 100) isBufferComplete = true;
-                        //Toast when buffered slow
-                        if(mediaPlayer.getCurrentPosition() >= AudioBuffered - 1000 && !isBufferComplete) {
-                            if (!mToastIsShowing) {
-                                mToast = Toast.makeText(playControlActivity,R.string.buffering_data,Toast.LENGTH_SHORT);
-                                mToast.show();
-                                mToastIsShowing = true;
-                            }
-                        } else mToastIsShowing = false;
 
-                    }
-                });
                 if (mediaPlayer.getCurrentPosition() < playControlActivity.getResumeTime()) {
                     if(isShowingDialog) {
-                        int resumeMinTime = 30000;
-                        if(resumeMinTime < playControlActivity.getResumeTime() && playControlActivity.getResumeTime() < mediaPlayer.getDuration()-1000) {
+                        int resumeMinTime = 30000; //30SEC
+                        if(resumeMinTime < playControlActivity.getResumeTime()
+                                && playControlActivity.getResumeTime() < intSoundMax-1000)
+                        {
                             ResumeMediaDialog(playControlActivity);
                             isShowingDialog = false;
-                        } else if(playControlActivity.getResumeTime() >= mediaPlayer.getDuration()-1000){
+                        } else if(playControlActivity.getResumeTime() >= intSoundMax-1000){
                             NextMediaDialog(playControlActivity);
-                        }
+                        } else mediaPlayer.start();
                     }
                 } else if (playControlActivity.getResumeTime() <= mediaPlayer.getCurrentPosition()
-                        && mediaPlayer.getCurrentPosition() < mediaPlayer.getDuration()) {
-                    mediaPlayer.setVolume(1.0f, 1.0f);
+                        && mediaPlayer.getCurrentPosition() < intSoundMax) {
+//                    mediaPlayer.setVolume(1.0f, 1.0f);
                     mediaPlayer.start();
                 } else {
                     ReplayMedia();

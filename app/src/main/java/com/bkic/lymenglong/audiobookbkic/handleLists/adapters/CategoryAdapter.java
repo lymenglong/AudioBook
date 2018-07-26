@@ -79,7 +79,6 @@ public class CategoryAdapter extends RecyclerView.Adapter {
             presenterOverrideTalkBack.DisableTouchForTalkBack(itemView);
             presenterOverrideTalkBack.DisableTouchForTalkBack(itemView.findViewById(R.id.title_item));
             presenterOverrideTalkBack.DisableTouchForTalkBack(itemView.findViewById(R.id.imgNext));
-
         }
 
         @Override
@@ -94,15 +93,6 @@ public class CategoryAdapter extends RecyclerView.Adapter {
                     intent.putExtra("CategoryParent", categories.get(getAdapterPosition()).getParentId());
                     intent.putExtra("NumOfChild", categories.get(getAdapterPosition()).getNumOfChild());
                     activity.startActivityForResult(intent, Const.REQUEST_CODE_BACK_HOME);
-                    /*Bundle bundle = new Bundle();
-                    bundle.putInt("CategoryId", categories.get(getAdapterPosition()).getId());
-                    bundle.putString("CategoryTitle", categories.get(getAdapterPosition()).getTitle());
-                    bundle.putString("CategoryDescription", categories.get(getAdapterPosition()).getDescription());
-                    bundle.putInt("CategoryParent", categories.get(getAdapterPosition()).getParentId());
-                    bundle.putInt("NumOfChild", categories.get(getAdapterPosition()).getNumOfChild());
-                    Intent intent = new Intent(activity, ListCategory.class);
-                    intent.putExtras(bundle);
-                    activity.startActivityForResult(intent,100);*/
                 } else {
                     Intent intent = new Intent(activity, ListBook.class);
                     intent.putExtra("CategoryId", categories.get(getAdapterPosition()).getId());
@@ -115,5 +105,14 @@ public class CategoryAdapter extends RecyclerView.Adapter {
 
             }
         }
+        /*Bundle bundle = new Bundle();
+        bundle.putInt("CategoryId", categories.get(getAdapterPosition()).getId());
+        bundle.putString("CategoryTitle", categories.get(getAdapterPosition()).getTitle());
+        bundle.putString("CategoryDescription", categories.get(getAdapterPosition()).getDescription());
+        bundle.putInt("CategoryParent", categories.get(getAdapterPosition()).getParentId());
+        bundle.putInt("NumOfChild", categories.get(getAdapterPosition()).getNumOfChild());
+        Intent intent = new Intent(activity, ListCategory.class);
+        intent.putExtras(bundle);
+        activity.startActivityForResult(intent,100);*/
     }
 }

@@ -1,6 +1,5 @@
 package com.bkic.lymenglong.audiobookbkic.handleLists.adapters;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -13,14 +12,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bkic.lymenglong.audiobookbkic.R;
 import com.bkic.lymenglong.audiobookbkic.database.DBHelper;
 import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Chapter;
 import com.bkic.lymenglong.audiobookbkic.overrideTalkBack.PresenterOverrideTalkBack;
-import com.bkic.lymenglong.audiobookbkic.utils.Const;
-import com.bkic.lymenglong.audiobookbkic.R;
 import com.bkic.lymenglong.audiobookbkic.player.PlayControl;
+import com.bkic.lymenglong.audiobookbkic.utils.Const;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
@@ -55,8 +53,7 @@ public class ChapterOfflineAdapter extends RecyclerView.Adapter {
             String sContentDescription;
             //check book length
             if(iLength!=0) {
-                @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss");
-                String sLength = simpleDateFormat.format(iLength);
+                String sLength = chapterHolder.presenterOverrideTalkBack.getConvertedDuration(iLength);
                 chapterHolder.sLength.setVisibility(View.VISIBLE);
                 chapterHolder.sLength.setText(String.valueOf(sLength));
                 cdLength = chapterHolder.presenterOverrideTalkBack.DurationContentDescription(iLength);

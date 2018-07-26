@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_list_chapter"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,20 +9,48 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
         <include layout="@layout/action_bar" />
-
-        <TextView
-            android:id="@+id/text_bar"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/label_normal"
-            android:textColor="@color/white"
-            android:gravity="start"
-            android:padding="2dp"
-            android:textSize="12sp"
-            android:visibility="gone" />
+            android:orientation="horizontal"
+            android:background="@color/label_normal">
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/text_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:singleLine="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:layout_gravity="start"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="start"
+                android:padding="2dp"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_weight="6"
+                android:id="@+id/text_bar_result_found"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#ff8c00"
+                android:singleLine="true"
+                android:layout_gravity="end"
+                android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"
+                android:gravity="end"
+                android:padding="2dp"
+                android:textSize="12sp"
+                android:visibility="gone" />
+        </LinearLayout>
+
 
         <include layout="@layout/custom_list"/>
 

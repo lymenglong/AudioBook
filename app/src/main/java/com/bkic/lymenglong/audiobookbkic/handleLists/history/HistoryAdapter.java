@@ -1,6 +1,5 @@
 package com.bkic.lymenglong.audiobookbkic.handleLists.history;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -13,13 +12,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bkic.lymenglong.audiobookbkic.R;
 import com.bkic.lymenglong.audiobookbkic.database.DBHelper;
 import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Book;
 import com.bkic.lymenglong.audiobookbkic.overrideTalkBack.PresenterOverrideTalkBack;
 import com.bkic.lymenglong.audiobookbkic.utils.Const;
-import com.bkic.lymenglong.audiobookbkic.R;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class HistoryAdapter extends RecyclerView.Adapter {

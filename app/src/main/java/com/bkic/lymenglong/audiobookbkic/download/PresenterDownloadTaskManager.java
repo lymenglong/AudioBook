@@ -5,7 +5,9 @@ import android.app.ActivityManager;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -13,12 +15,17 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.bkic.lymenglong.audiobookbkic.services.MyDownloadService;
 import com.bkic.lymenglong.audiobookbkic.R;
+import com.bkic.lymenglong.audiobookbkic.database.DBHelper;
+import com.bkic.lymenglong.audiobookbkic.utils.Const;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 
@@ -31,6 +38,9 @@ public class PresenterDownloadTaskManager implements PresenterDownloadTaskManage
     private int BookId, ChapterId;
     private Button buttonText;
     private static HashMap<String,DownloadingIndex> downloadingIndexHashMap = new HashMap<>();
+    public static String KEY_CHAPTER_ID = "CHAPTER_ID";
+    public static String KEY_BOOK_ID = "BOOK_ID";
+    private static String NAME_SHARED_PREFERENCES = "DOWNLOAD_TASK";
 
     public class DownloadingIndex {
         private int bookId;
@@ -68,7 +78,7 @@ public class PresenterDownloadTaskManager implements PresenterDownloadTaskManage
 
 
     @SuppressLint("StaticFieldLeak")
-    public class DownloadingTask extends AsyncTask<Void, Void, Void> {
+    public class DownloadingTask extends AsyncTask<Void, Void, Boolean> {
 
         File apkStorage = null;
         File apkSubStorage = null;
@@ -84,16 +94,31 @@ public class PresenterDownloadTaskManager implements PresenterDownloadTaskManage
         }
 
         @Override
-        protected Void doInBackground(Void... arg0) {
+        protected void onPostExecute(Boolean bDownloaded) {
+            super.onPostExecute(bDownloaded);
+            if(bDownloaded){
+                buttonText.setEnabled(false);
+                buttonText.setText(context.getString(R.string.downloadCompleted));//If Download completed then change button text
+                String ms =
+                        ChapterDownloadedTitle(context,BookId,ChapterId)+
+                                " "+ BookDownloadedTitle(context,BookId)+
+                                " "+context.getString(R.string.message_download_complete);
+                Toast.makeText(context, ms, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... arg0) {
                 //Get File if SD card is present
                 /*if (new CheckForSDCard().isSDCardPresent()) apkStorage = new File(
                         Environment.getExternalStorageDirectory() + "/"
                                 + Utils.downloadDirectory + "/" + subFolderPath);*/
-            if (new CheckForSDCard().isSDCardPresent()) apkStorage = new File(
+            if (new CheckForSDCard().isSDCardPresent())
+                apkStorage = new File(
                     Environment.getExternalStorageDirectory() + "/"
                             + Utils.downloadDirectory);
             else
-                Toast.makeText(context, "Oops!! There is no SD Card.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.error_message_no_sd_card, Toast.LENGTH_SHORT).show();
 
             //Check permission for api 24 or higher
             int code = context.getPackageManager().checkPermission(
@@ -127,6 +152,17 @@ public class PresenterDownloadTaskManager implements PresenterDownloadTaskManage
                         Log.d(TAG, "Sub Directory: " + subFolderPath + " is created");
                     }
                     if(isSubDirectoryCreated){
+
+                        //Check if file exists old file
+                        String filePath = Environment.getExternalStorageDirectory()+"/"+Utils.downloadDirectory+"/"+BookId+"/"+ChapterId+".mp3"; //i.e. /sdcard/AudioBookBKIC/2162/2168.mp3
+                        File file = new File(filePath);
+                        //delete old file
+                        if(file.exists()){
+                            UpdateDownloadTable(context,BookId,ChapterId);
+                            UpdateBookTable(context,BookId);
+                            UpdateChapterTable(context,BookId,ChapterId);
+                            return true;
+                        }
                         //download file using download manager
                         long downloadId = DownloadData(Uri.parse(downloadUrl), BookId, ChapterId);
                         DownloadingIndex index = new DownloadingIndex
@@ -135,62 +171,79 @@ public class PresenterDownloadTaskManager implements PresenterDownloadTaskManage
                                         ChapterId
                                 );
                         downloadingIndexHashMap.put(String.valueOf(downloadId),index);
+                        HashMap <String, String> inputMap = new HashMap<>();
+                        inputMap.put(KEY_BOOK_ID, String.valueOf(BookId));
+                        inputMap.put(KEY_CHAPTER_ID, String.valueOf(ChapterId));
+                        String keyMap = String.valueOf(downloadId);
+                        SaveDownloadMap(context, keyMap, inputMap);
                     }
                 }
             }
-            return null;
+            return false;
+
         }
     }
 
-//    /**
-//     *
-//     * @param   directoryPath   The full path to the directory to place the .nomedia file
-//     * @return   Returns true if the file was successfully written or appears to already exist
-//     * Notes:
-//            - the TAG varible is just the name of the class (in this case "FileUtil")
-//            - the D varible is just a boolen to indicate you want to debug or not
-//     */
-
-
-
-
-/*    private boolean writeNoMediaFile(String directoryPath)
-    {
-//        String storageState = Environment.getExternalStorageState();
-        String storageState = Environment.getExternalStorageDirectory() + "/"
-                + Utils.downloadDirectory + "/" + directoryPath;
-
-        if ( Environment.MEDIA_MOUNTED.equals( storageState ) )
-        {
-            try
-            {
-                File noMedia = new File ( directoryPath, ".nomedia" );
-
-                if ( noMedia.exists() )
-                {
-                    Log.i ( TAG, ".no media appears to exist already, returning without writing a new file" );
-                    return true;
+    @Override
+    public void SaveDownloadMap(Context context, String keyMap, HashMap<String, String> inputMap){
+        SharedPreferences pSharedPref = context.getSharedPreferences(NAME_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        if (pSharedPref != null){
+            JSONObject jsonObject = new JSONObject(inputMap);
+            String jsonString = jsonObject.toString();
+            SharedPreferences.Editor editor = pSharedPref.edit();
+//            editor.remove("My_map").apply();
+            editor.putString(keyMap, jsonString);
+            editor.apply();
+        }
+    }
+    @Override
+    public void RemoveDownloadMap(Context context, String keyMap){
+        SharedPreferences pSharedPref = context.getSharedPreferences(NAME_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        if (pSharedPref != null){
+            SharedPreferences.Editor editor = pSharedPref.edit();
+            editor.remove(keyMap).apply();
+            editor.commit();
+        }
+    }
+    @Override
+    public Map<String,String> LoadDownloadMap(Context context, String keyMap){
+        Map<String,String> outputMap = new HashMap<>();
+        SharedPreferences pSharedPref = context.getSharedPreferences(NAME_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        try{
+            if (pSharedPref != null){
+                String jsonString = pSharedPref.getString(keyMap, (new JSONObject()).toString());
+                JSONObject jsonObject = new JSONObject(jsonString);
+                Iterator<String> keysItr = jsonObject.keys();
+                while(keysItr.hasNext()) {
+                    String key = keysItr.next();
+                    String value = (String) jsonObject.get(key);
+                    outputMap.put(key, value);
                 }
-
-                FileOutputStream noMediaOutStream = new FileOutputStream( noMedia );
-                noMediaOutStream.write ( 0 );
-                noMediaOutStream.close ( );
             }
-            catch ( Exception e )
-            {
-                Log.e( TAG, "error writing file" );
-                return false;
-            }
+        }catch(Exception e){
+            e.printStackTrace();
         }
-        else
-        {
-            Log.e( TAG, "storage appears unwritable" );
-            return false;
-        }
+        return outputMap;
+    }
 
-        return true;
-
-    }*/
+    private String GetDownloadTitle(int bookId, int chapterId){
+        DBHelper dbHelper = new DBHelper(context, Const.DB_NAME, null, Const.DB_VERSION);
+        Cursor cursor = dbHelper.GetData(
+                "SELECT " +
+                        "chapter.ChapterTitle, book.bookTitle " +
+                        "FROM chapter, book " +
+                        "WHERE " +
+                        "book.BookId = chapter.bookId " +
+                        "AND " +
+                        "chapter.BookId = '"+bookId+"' " +
+                        "AND " +
+                        "chapter.ChapterId = '"+chapterId+"' " +
+                        ";"
+        );
+        if(cursor.moveToFirst())
+            return cursor.getString(0)+" - "+cursor.getString(1);
+        return null;
+    }
 
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
@@ -214,6 +267,97 @@ public class PresenterDownloadTaskManager implements PresenterDownloadTaskManage
         return downloadingIndexHashMap.get(String.valueOf(downloadId)).getChapterId()==chapterId;
     }
 
+    @Override
+    public String BookDownloadedTitle(Context context, int bookId){
+        String bookTitle = null;
+        DBHelper dbHelper = new DBHelper(context, Const.DB_NAME,null, Const.DB_VERSION);
+        String SELECT =
+                "SELECT BookTitle " +
+                        "From book " +
+                        "WHERE BookId = '"+bookId+"'" +
+                        ";";
+        Cursor cursor = dbHelper.GetData(SELECT);
+        if(cursor.moveToFirst()) bookTitle = cursor.getString(0);
+        return bookTitle;
+    }
+
+    @Override
+    public String ChapterDownloadedTitle(Context context, int bookId, int chapterId){
+        String bookTitle = null;
+        DBHelper dbHelper = new DBHelper(context, Const.DB_NAME,null, Const.DB_VERSION);
+        String SELECT =
+                "SELECT ChapterTitle " +
+                        "From chapter " +
+                        "WHERE " +
+                        "BookId = '"+bookId+"' " +
+                        "AND " +
+                        "ChapterId = '"+chapterId+"'"+
+                        ";";
+        Cursor cursor = dbHelper.GetData(SELECT);
+        if(cursor.moveToFirst()) bookTitle = cursor.getString(0);
+        return bookTitle;
+    }
+
+    @Override
+    public void UpdateBookTable(Context context, int bookId) {
+        DBHelper dbHelper = new DBHelper(context, Const.DB_NAME,null, Const.DB_VERSION);
+        String UPDATE_STATUS =
+                "UPDATE " +
+                        "book " +
+                        "SET " +
+                        "BookStatus = '1' " +
+                        "WHERE " +
+                        "BookId = '"+bookId+"'" +
+                        ";"
+                ;
+        dbHelper.QueryData(UPDATE_STATUS);
+        dbHelper.close();
+    }
+
+    @Override
+    public void UpdateChapterTable(Context context, int bookId, int chapterId){
+        DBHelper dbHelper = new DBHelper(context, Const.DB_NAME,null, Const.DB_VERSION);
+        String UPDATE_STATUS =
+                "UPDATE " +
+                        "chapter " +
+                        "SET " +
+                        "ChapterStatus = '1' " +
+                        "WHERE " +
+                        "BookId = '"+bookId+"' " +
+                        "AND " +
+                        "ChapterId = '"+chapterId+"'"
+                ;
+        dbHelper.QueryData(UPDATE_STATUS);
+    }
+    @Override
+    public void UpdateDownloadTable(Context context, int bookId, int chapterId) {
+        DBHelper dbHelper = new DBHelper(context, Const.DB_NAME,null, Const.DB_VERSION);
+        try {
+            String INSERT_STATUS =
+                    "INSERT INTO downloadStatus " +
+                            "VALUES " +
+                            "(" +
+                            "'"+chapterId+"', "+
+                            "'"+bookId+"', "+
+                            "'"+1+"'"+ //downloaded
+                            ")" +
+                            ";" ;
+            dbHelper.QueryData(INSERT_STATUS);
+        } catch (Exception e) {
+            Log.e(TAG, "UpdateDownloadTable: " +e.getMessage());
+            String UPDATE_STATUS =
+                    "UPDATE downloadStatus " +
+                            "SET DownloadedStatus = '1' " +
+                            "WHERE " +
+                            "ChapterId = '"+chapterId+"' " +
+                            "AND " +
+                            "BookId = '"+bookId+"'" +
+                            ";" ;
+            dbHelper.QueryData(UPDATE_STATUS);
+        }
+        dbHelper.close();
+    }
+
     private long DownloadData (Uri uri, int bookId, int chapterId ) {
 
         long downloadReference;
@@ -222,16 +366,20 @@ public class PresenterDownloadTaskManager implements PresenterDownloadTaskManage
 
         DownloadManager.Request request = new DownloadManager.Request(uri);
 
+        String sTitle = GetDownloadTitle(bookId, chapterId);
+        String sDescription = "Sách Đang Tải Xuống";
+
         //Setting title of request
-        request.setTitle("Tải Xuống");
+        request.setTitle(sTitle);
 
         //Setting description of request
-        request.setDescription("Sách Đang Tải Xuống");
+        request.setDescription(sDescription);
 
         //Check if file exists delete old file
         String filePath = Environment.getExternalStorageDirectory()+"/"+Utils.downloadDirectory+"/"+bookId+"/"+chapterId+".mp3"; //i.e. /sdcard/AudioBookBKIC/2162/2168.mp3
         boolean isFileDeleted = false;
         File file = new File(filePath);
+        //delete old file
         if(file.exists()) isFileDeleted = file.delete();
         Log.e(TAG, filePath+" Deleted: "+ isFileDeleted);
 

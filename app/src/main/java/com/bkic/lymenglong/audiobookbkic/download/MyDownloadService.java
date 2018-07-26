@@ -1,4 +1,4 @@
-package com.bkic.lymenglong.audiobookbkic.services;
+package com.bkic.lymenglong.audiobookbkic.download;
 
 import android.app.DownloadManager;
 import android.app.Service;
@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 import android.util.Log;
-
-import com.bkic.lymenglong.audiobookbkic.download.DownloadReceiver;
 
 public class MyDownloadService extends Service {
 
@@ -38,7 +36,7 @@ public class MyDownloadService extends Service {
         /*If you start your Service using START_NOT_STICKY,
         then your app will kill your service once your entire application is closed from background
         i.e. you cleaned your app from home screen.*/
-        return START_NOT_STICKY;
+        return START_STICKY;
     }
 
     @Override

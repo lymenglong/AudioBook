@@ -115,7 +115,7 @@ public class PresenterSearchBook implements PresenterSearchImp {
                     jsonResult = jsonObject.getString("Result");
                     jsonMessage = jsonObject.getString("Message");
                     jsonLog = jsonObject.getString("Log");
-                    logSuccess = jsonLog.equals("Successs");
+                    logSuccess = jsonLog.equals("Successs")|jsonLog.equals("Success");
                 }
             }
             catch (Exception e)

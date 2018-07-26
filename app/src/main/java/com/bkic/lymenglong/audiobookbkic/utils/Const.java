@@ -67,6 +67,13 @@ public final class Const {
                             "NumOfChild INTEGER" +
                     ");";
 
+    public static final String CREATE_TABLE_CATEGORY_BOOK =
+            "CREATE TABLE IF NOT EXISTS category_book" +
+                    "(" +
+                    "CategoryId INTEGER, " +
+                    "BookId INTEGER "+
+                    ");";
+
     public static final String CREATE_TABLE_BOOK =
             "CREATE TABLE IF NOT EXISTS book " +
                     "(" +
@@ -92,7 +99,9 @@ public final class Const {
                             "ChapterLength INTEGER, " +
                             "BookId INTEGER, " +
                             "ChapterStatus INTEGER, " +
-                            "Page INTEGER" +
+                            "Page INTEGER, " +
+                            "InsertTime VARCHAR(255), " +
+                            "MetaInsertTime VARCHAR(255)" +
                     ");";
     public static final String CREATE_TABLE_DOWNLOAD_STATUS =
             "CREATE TABLE IF NOT EXISTS downloadStatus " +
@@ -169,27 +178,9 @@ public final class Const {
                             "BookLength INTEGER, " +
                             "CategoryId INTEGER, " +
                             "KeyWord VARCHAR(255)" +
+                            /*", " +
+                            "InsertTime VARCHAR(255)" +*/
                     ");";
-
-    public static String SELECT_CATEGORY_BY_PARENT_ID (int parentId){
-        return "SELECT * FROM category WHERE CategoryParent = '"+parentId+"'";
-    }
-
-    public static String UPDATE_CATEGORY_DATA (
-            int categoryIdValue,
-            String categoryTitleValue,
-            String categoryDescription,
-            int categoryParent,
-            int numOfChild){
-        return "UPDATE category SET " +
-                    "CategoryTitle = '"+categoryTitleValue+"', " +
-                    "CategoryDescription = '"+categoryDescription+"', " +
-                    "CategoryParent = '"+categoryParent+"', " +
-                    "NumOfChild = '"+numOfChild+"' " +
-                        "WHERE " +
-                            "CategoryId = '"+categoryIdValue+"';";
-
-    }
 
     //endregion
 

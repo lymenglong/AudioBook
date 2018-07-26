@@ -195,7 +195,7 @@
     <string name="message_please_complete_password">Điền mật khẩu</string>
     <string name="message_please_complete_confirm_password">Điền mật xác nhận khẩu</string>
     <string name="error_message_confirm_password_not_match">"Xác Nhận Mật Khẩu Chưa Đúng"</string>
-    <string name="prompt_keyWord">Từ khóa\:</string>
+    <string name="prompt_keyWord">Từ khóa\: %s</string>
     <string name="message_no_more_book">Không còn sách nào</string>
     <string name="continue_listening">Nghe tiếp</string>
     <string name="replay_chapter">Nghe lại</string>
@@ -210,5 +210,10 @@
     <string name="item_book_cd_title_only">Sách %s</string>
     <string name="item_chapter_cd_title_length">%s có độ dài %s</string>
     <string name="_00_00_00">00:00:00</string>
+    <string name="search_book">Tìm kiếm sách</string>
+    <string name="message_not_exists">Không tồn tại</string>
+    <string name="voice_search">Tìm kiếm bằng giọng nói</string>
+    <string name="message_no_key_word">Không có từ khóa</string>
+    <string name="error_message_no_sd_card">Oops!! There is no SD Card.</string>
 
 </resources>

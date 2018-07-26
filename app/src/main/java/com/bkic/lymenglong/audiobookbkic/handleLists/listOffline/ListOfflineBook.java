@@ -173,7 +173,13 @@ public class ListOfflineBook
                 );*/
         cursor = dbHelper.GetData
                 (
-                        "SELECT DISTINCT book.BookId, book.BookTitle, book.BookImage, book.BookLength, book.CategoryId " +
+                        "SELECT DISTINCT " +
+                                "book.BookId, " +
+                                "book.BookTitle, " +
+                                "book.BookAuthor, " +
+                                "book.BookImage, " +
+                                "book.BookLength, " +
+                                "book.CategoryId " +
                                 "FROM book, downloadStatus " +
                                     "WHERE " +
                                             "book.BookId = downloadStatus.BookId " +
@@ -184,11 +190,12 @@ public class ListOfflineBook
         while (cursor.moveToNext()) {
             int bookId = cursor.getInt(0);
             String bookTitle = cursor.getString(1);
-            String bookImage = cursor.getString(2);
-            int bookLength = cursor.getInt(3);
-            int categoryId = cursor.getInt(4);
+            String bookAuthor = cursor.getString(2);
+            String bookImage = cursor.getString(3);
+            int bookLength = cursor.getInt(4);
+            int categoryId = cursor.getInt(5);
 
-            list.add(new Book(bookId,bookTitle,bookImage,bookLength,categoryId));
+            list.add(new Book(bookId,bookTitle,bookAuthor,bookImage,bookLength,categoryId));
         }
         cursor.close();
         bookOfflineAdapter.notifyDataSetChanged();

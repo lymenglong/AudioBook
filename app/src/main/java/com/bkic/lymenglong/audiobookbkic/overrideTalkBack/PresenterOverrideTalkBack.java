@@ -35,7 +35,7 @@ public class PresenterOverrideTalkBack
         }
     }*/
 
-    @Override
+/*    @Override
     public boolean onHover(View v, MotionEvent event) {
         //Move AccessibilityManager object to the constructor
         if (talkBackEnable(context)) {
@@ -43,6 +43,12 @@ public class PresenterOverrideTalkBack
         } else {
             return onHover(v,event);
         }
+    }
+*/
+    @Override
+    public boolean onHover(View v, MotionEvent event) {
+        //Move AccessibilityManager object to the constructor
+        return talkBackEnable(context) && onTouch(v, event);
     }
 
     @SuppressLint("ClickableViewAccessibility")

@@ -42,6 +42,28 @@
             android:textSize="20sp"
             tools:targetApi="jelly_bean" />
 
+        <EditText
+            android:id="@+id/edt_toolbar"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:ellipsize="none"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:fontFamily="sans-serif"
+            android:gravity="start"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:hint="@string/search_book"
+            android:visibility="gone"
+            android:imeOptions="actionSearch"
+            android:textSize="20sp"
+            tools:targetApi="jelly_bean"
+            android:inputType="text" />
+
         <ImageView
             android:id="@+id/imRefresh"
             android:layout_width="35dp"
@@ -56,14 +78,26 @@
             android:layout_alignParentRight="true" />
 
         <ImageView
+            android:id="@+id/im_micro"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/voice_search"
+            android:src="@drawable/ic_mic_white_24dp"
+            android:visibility="gone"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_alignParentRight="true" />
+        <ImageView
             android:id="@+id/imSearch"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginEnd="40dp"
             android:contentDescription="@string/search"
             android:src="@drawable/ic_search_white_24dp"
             android:visibility="gone"/>

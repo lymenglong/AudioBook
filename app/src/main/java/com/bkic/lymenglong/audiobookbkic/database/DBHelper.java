@@ -10,6 +10,7 @@ import static com.bkic.lymenglong.audiobookbkic.utils.Const.CREATE_TABLE_BOOK;
 import static com.bkic.lymenglong.audiobookbkic.utils.Const.CREATE_TABLE_BOOK_FAVORITE_SYNC;
 import static com.bkic.lymenglong.audiobookbkic.utils.Const.CREATE_TABLE_BOOK_HISTORY_SYNC;
 import static com.bkic.lymenglong.audiobookbkic.utils.Const.CREATE_TABLE_CATEGORY;
+import static com.bkic.lymenglong.audiobookbkic.utils.Const.CREATE_TABLE_CATEGORY_BOOK;
 import static com.bkic.lymenglong.audiobookbkic.utils.Const.CREATE_TABLE_CHAPTER;
 import static com.bkic.lymenglong.audiobookbkic.utils.Const.CREATE_TABLE_DOWNLOAD_STATUS;
 import static com.bkic.lymenglong.audiobookbkic.utils.Const.CREATE_TABLE_FAVORITE;
@@ -18,6 +19,7 @@ import static com.bkic.lymenglong.audiobookbkic.utils.Const.CREATE_TABLE_MENU;
 import static com.bkic.lymenglong.audiobookbkic.utils.Const.CREATE_TABLE_PLAYBACK_HISTORY;
 import static com.bkic.lymenglong.audiobookbkic.utils.Const.CREATE_TABLE_REVIEW;
 import static com.bkic.lymenglong.audiobookbkic.utils.Const.CREATE_TABLE_SEARCH_BOOK;
+import static com.bkic.lymenglong.audiobookbkic.utils.Const.DB_NAME;
 import static com.bkic.lymenglong.audiobookbkic.utils.Const.INSERT_MENU_VALUES;
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -54,6 +56,7 @@ public class DBHelper extends SQLiteOpenHelper {
         dbHelper.execSQL(CREATE_TABLE_DOWNLOAD_STATUS);
         dbHelper.execSQL(CREATE_TABLE_BOOK_HISTORY_SYNC);
         dbHelper.execSQL(CREATE_TABLE_BOOK_FAVORITE_SYNC);
+        dbHelper.execSQL(CREATE_TABLE_CATEGORY_BOOK);
         //insert menu value
         dbHelper.execSQL(INSERT_MENU_VALUES);
 
