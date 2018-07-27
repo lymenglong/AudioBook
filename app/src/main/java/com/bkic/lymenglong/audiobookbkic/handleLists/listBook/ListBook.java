@@ -1,5 +1,6 @@
 package com.bkic.lymenglong.audiobookbkic.handleLists.listBook;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Intent;
@@ -31,7 +32,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
@@ -316,13 +319,17 @@ public class ListBook
     }
 //todo fix missing book from other category
     private void UpdateDatabase(Book bookModel) {
+        Calendar calendar = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpledateformat =
+                new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String insertTime = simpledateformat.format(calendar.getTime());
         String INSERT_DATA;
         try {
             INSERT_DATA =
                     "INSERT INTO book " +
                             "(" +
                             "BookId, BookTitle, BookAuthor, BookPublishDate, BookImage, " +
-                            "BookContent, BookLength, BookURL, NumOfChapter, Page" +
+                            "BookContent, BookLength, BookURL, NumOfChapter, Page, InsertTime" +
                             ") " +
                             "VALUES(" +
                             "'" + bookModel.getId() + "', " +
@@ -334,7 +341,8 @@ public class ListBook
                             "'" + bookModel.getLength() + "', " +
                             "'" + bookModel.getFileUrl() + "', " +
                             "'" + bookModel.getNumOfChapter() + "', " +
-                            "'" + mPAGE + "'" +
+                            "'" + mPAGE + "', " +
+                            "'" + insertTime +"'" +
                             ")";
             dbHelper.QueryData(INSERT_DATA);
         } catch (Exception ignored){
@@ -346,17 +354,19 @@ public class ListBook
                             "BookAuthor = '"+bookModel.getAuthor()+"', " +
                             "BookImage = '"+bookModel.getUrlImage()+"', " +
                             "BookLength = '"+bookModel.getLength()+"' ," +
-                            "BookURL = '"+bookModel.getFileUrl()+"' " +
+                            "BookURL = '"+bookModel.getFileUrl()+"', " +
+                            "InsertTime = '"+insertTime+"'" +
                             "WHERE " +
                             "BookId = '"+bookModel.getId()+"'";
             dbHelper.QueryData(UPDATE_DATA);
         }
         try {
             INSERT_DATA =
-                    "INSERT INTO category_book(CategoryId, BookId) " +
+                    "INSERT INTO category_book(CategoryId, BookId, InsertTime) " +
                             "VALUES(" +
                             "'"+bookModel.getCategoryId()+"', " +
-                            "'"+bookModel.getId()+"'" +
+                            "'"+bookModel.getId()+"', " +
+                            "'"+insertTime+"'" +
                             ")";
             dbHelper.QueryData(INSERT_DATA);
             dbHelper.close();

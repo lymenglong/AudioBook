@@ -325,6 +325,10 @@ public class ListChapter extends AppCompatActivity
 
     @Override
     public void SetUpdateBookDetail(JSONObject jsonObject) throws JSONException {
+        Calendar calendar = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpledateformat =
+                new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String insertTime = simpledateformat.format(calendar.getTime());
         Book bookModel = new Book();
         bookModel.setId(Integer.parseInt(jsonObject.getString("BookId")));
         bookModel.setTitle(jsonObject.getString("BookTitle"));
@@ -340,7 +344,12 @@ public class ListChapter extends AppCompatActivity
         cursor.moveToFirst();
         if(cursor.getCount()==0){
             String INSERT_DATA =
-                    "INSERT INTO book VALUES" +
+                    "INSERT INTO book(" +
+                            "BookId, BookTitle, BookAuthor, BookPublishDate, " +
+                            "BookImage, BookContent, BookLength, BookURL, CategoryId, " +
+                            "NumOfChapter, BookStatus, Page, InsertTime" +
+                            ") " +
+                            "VALUES" +
                             "(" +
                             "'"+bookModel.getId()+"', " +
                             "'"+bookModel.getTitle()+"', " +
@@ -353,7 +362,8 @@ public class ListChapter extends AppCompatActivity
                             "'"+bookModel.getCategoryId()+"', " +
                             "'"+bookModel.getNumOfChapter()+"', " +
                             "'"+0+"', " + //book Status default = 0
-                            "'null'"+ //page
+                            "'null', " +
+                            "'"+insertTime+"'"+ //page
                             ");";
             dbHelper.QueryData(INSERT_DATA);
         } else{
@@ -367,7 +377,8 @@ public class ListChapter extends AppCompatActivity
                                 "BookLength = '"+bookModel.getLength()+"', " +
                                 "BookURL = '"+bookModel.getFileUrl()+"', " +
 //                            "CategoryId = '"+bookModel.getCategoryId()+"', " +
-                                "NumOfChapter = '"+bookModel.getNumOfChapter()+"' " +
+                                "NumOfChapter = '"+bookModel.getNumOfChapter()+"', " +
+                                "InsertTime = '"+insertTime+"'" +
                                 "WHERE " +
                                 "BookId = '"+bookModel.getId()+"'" +
                                 ";";
@@ -428,7 +439,8 @@ public class ListChapter extends AppCompatActivity
                                 "ChapterUrl = '"+chapterModel.getFileUrl()+"', " +
                                 "ChapterLength = '"+chapterModel.getLength()+"', " +
                                 "BookId = '"+BookId+"' , " +//BookId
-                                "Page = '"+mPAGE+"' " +
+                                "Page = '"+mPAGE+"', " +
+                                "InsertTime = '"+insertTime+"' " +
                                 "WHERE ChapterId = '"+chapterModel.getId()+"'";
                         dbHelper.QueryData(UPDATE_DATA);
                     }
@@ -443,6 +455,10 @@ public class ListChapter extends AppCompatActivity
     //Now I Don't Use It Any More
     @Override
     public void SetTableSelectedData(JSONObject jsonObject) throws JSONException {
+        Calendar calendar = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpledateformat =
+                new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String insertTime = simpledateformat.format(calendar.getTime());
         Chapter chapterModel = new Chapter();
         chapterModel.setId(Integer.parseInt(jsonObject.getString("ChapterId")));
         chapterModel.setTitle(jsonObject.getString("ChapterTitle"));
@@ -452,7 +468,11 @@ public class ListChapter extends AppCompatActivity
         String INSERT_DATA;
         try {
             INSERT_DATA =
-                    "INSERT INTO chapter VALUES" +
+                    "INSERT INTO chapter(" +
+                            "ChapterId, ChapterTitle, ChapterUrl, ChapterLength, BookId, " +
+                            "ChapterStatus, Page, InsertTime" +
+                            ") " +
+                            "VALUES" +
                             "(" +
                             "'"+chapterModel.getId()+"', " +
                             "'"+chapterModel.getTitle()+"', " +
@@ -460,7 +480,8 @@ public class ListChapter extends AppCompatActivity
                             "'"+chapterModel.getLength() +"', " +
                             "'"+BookId+"', " + //BookId
                             "'"+0+"', " + // Status Chapter is equal 0 which mean chapter have not downloaded yet
-                            "'"+mPAGE+"'"+
+                            "'"+mPAGE+"', " +
+                            "'"+insertTime+"'"+
                             ")";
             dbHelper.QueryData(INSERT_DATA);
         } catch (Exception e) {
@@ -468,7 +489,8 @@ public class ListChapter extends AppCompatActivity
                     "ChapterTitle = '"+chapterModel.getTitle()+"', " +
                     "ChapterUrl = '"+chapterModel.getFileUrl()+"', " +
                     "ChapterLength = '"+chapterModel.getLength()+"', " +
-                    "BookId = '"+BookId+"' " + //BookId
+                    "BookId = '"+BookId+"', " +
+                    "InsertTime = '"+insertTime+"' " + //BookId
                     "WHERE ChapterId = '"+chapterModel.getId()+"'";
             dbHelper.QueryData(UPDATE_DATA);
         }

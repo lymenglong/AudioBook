@@ -23,6 +23,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -331,6 +333,10 @@ public class PresenterDownloadTaskManager implements PresenterDownloadTaskManage
     }
     @Override
     public void UpdateDownloadTable(Context context, int bookId, int chapterId) {
+        Calendar calendar = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpledateformat =
+                new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String insertTime = simpledateformat.format(calendar.getTime());
         DBHelper dbHelper = new DBHelper(context, Const.DB_NAME,null, Const.DB_VERSION);
         try {
             String INSERT_STATUS =
@@ -339,7 +345,8 @@ public class PresenterDownloadTaskManager implements PresenterDownloadTaskManage
                             "(" +
                             "'"+chapterId+"', "+
                             "'"+bookId+"', "+
-                            "'"+1+"'"+ //downloaded
+                            "'"+1+"', "+ //downloaded
+                            "'"+insertTime+"'" +
                             ")" +
                             ";" ;
             dbHelper.QueryData(INSERT_STATUS);
@@ -347,7 +354,9 @@ public class PresenterDownloadTaskManager implements PresenterDownloadTaskManage
             Log.e(TAG, "UpdateDownloadTable: " +e.getMessage());
             String UPDATE_STATUS =
                     "UPDATE downloadStatus " +
-                            "SET DownloadedStatus = '1' " +
+                            "SET " +
+                            "DownloadedStatus = '1'," +
+                            "InsertTime = '"+insertTime+"' " +
                             "WHERE " +
                             "ChapterId = '"+chapterId+"' " +
                             "AND " +

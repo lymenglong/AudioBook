@@ -1,5 +1,6 @@
 package com.bkic.lymenglong.audiobookbkic.handleLists.favorite;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Intent;
@@ -29,7 +30,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
@@ -225,27 +228,41 @@ public class ListFavorite
     }
 
     private void SetInsertTableData(Book arrayModel) {
+        Calendar calendar = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpledateformat =
+                new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String insertTime = simpledateformat.format(calendar.getTime());
         String INSERT_DATA =
-                "INSERT INTO favorite VALUES" +
-                "(" +
+                "INSERT INTO favorite" +
+                        "(" +
+                        "BookId, BookTitle, BookImage, BookLength, BookAuthor, BookSync, BookRemoved, InsertTime" +
+                        ") " +
+                        "VALUES" +
+                        "(" +
                         "'"+arrayModel.getId()+"'," +
                         "'"+arrayModel.getTitle()+"'," +
                         "'"+arrayModel.getUrlImage()+"'," +
                         "'"+arrayModel.getLength()+"'," +
                         "'"+arrayModel.getAuthor()+"', " +
                         "'"+Const.BOOK_SYNCED_WITH_SERVER+"', " + //BookSync is equal 1, It means that book is already store in server
-                        "'"+Const.BOOK_NOT_REQUEST_REMOVE_SYNCED_WITH_SERVER+"'"+
+                        "'"+Const.BOOK_NOT_REQUEST_REMOVE_SYNCED_WITH_SERVER+"', " +
+                        "'"+insertTime+"'"+
                 ");";
         dbHelper.QueryData(INSERT_DATA);
     }
 
     private void SetUpdateTableData(Book arrayModel) {
+        Calendar calendar = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpledateformat =
+                new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String insertTime = simpledateformat.format(calendar.getTime());
         String UPDATE_DATA = "UPDATE favorite SET " +
                 "BookTitle = '"+arrayModel.getTitle()+"', " +
                 "BookImage = '"+arrayModel.getUrlImage()+"', " +
                 "BookLength = '"+arrayModel.getLength()+"', " +
                 "BookAuthor = '"+arrayModel.getAuthor()+"', " +
-                "BookSync = '"+Const.BOOK_SYNCED_WITH_SERVER+"' " +
+                "BookSync = '"+Const.BOOK_SYNCED_WITH_SERVER+"'," +
+                "InsertTime = '"+insertTime+"' " +
                 "WHERE " +
                 "BookId = '"+arrayModel.getId()+"'; ";
         dbHelper.QueryData(UPDATE_DATA);

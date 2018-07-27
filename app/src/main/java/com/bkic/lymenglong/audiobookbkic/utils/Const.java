@@ -54,7 +54,7 @@ public final class Const {
                     "('5', 'Tìm Kiếm'), " +
                     "('6', 'Tài Khoản'), " +
                     "('7', 'Hướng Dẫn'), " +
-                    "('100', 'Thoát')" +
+                    "('100', 'Thoát')" + //to make it's always at bottom
                     ";";
 
     public static final String CREATE_TABLE_CATEGORY =
@@ -64,14 +64,16 @@ public final class Const {
                             "CategoryTitle VARCHAR(255), " +
                             "CategoryDescription VARCHAR(255), " +
                             "CategoryParent INTEGER, " +
-                            "NumOfChild INTEGER" +
+                            "NumOfChild INTEGER, " +
+                            "InsertTime VARCHAR(255)" +
                     ");";
 
-    public static final String CREATE_TABLE_CATEGORY_BOOK =
+    public static final String CREATE_TABLE_CATEGORY_BOOK = //N-N RELATIONSHIP
             "CREATE TABLE IF NOT EXISTS category_book" +
                     "(" +
                     "CategoryId INTEGER, " +
-                    "BookId INTEGER "+
+                    "BookId INTEGER, " +
+                    "InsertTime VARCHAR(255)"+
                     ");";
 
     public static final String CREATE_TABLE_BOOK =
@@ -87,8 +89,9 @@ public final class Const {
                             "BookURL VARCHAR(255), " +
                             "CategoryId INTEGER, " +
                             "NumOfChapter INTEGER, " +
-                            "BookStatus INTEGER, " +
-                            "Page INTEGER" +
+                            "BookStatus INTEGER, " + //EQUAL 1 MEANS THAT BOOK DOWNLOADED
+                            "Page INTEGER, " +
+                            "InsertTime VARCHAR(255)" +
                     ");";
     public static final String CREATE_TABLE_CHAPTER =
             "CREATE TABLE IF NOT EXISTS chapter " +
@@ -101,14 +104,15 @@ public final class Const {
                             "ChapterStatus INTEGER, " +
                             "Page INTEGER, " +
                             "InsertTime VARCHAR(255), " +
-                            "MetaInsertTime VARCHAR(255)" +
+                            "MetaInsertTime VARCHAR(255)" + //TO SEE CLEARLY THE MILLISECOND INSERT TIME AND ARRANGE BY THIS
                     ");";
-    public static final String CREATE_TABLE_DOWNLOAD_STATUS =
+    public static final String CREATE_TABLE_DOWNLOAD_STATUS = //DOWNLOAD
             "CREATE TABLE IF NOT EXISTS downloadStatus " +
                     "(" +
                             "ChapterId INTEGER PRIMARY KEY, " +
                             "BookId INTEGER, " +
-                            "DownloadedStatus INTEGER" +
+                            "DownloadedStatus INTEGER, " +
+                            "InsertTime VARCHAR(255)" +
                     ");";
 
     public static final String CREATE_TABLE_HISTORY =
@@ -120,7 +124,8 @@ public final class Const {
                             "BookLength INTEGER, " +
                             "BookAuthor VARCHAR(255), " +
                             "BookSync INTEGER, " +
-                            "BookRemoved INTEGER" +
+                            "BookRemoved INTEGER, " +
+                            "InsertTime VARCHAR(255)" +
                     ");";
     public static final String CREATE_TABLE_PLAYBACK_HISTORY =
             "CREATE TABLE IF NOT EXISTS playHistory" +
@@ -140,7 +145,8 @@ public final class Const {
                             "BookLength INTEGER, " +
                             "BookAuthor VARCHAR(255), " +
                             "BookSync INTEGER, " +
-                            "BookRemoved INTEGER" +
+                            "BookRemoved INTEGER, " +
+                            "InsertTime VARCHAR(255)" +
                     ");";
 
     public static final String CREATE_TABLE_BOOK_HISTORY_SYNC =
@@ -148,14 +154,16 @@ public final class Const {
                     "(" +
                             "BookId INTEGER PRIMARY KEY, " +
                             "BookSync INTEGER, " +
-                            "BookRemoved INTEGER" +
+                            "BookRemoved INTEGER, " +
+                            "InsertTime VARCHAR(255)" +
                     ");";
     public static final String CREATE_TABLE_BOOK_FAVORITE_SYNC =
             "CREATE TABLE IF NOT EXISTS bookFavoriteSyncs " +
                     "(" +
                             "BookId INTEGER PRIMARY KEY, " +
                             "BookSync INTEGER, " +
-                            "BookRemoved INTEGER" +
+                            "BookRemoved INTEGER, " +
+                            "InsertTime VARCHAR(255)" +
                     ");";
 
     public static final String CREATE_TABLE_REVIEW =
@@ -163,9 +171,9 @@ public final class Const {
                     "(" +
                             "ChapterId INTEGER PRIMARY KEY, "+
                             "BookId INTEGER, " +
-                            "InsertTime VARCHAR(255), " +
                             "RateNumber INTEGER, " +
-                            "Review VARCHAR(255)" +
+                            "Review VARCHAR(255), " +
+                            "InsertTime VARCHAR(255)" +
                     ");";
     public static final String CREATE_TABLE_SEARCH_BOOK =
             "CREATE TABLE IF NOT EXISTS bookSearch " +
@@ -177,9 +185,8 @@ public final class Const {
                             "BookImage VARCHAR(255), " +
                             "BookLength INTEGER, " +
                             "CategoryId INTEGER, " +
-                            "KeyWord VARCHAR(255)" +
-                            /*", " +
-                            "InsertTime VARCHAR(255)" +*/
+                            "KeyWord VARCHAR(255), " +
+                            "InsertTime VARCHAR(255)" +
                     ");";
 
     //endregion

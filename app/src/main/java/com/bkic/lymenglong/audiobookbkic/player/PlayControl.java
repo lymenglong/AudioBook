@@ -384,6 +384,10 @@ public class PlayControl extends AppCompatActivity
     //Update when file mp3 is missing
     @Override
     public void UpdateChapterStatus() {
+        Calendar calendar = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpledateformat =
+                new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String insertTime = simpledateformat.format(calendar.getTime());
         Toast.makeText(playControlActivity, "file offline đã bị mất", Toast.LENGTH_SHORT).show();
         dbHelper.QueryData(
                 "UPDATE chapter " +
@@ -396,7 +400,9 @@ public class PlayControl extends AppCompatActivity
         );
         dbHelper.QueryData(
                 "UPDATE downloadStatus " +
-                        "SET DownloadedStatus = '0' " +
+                        "SET " +
+                        "DownloadedStatus = '0', " +
+                        "InsertTime = '"+insertTime+"' " +
                         "WHERE " +
                         "ChapterId = '"+chapterFromIntent.getId()+"' " +
                         "AND " +
@@ -685,7 +691,11 @@ public class PlayControl extends AppCompatActivity
         if (bookModel.getLength() != 0) {
             try {
                 String INSERT_BOOK_INTO_TABLE_FAVORITE =
-                        "INSERT INTO favorite VALUES" +
+                        "INSERT INTO favorite(" +
+                                "BookId, BookTitle, BookImage, BookLength, BookAuthor, " +
+                                "BookSync, BookRemoved, InsertTime" +
+                                ") " +
+                                "VALUES" +
                                 "(" +
                                         "'"+bookModel.getId()+"', " +
                                         "'"+bookModel.getTitle()+"', " +
@@ -693,7 +703,8 @@ public class PlayControl extends AppCompatActivity
                                         "'"+bookModel.getLength()+"', " +
                                         "'"+bookModel.getAuthor()+"', " +
                                         "'"+Const.BOOK_NOT_SYNCED_WITH_SERVER+"', " +// BookSync Is Default Equal 0
-                                        "'"+Const.BOOK_NOT_REQUEST_REMOVE_SYNCED_WITH_SERVER+"'" +// BookRemoved Is Default Equal 0
+                                        "'"+Const.BOOK_NOT_REQUEST_REMOVE_SYNCED_WITH_SERVER+"', " +// BookRemoved Is Default Equal 0
+                                        "'"+InsertTimeHolder+"'"+
                                 ");";
                 dbHelper.QueryData(INSERT_BOOK_INTO_TABLE_FAVORITE);
                 dbHelper.close();
@@ -707,7 +718,8 @@ public class PlayControl extends AppCompatActivity
                                 "BookLength = '"+bookModel.getLength()+"', " +
                                 "BookAuthor = '"+bookModel.getAuthor()+"', " +
                                 "BookRemoved = '"+Const.BOOK_NOT_REQUEST_REMOVE_SYNCED_WITH_SERVER+"', "+
-                                "BookSync = '"+Const.BOOK_NOT_REQUEST_REMOVE_SYNCED_WITH_SERVER+"' " +
+                                "BookSync = '"+Const.BOOK_NOT_REQUEST_REMOVE_SYNCED_WITH_SERVER+"', " +
+                                "InsertTime = '"+InsertTimeHolder+"' " +
                         "WHERE " +
                                 "BookId = '"+bookModel.getId()+"'" +
                         ";";
@@ -837,7 +849,11 @@ public class PlayControl extends AppCompatActivity
             if(bookModel.getLength() != 0) {
                 try {
                     String INSERT_BOOK_INTO_TABLE_HISTORY =
-                            "INSERT INTO history VALUES" +
+                            "INSERT INTO history(" +
+                                    "BookId, BookTitle, BookImage, BookLength, BookAuthor, " +
+                                    "BookSync, BookRemoved, InsertTime" +
+                                    ") " +
+                                    "VALUES" +
                                     "(" +
                                     "'" + bookModel.getId() + "', " +
                                     "'" + bookModel.getTitle() + "', " +
@@ -845,7 +861,8 @@ public class PlayControl extends AppCompatActivity
                                     "'" + bookModel.getLength() + "', " +
                                     "'" + bookModel.getAuthor() + "', " +
                                     "'" + Const.BOOK_NOT_SYNCED_WITH_SERVER + "', " +
-                                    "'" + Const.BOOK_NOT_REQUEST_REMOVE_SYNCED_WITH_SERVER + "'" +
+                                    "'" + Const.BOOK_NOT_REQUEST_REMOVE_SYNCED_WITH_SERVER + "', " +
+                                    "'" + InsertTimeHolder +"'" +
                                     ");";
                     dbHelper.QueryData(INSERT_BOOK_INTO_TABLE_HISTORY);
                     dbHelper.close();
@@ -857,7 +874,8 @@ public class PlayControl extends AppCompatActivity
                                     "BookTitle = '" + bookModel.getTitle() + "', " +
                                     "BookImage = '" + bookModel.getUrlImage() + "', " +
                                     "BookLength = '" + bookModel.getLength() + "', " +
-                                    "BookAuthor = '" + bookModel.getAuthor() + "' " +
+                                    "BookAuthor = '" + bookModel.getAuthor() + "', " +
+                                    "InsertTime = '" + InsertTimeHolder +"' " +
                                     "WHERE " +
                                     "BookId = '" + bookModel.getId() + "'" +
                                     ";";
@@ -953,13 +971,16 @@ public class PlayControl extends AppCompatActivity
             dbHelper.QueryData(Const.CREATE_TABLE_REVIEW);
         }
         dbHelper.QueryData(
-                "INSERT INTO review VALUES" +
+                "INSERT INTO review(" +
+                        "ChapterId, BookId, RateNumber, Review, InsertTime" +
+                        ") " +
+                        "VALUES" +
                         "(" +
                         "'"+chapterId+"', " +
                         "'"+bookId+"', " +
-                        "'"+insertTime+"', " +
                         "'"+rateNumber+"', " +
-                        "'"+review+"'" +
+                        "'"+review+"', " +
+                        "'"+insertTime+"'" +
                         ");"
                 );
         dbHelper.close();

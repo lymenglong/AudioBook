@@ -1,5 +1,6 @@
 package com.bkic.lymenglong.audiobookbkic.handleLists.listCategory;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Intent;
@@ -30,7 +31,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
@@ -256,14 +259,22 @@ public class ListCategory extends AppCompatActivity
     }
 
     private void SetInsertTableData(Category arrayModel) {
+        Calendar calendar = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpledateformat =
+                new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String insertTime = simpledateformat.format(calendar.getTime());
         String INSERT_DATA =
-                "INSERT INTO category VALUES" +
-                "(" +
+                "INSERT INTO category(" +
+                        "CategoryId, CategoryTitle, CategoryDescription, CategoryParent, NumOfChild, InsertTime" +
+                        ") " +
+                        "VALUES" +
+                        "(" +
                         "'"+arrayModel.getId()+"', " +
                         "'"+arrayModel.getTitle()+"', " +
                         "'"+arrayModel.getDescription()+"', " +
                         "'"+arrayModel.getParentId()+"', " +
-                        "'"+arrayModel.getNumOfChild()+"'" +
+                        "'"+arrayModel.getNumOfChild()+"', " +
+                        "'"+insertTime+"'" +
                 ")";
         dbHelper.QueryData(INSERT_DATA);
     }

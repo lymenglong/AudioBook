@@ -21,7 +21,7 @@ public class PresenterViewReading implements PresenterViewReadingImp {
     private ViewReading viewReadingActivity;
     private Session session;
 
-    public PresenterViewReading(ViewReading viewReadingActivity) {
+    PresenterViewReading(ViewReading viewReadingActivity) {
         this.viewReadingActivity = viewReadingActivity;
     }
 

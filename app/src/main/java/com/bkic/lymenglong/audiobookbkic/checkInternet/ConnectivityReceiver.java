@@ -160,11 +160,16 @@ public class ConnectivityReceiver
 
     //SyncBook Update SQLite Status For History & Favorite
     private void UpdateBookSyncStatus(String tableName, int bookId) {
+        Calendar calendar = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpledateformat =
+                new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String insertTime = simpledateformat.format(calendar.getTime());
         String UPDATE_BOOK_SYNC =
                 "UPDATE " +
                         "'"+tableName+"' " +
                         "SET " +
-                        "BookSync = '"+ Const.BOOK_SYNCED_WITH_SERVER+"' " +
+                        "BookSync = '"+ Const.BOOK_SYNCED_WITH_SERVER+"'," +
+                        "InsertTime = '"+insertTime+"' " +
                         "WHERE " +
                         "BookId = '"+bookId+"'" +
                         ";";

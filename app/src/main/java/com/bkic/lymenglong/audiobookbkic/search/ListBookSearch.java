@@ -381,17 +381,22 @@ public class ListBookSearch
                 } else {
                     String DELETE_DATA = "DELETE FROM bookSearch WHERE KeyWord = '"+keyWord+"'";
                     dbHelper.QueryData(DELETE_DATA);
-                    String INSERT_DATA = "INSERT INTO bookSearch VALUES(" +
-                            "null, "+ // ID auto increment
-                            "'"+bookModel.getId()+"', " +
-                            "'"+bookModel.getTitle()+"', " +
-                            "'"+bookModel.getAuthor()+"', " +
-                            "'"+bookModel.getUrlImage() +"', " +
-                            "'"+bookModel.getLength()+"', " +
-                            "'"+bookModel.getCategoryId()+"', " + //CategoryID
-                            "'"+keyWord+"', " +
-                            "'"+insertTime+"'"+
-                            ")";
+                    String INSERT_DATA =
+                            "INSERT INTO bookSearch(" +
+                                    "Id, BookId, BookTitle, BookAuthor, BookImage, BookLength, " +
+                                    "CategoryId, KeyWord, InsertTime" +
+                                    ") " +
+                                    "VALUES(" +
+                                    "null, "+ // ID auto increment
+                                    "'"+bookModel.getId()+"', " +
+                                    "'"+bookModel.getTitle()+"', " +
+                                    "'"+bookModel.getAuthor()+"', " +
+                                    "'"+bookModel.getUrlImage() +"', " +
+                                    "'"+bookModel.getLength()+"', " +
+                                    "'"+bookModel.getCategoryId()+"', " + //CategoryID
+                                    "'"+keyWord+"', " +
+                                    "'"+insertTime+"'"+
+                                    ")";
                     try {
                         dbHelper.QueryData(INSERT_DATA);
                     } catch (Exception ignored) {
