@@ -1,36 +1,112 @@
 package com.bkic.lymenglong.audiobookbkic.handleLists.history;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.os.AsyncTask;
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
-import com.bkic.lymenglong.audiobookbkic.https.HttpParse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.bkic.lymenglong.audiobookbkic.R;
+import com.bkic.lymenglong.audiobookbkic.utils.Const;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Map;
+
+import static com.bkic.lymenglong.audiobookbkic.utils.Const.HttpURL_API;
 
 public class PresenterShowListHistory implements PresenterShowListHistoryImp {
 
     private ListHistory listHistoryActivity;
     private ProgressDialog pDialog;
-    private static final String TAG = "PresenterShowListHistory";
+    private static final String TAG = "PreShowListHistory";
 
-    public PresenterShowListHistory(ListHistory listHistoryActivity) {
+    PresenterShowListHistory(ListHistory listHistoryActivity) {
         this.listHistoryActivity = listHistoryActivity;
     }
 
     @Override
     public void GetSelectedResponse(Activity activity, HashMap<String, String> ResultHash, String HttpHolder) {
-        HttpWebCall(activity, ResultHash, HttpHolder);
+//        HttpWebCall(activity, ResultHash, HttpHolder);
+        RequestJSON(activity,ResultHash);
+    }
+    private String jsonAction, jsonResult, jsonMessage, jsonLog;
+    private Boolean LogSuccess;
+    private void RequestJSON(final Context context, final HashMap<String,String> hashMap){
+        pDialog = ProgressDialog.show(context,null,context.getString(R.string.message_please_wait),true,true);
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        StringRequest request = new StringRequest(Request.Method.POST, HttpURL_API, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                pDialog.dismiss();
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    jsonAction = jsonObject.getString(Const.JSON_KEY_ACTION);
+                    jsonResult = jsonObject.getString(Const.JSON_KEY_RESULT);
+                    jsonMessage = jsonObject.getString(Const.JSON_KEY_MESSAGE);
+                    jsonLog = jsonObject.getString(Const.JSON_KEY_LOG);
+                    LogSuccess = jsonLog.equals(Const.JSON_KEY_LOG_SUCCESS);
+                    if (LogSuccess) {
+                        switch (jsonAction){
+                            //region ListHistoryBook : getHistory
+                            case "getHistory":
+                                try {
+                                    JSONArray jsonArrayChapter = new JSONArray(jsonResult);
+                                    if (jsonArrayChapter.length()!=0) {
+                                        for (int i = 0; i< jsonArrayChapter.length(); i++){
+                                            try {
+                                                listHistoryActivity.SetTableSelectedData(jsonArrayChapter.getJSONObject(i));
+                                            } catch (JSONException ignored) {
+                                                Log.d(TAG, "onPostExecute: "+jsonArrayChapter.getJSONObject(i));
+                                            }
+                                        }
+                                    } else {
+                                        listHistoryActivity.LoadListDataFailed(jsonMessage);
+                                    }
+                                } catch (JSONException ignored) {
+                                    Log.d(TAG, "onPostExecute: "+ jsonResult);
+                                }
+                                listHistoryActivity.ShowListFromSelected();
+                                break;
+                            //endregion
+                        }
+                    } else {
+                        Log.d(TAG, "onPostExecute:" + jsonLog);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                pDialog.dismiss();
+                String ms = context.getString(R.string.error_message_not_stable_internet);
+                Toast.makeText(context, ms, Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "onErrorResponse:" +error.getMessage());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                return hashMap;
+            }
+        };
+
+        requestQueue.add(request);
     }
 
+
     //region Method to show current record Current Selected Record
-    private String FinalJSonObject;
+    /*private String FinalJSonObject;
     private String ParseResult;
     private HttpParse httpParse = new HttpParse();
     private void HttpWebCall(final Activity activity, final HashMap<String,String> ResultHash, final String httpHolder){
@@ -110,7 +186,6 @@ public class PresenterShowListHistory implements PresenterShowListHistoryImp {
             }
             catch (Exception e)
             {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             return null;
@@ -152,6 +227,6 @@ public class PresenterShowListHistory implements PresenterShowListHistoryImp {
     }
 
 
-    //endregion
+*/    //endregion
     //endregion
 }

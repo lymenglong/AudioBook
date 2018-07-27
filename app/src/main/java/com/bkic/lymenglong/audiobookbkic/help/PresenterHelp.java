@@ -10,7 +10,7 @@ import java.io.InputStream;
 public class PresenterHelp implements PresenterHelpImp {
     private HelpActivity helpActivity;
 
-    public PresenterHelp(HelpActivity helpActivity) {
+    PresenterHelp(HelpActivity helpActivity) {
         this.helpActivity = helpActivity;
     }
 

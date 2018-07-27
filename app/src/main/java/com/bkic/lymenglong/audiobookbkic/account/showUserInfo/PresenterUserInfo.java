@@ -1,14 +1,12 @@
 package com.bkic.lymenglong.audiobookbkic.account.showUserInfo;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.Window;
@@ -16,22 +14,30 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.bkic.lymenglong.audiobookbkic.R;
 import com.bkic.lymenglong.audiobookbkic.account.login.Session;
 import com.bkic.lymenglong.audiobookbkic.account.utils.User;
 import com.bkic.lymenglong.audiobookbkic.checkInternet.ConnectivityReceiver;
-import com.bkic.lymenglong.audiobookbkic.https.HttpParse;
 import com.bkic.lymenglong.audiobookbkic.utils.Const;
-import com.bkic.lymenglong.audiobookbkic.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Map;
+
+import static com.bkic.lymenglong.audiobookbkic.utils.Const.HttpURL_API;
 
 
 public class PresenterUserInfo implements PresenterUserInfoImp {
     private UserInfoActivity userInfoActivity;
-//    private static final String TAG = "PresenterUserInfo";
+    private static final String TAG = "PresenterUserInfo";
     private User userUpdated;
 
     PresenterUserInfo(UserInfoActivity userInfoActivity) {
@@ -39,7 +45,7 @@ public class PresenterUserInfo implements PresenterUserInfoImp {
     }
 
     //region Method to show current record Current Selected Record
-    private String FinalJSonObject;
+    /*private String FinalJSonObject;
     private String ParseResult;
     private HttpParse httpParse = new HttpParse();
     private void HttpWebCall(final Activity activity, final HashMap<String,String> ResultHash, final String httpHolder){
@@ -164,7 +170,69 @@ public class PresenterUserInfo implements PresenterUserInfoImp {
         }
     }
     //endregion
-    //endregion
+*/    //endregion
+
+    private String jsonAction, /*jsonResult,*/ jsonMessage, jsonLog;
+    private Boolean LogSuccess;
+    private void RequestJSON(final Context context, final HashMap<String,String> hashMap){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        StringRequest request = new StringRequest(Request.Method.POST, HttpURL_API, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    jsonAction = jsonObject.getString(Const.JSON_KEY_ACTION);
+//                    jsonResult = jsonObject.getString(Const.JSON_KEY_RESULT);
+                    jsonMessage = jsonObject.getString(Const.JSON_KEY_MESSAGE);
+                    jsonLog = jsonObject.getString(Const.JSON_KEY_LOG);
+                    LogSuccess = jsonLog.equals(Const.JSON_KEY_LOG_SUCCESS);
+                    switch (jsonAction){
+                        case "checkPassword":
+                            if (LogSuccess) {
+                                ShowDialogUpdateUserInfo(context);
+                            } else {
+                                Toast.makeText(context, jsonMessage, Toast.LENGTH_SHORT).show();
+                            }
+                            break;
+                        case "updateUserDetail":
+                            if (LogSuccess){
+                                userInfoActivity.UpdateDetailSuccess(jsonMessage);
+                                Session session = new Session(context);
+                                session.setUpdateUserDetail(userUpdated);
+                                userInfoActivity.DisplayUserDetail();
+                            } else {
+                                userInfoActivity.UpdateDetailFailed(jsonMessage);
+                            }
+                            break;
+                        case "updatePassword" :
+                            if (LogSuccess){
+                                userInfoActivity.UpdatePasswordSuccess(jsonMessage);
+                            } else {
+                                userInfoActivity.UpdatePasswordFailed(jsonMessage);
+                            }
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String ms = context.getString(R.string.error_message_not_stable_internet);
+                Toast.makeText(context, ms, Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "onErrorResponse:" +error.getMessage());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                return hashMap;
+            }
+        };
+
+        requestQueue.add(request);
+    }
+
 
 
     @Override
@@ -286,7 +354,8 @@ public class PresenterUserInfo implements PresenterUserInfoImp {
                 "}";
         HashMap<String, String> ResultHash = new HashMap<>();
         ResultHash.put(keyPost, valuePost);
-        HttpWebCall(userInfoActivity,ResultHash,Const.HttpURL_API);
+        RequestJSON(userInfoActivity, ResultHash);
+//        HttpWebCall(userInfoActivity,ResultHash,Const.HttpURL_API);
     }
 
     @Override
@@ -345,7 +414,8 @@ public class PresenterUserInfo implements PresenterUserInfoImp {
                 "}";
         HashMap<String,String> ResultHash = new HashMap<>();
         ResultHash.put(keyPost, valuePost);
-        HttpWebCall(userInfoActivity,ResultHash,Const.HttpURL_API);
+//        HttpWebCall(userInfoActivity,ResultHash,Const.HttpURL_API);
+        RequestJSON(userInfoActivity, ResultHash);
     }
 
     @Override
@@ -388,7 +458,8 @@ public class PresenterUserInfo implements PresenterUserInfoImp {
                 "}";
         HashMap<String,String> ResultHash = new HashMap<>();
         ResultHash.put(keyPost, valuePost);
-        HttpWebCall(userInfoActivity,ResultHash, Const.HttpURL_API);
+//        HttpWebCall(userInfoActivity,ResultHash, Const.HttpURL_API);
+        RequestJSON(userInfoActivity, ResultHash);
     }
 
 

@@ -208,23 +208,7 @@ public class ViewRegisterActivity extends AppCompatActivity implements ViewRegis
     }
 
     private void RequestRegisterAccount(User userModel) {
-        HashMap<String, String> ResultHash = new HashMap<>();
-        // GetUserDetail
-        String keyPost = "json";
-        String valuePost =
-                "{" +
-                        "\"Action\":\"register\", " +
-                        "\"UserName\":\""+ userModel.getUsername()+"\"," +
-                        "\"UserMail\":\""+ userModel.getEmail()+"\", " +
-                        "\"UserFirstName\":\""+ userModel.getFirstName() +"\", " +
-                        "\"UserLastName\":\""+ userModel.getLastName() +"\"," +
-                        "\"UserPassword\":\""+ userModel.getPassword()+"\"," +
-                        "\"UserAddress\":\""+ userModel.getAddress()+"\", " +
-                        "\"UserPhone\":\""+ userModel.getPhonenumber()+"\" " +
-                        "}";
-        ResultHash.put(keyPost,valuePost);
-        Toast.makeText(registerActivity, "Please Wait..", Toast.LENGTH_SHORT).show();
-        presenterRegisterLogic.Register(registerActivity, ResultHash, HttpURL_API);
+        presenterRegisterLogic.Register(userModel);
         SetWaitingRegister(true);
     }
 

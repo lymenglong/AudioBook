@@ -24,6 +24,11 @@ public final class Const {
 //    public static final String HttpURL_API = "http://jsontest123.000webhostapp.com/api/index.php";
     public static final String HttpURL_API = "http://audiobook.aseantech.org/api/";
     public static final String HttpURL_Audio = "http://audiobook.aseantech.org/wp-content/uploads/";
+    public static String JSON_KEY_ACTION = "Action";
+    public static String JSON_KEY_RESULT = "Result";
+    public static String JSON_KEY_MESSAGE = "Message";
+    public static String JSON_KEY_LOG = "Log";
+    public static String JSON_KEY_LOG_SUCCESS = "Success";
     //endregion
 
     //region Back Home

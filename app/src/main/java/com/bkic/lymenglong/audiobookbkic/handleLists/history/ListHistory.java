@@ -228,6 +228,7 @@ public class ListHistory
             //calling the method to save the unsynced books to MySQL server
             presenterUpdateHistory.RequestToRemoveBookById
                     (
+                            activity,
                             String.valueOf(session.getUserIdLoggedIn()),
                             String.valueOf(cursor.getInt(0))
                     );

@@ -1,31 +1,15 @@
 package com.bkic.lymenglong.audiobookbkic.main;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.widget.Toast;
-
-import com.bkic.lymenglong.audiobookbkic.https.HttpServicesClass;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class PresenterMain implements PresenterMainImp {
     private MainActivity mainActivity;
 //    private ProgressDialog pDialog;
 
-    public PresenterMain(MainActivity mainActivity) {
+    PresenterMain(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
-    }
-
-    @Override
-    public void GetHttpResponse(String httpUrl) {
-        new GetHttpResponse(mainActivity).execute(httpUrl);
     }
 
     @Override
@@ -52,7 +36,7 @@ public class PresenterMain implements PresenterMainImp {
     }
 
     //region JSON parse class started from here.
-    @SuppressLint("StaticFieldLeak")
+    /*@SuppressLint("StaticFieldLeak")
     private class GetHttpResponse extends AsyncTask<String, Void, Void> {
 
         Context context;
@@ -115,6 +99,6 @@ public class PresenterMain implements PresenterMainImp {
             mainActivity.ShowListMenu();
 
         }
-    }
+    }*/
     //endregion
 }

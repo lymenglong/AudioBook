@@ -215,5 +215,6 @@
     <string name="voice_search">Tìm kiếm bằng giọng nói</string>
     <string name="message_no_key_word">Không có từ khóa</string>
     <string name="error_message_no_sd_card">Oops!! There is no SD Card.</string>
+    <string name="error_message_not_stable_internet">Mạng không ổn định</string>
 
 </resources>

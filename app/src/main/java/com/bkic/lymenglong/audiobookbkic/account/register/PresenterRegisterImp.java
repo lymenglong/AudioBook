@@ -1,10 +1,8 @@
 package com.bkic.lymenglong.audiobookbkic.account.register;
 
-import android.app.Activity;
-
-import java.util.HashMap;
+import com.bkic.lymenglong.audiobookbkic.account.utils.User;
 
 public interface PresenterRegisterImp {
 
-    void Register(Activity activity, HashMap<String, String> ResultHash, String HttpUrl_API);
+    void Register(User userModel);
 }

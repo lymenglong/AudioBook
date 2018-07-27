@@ -1,30 +1,103 @@
 package com.bkic.lymenglong.audiobookbkic.account.register;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.os.AsyncTask;
+import android.content.Context;
 import android.util.Log;
 
-import com.bkic.lymenglong.audiobookbkic.https.HttpParse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.bkic.lymenglong.audiobookbkic.R;
+import com.bkic.lymenglong.audiobookbkic.account.utils.User;
+import com.bkic.lymenglong.audiobookbkic.utils.Const;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Map;
+
+import static com.bkic.lymenglong.audiobookbkic.utils.Const.HttpURL_API;
 
 
 public class PresenterRegisterLogic implements PresenterRegisterImp {
     private ViewRegisterActivity registerActivity;
+    private static String TAG = "PresenterRegisterLogic";
 
-    public PresenterRegisterLogic(ViewRegisterActivity registerActivity) {
+    PresenterRegisterLogic(ViewRegisterActivity registerActivity) {
         this.registerActivity = registerActivity;
     }
     @Override
-    public void Register(Activity activity, HashMap<String, String> ResultHash, String HttpUrl_API) {
-        String TAG = "PresenterRegisterLogic";
-        Log.d(TAG, "Register: " + ResultHash.toString());
-        HttpWebCall(registerActivity, ResultHash, HttpUrl_API);
+    public void Register(User userModel) {
+        HashMap<String, String> ResultHash = new HashMap<>();
+        // GetUserDetail
+        String keyPost = "json";
+        String valuePost =
+                "{" +
+                        "\"Action\":\"register\", " +
+                        "\"UserName\":\""+ userModel.getUsername()+"\"," +
+                        "\"UserMail\":\""+ userModel.getEmail()+"\", " +
+                        "\"UserFirstName\":\""+ userModel.getFirstName() +"\", " +
+                        "\"UserLastName\":\""+ userModel.getLastName() +"\"," +
+                        "\"UserPassword\":\""+ userModel.getPassword()+"\"," +
+                        "\"UserAddress\":\""+ userModel.getAddress()+"\", " +
+                        "\"UserPhone\":\""+ userModel.getPhonenumber()+"\" " +
+                        "}";
+        ResultHash.put(keyPost,valuePost);
+        RequestJSON(registerActivity,ResultHash);
+//        HttpWebCall(registerActivity, ResultHash, HttpUrl_API);
     }
+
+    private String jsonAction, /*jsonResult,*/ jsonMessage, jsonLog;
+    private Boolean LogSuccess;
+    private void RequestJSON(final Context context, final HashMap<String,String> hashMap){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        StringRequest request = new StringRequest(Request.Method.POST, HttpURL_API, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    jsonAction = jsonObject.getString(Const.JSON_KEY_ACTION);
+//                    jsonResult = jsonObject.getString(Const.JSON_KEY_RESULT);
+                    jsonMessage = jsonObject.getString(Const.JSON_KEY_MESSAGE);
+                    jsonLog = jsonObject.getString(Const.JSON_KEY_LOG);
+                    LogSuccess = jsonLog.equals(Const.JSON_KEY_LOG_SUCCESS);
+                    switch (jsonAction){
+                        case "register":
+                            if (LogSuccess) {
+                                registerActivity.RegisterSuccess(jsonMessage);
+                            } else {
+                                registerActivity.RegisterFailed(jsonMessage);
+                            }
+                            break;
+                        default:
+                            String msAction = "Wrong action";
+                            registerActivity.RegisterFailed(msAction);
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String ms = context.getString(R.string.error_message_not_stable_internet);
+                registerActivity.RegisterFailed(ms);
+                Log.e(TAG, "onErrorResponse:" +error.getMessage());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                return hashMap;
+            }
+        };
+
+        requestQueue.add(request);
+    }
+
 
     //region RequestRegister Old Code
 /*
@@ -70,7 +143,8 @@ public class PresenterRegisterLogic implements PresenterRegisterImp {
     }*/
     //endregion
 
-    private String FinalJSonObject;
+    //region HTTPWebCall
+   /* private String FinalJSonObject;
     private String ParseResult;
     private HttpParse httpParse = new HttpParse();
     private void HttpWebCall(final Activity activity, final HashMap<String,String> ResultHash, final String httpHolder){
@@ -155,14 +229,12 @@ public class PresenterRegisterLogic implements PresenterRegisterImp {
 
                     }
                     catch (JSONException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                 }
             }
             catch (Exception e)
             {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             return null;
@@ -177,6 +249,7 @@ public class PresenterRegisterLogic implements PresenterRegisterImp {
                 registerActivity.RegisterFailed(message);
             }
         }
-    }
+    }*/
+    //endregion
 
 }

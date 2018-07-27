@@ -1,5 +1,6 @@
 package com.bkic.lymenglong.audiobookbkic.handleLists.favorite;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -19,7 +20,9 @@ import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Book;
 import com.bkic.lymenglong.audiobookbkic.overrideTalkBack.PresenterOverrideTalkBack;
 import com.bkic.lymenglong.audiobookbkic.utils.Const;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class FavoriteAdapter extends RecyclerView.Adapter {
     private ArrayList<Book> books;
@@ -182,7 +185,10 @@ public class FavoriteAdapter extends RecyclerView.Adapter {
     private void RemoveFavoriteData(int bookId){
         DBHelper dbHelper = new DBHelper(activity, Const.DB_NAME, null, Const.DB_VERSION);
         dbHelper.QueryData("UPDATE favorite SET BookRemoved = '"+Const.BOOK_REQUEST_REMOVE_WITH_SERVER+"' WHERE BookId = '"+bookId+"'");
-
+        Calendar calendar = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpledateformat =
+                new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String insertTime = simpledateformat.format(calendar.getTime());
         try {
             dbHelper.QueryData(
                     "INSERT INTO bookFavoriteSyncs " +
@@ -190,7 +196,8 @@ public class FavoriteAdapter extends RecyclerView.Adapter {
                             "(" +
                                     "'"+bookId+"', " +
                                     "'"+Const.BOOK_SYNCED_WITH_SERVER+"', " +
-                                    "'"+Const.BOOK_REQUEST_REMOVE_WITH_SERVER+"'" +
+                                    "'"+Const.BOOK_REQUEST_REMOVE_WITH_SERVER+"', " +
+                                    "'"+insertTime+"'" +
                             ")" +
                         ";"
             );
@@ -199,7 +206,8 @@ public class FavoriteAdapter extends RecyclerView.Adapter {
                     "UPDATE bookFavoriteSyncs " +
                             "SET " +
                             "BookSync = '"+Const.BOOK_SYNCED_WITH_SERVER+"', " +
-                            "BookRemoved = '"+Const.BOOK_REQUEST_REMOVE_WITH_SERVER+"' " +
+                            "BookRemoved = '"+Const.BOOK_REQUEST_REMOVE_WITH_SERVER+"', " +
+                            "InsertTime = '"+insertTime+"' " +
                             "WHERE BookId = '"+bookId+"'" +
                             ";"
             );

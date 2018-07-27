@@ -1,5 +1,6 @@
 package com.bkic.lymenglong.audiobookbkic.handleLists.history;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -18,7 +19,9 @@ import com.bkic.lymenglong.audiobookbkic.handleLists.utils.Book;
 import com.bkic.lymenglong.audiobookbkic.overrideTalkBack.PresenterOverrideTalkBack;
 import com.bkic.lymenglong.audiobookbkic.utils.Const;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class HistoryAdapter extends RecyclerView.Adapter {
     private ArrayList<Book> books;
@@ -190,7 +193,10 @@ public class HistoryAdapter extends RecyclerView.Adapter {
                         "SET BookRemoved = '"+Const.BOOK_REQUEST_REMOVE_WITH_SERVER+"' " +
                         "WHERE BookId = '"+bookId+"'"
         );*/
-
+        Calendar calendar = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpledateformat =
+                new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String insertTime = simpledateformat.format(calendar.getTime());
         try {
             dbHelper.QueryData(
                     "INSERT INTO bookHistorySyncs " +
@@ -198,7 +204,8 @@ public class HistoryAdapter extends RecyclerView.Adapter {
                             "(" +
                             "'"+bookId+"', " +
                             "'"+Const.BOOK_SYNCED_WITH_SERVER+"', " +
-                            "'"+Const.BOOK_REQUEST_REMOVE_WITH_SERVER+"'" +
+                            "'"+Const.BOOK_REQUEST_REMOVE_WITH_SERVER+"', " +
+                            "'"+insertTime+"'" +
                             ")" +
                         ";"
             );
@@ -207,7 +214,8 @@ public class HistoryAdapter extends RecyclerView.Adapter {
                     "UPDATE bookHistorySyncs " +
                             "SET " +
                             "BookSync = '"+Const.BOOK_SYNCED_WITH_SERVER+"', " +
-                            "BookRemoved = '"+Const.BOOK_REQUEST_REMOVE_WITH_SERVER+"' " +
+                            "BookRemoved = '"+Const.BOOK_REQUEST_REMOVE_WITH_SERVER+"'," +
+                            "InsertTime = '"+insertTime+"' " +
                             "WHERE BookId = '"+bookId+"'" +
                             ";"
             );

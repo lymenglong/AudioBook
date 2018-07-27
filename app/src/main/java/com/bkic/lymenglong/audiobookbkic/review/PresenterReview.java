@@ -1,12 +1,10 @@
 package com.bkic.lymenglong.audiobookbkic.review;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -16,16 +14,24 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.bkic.lymenglong.audiobookbkic.checkInternet.ConnectivityReceiver;
-import com.bkic.lymenglong.audiobookbkic.https.HttpParse;
-import com.bkic.lymenglong.audiobookbkic.utils.Const;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bkic.lymenglong.audiobookbkic.R;
+import com.bkic.lymenglong.audiobookbkic.checkInternet.ConnectivityReceiver;
 import com.bkic.lymenglong.audiobookbkic.player.PlayControl;
+import com.bkic.lymenglong.audiobookbkic.utils.Const;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Map;
+
+import static com.bkic.lymenglong.audiobookbkic.utils.Const.HttpURL_API;
 
 public class PresenterReview
         implements
@@ -190,7 +196,8 @@ public class PresenterReview
                 "}";
         HashMap<String,String> ResultHash = new HashMap<>();
         ResultHash.put(keyPost,value);
-        HttpWebCall(activity,ResultHash, Const.HttpURL_API);
+//        HttpWebCall(activity,ResultHash, Const.HttpURL_API);
+        RequestJSON(activity, ResultHash);
     }
 
     @Override
@@ -203,7 +210,8 @@ public class PresenterReview
                 "}";
         HashMap<String,String> ResultHash = new HashMap<>();
         ResultHash.put(keyPost,valuePost);
-        HttpWebCall(activity, ResultHash, Const.HttpURL_API);
+//        HttpWebCall(activity, ResultHash, Const.HttpURL_API);
+        RequestJSON(activity, ResultHash);
     }
 
     @Override
@@ -220,7 +228,8 @@ public class PresenterReview
                 "}";
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put(keyPost, valuePost);
-        HttpWebCall(activity, hashMap,Const.HttpURL_API);
+//        HttpWebCall(activity, hashMap,Const.HttpURL_API);
+        RequestJSON(activity, hashMap);
     }
     @Override
     public void RequestGetReviewChapter(Activity activity, int bookId, int chapterId) {
@@ -233,7 +242,8 @@ public class PresenterReview
                 "}";
         HashMap<String,String> ResultHash = new HashMap<>();
         ResultHash.put(keyPost,valuePost);
-        HttpWebCall(activity, ResultHash, Const.HttpURL_API);
+//        HttpWebCall(activity, ResultHash, Const.HttpURL_API);
+        RequestJSON(activity, ResultHash);
     }
 
     @Override
@@ -383,8 +393,66 @@ public class PresenterReview
 
     }
 
+    private String jsonAction, /*jsonResult,*/ jsonMessage, jsonLog;
+    private Boolean LogSuccess;
+    private void RequestJSON(final Context context, final HashMap<String,String> hashMap){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        StringRequest request = new StringRequest(Request.Method.POST, HttpURL_API, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    jsonAction = jsonObject.getString(Const.JSON_KEY_ACTION);
+//                    jsonResult = jsonObject.getString(Const.JSON_KEY_RESULT);
+                    jsonMessage = jsonObject.getString(Const.JSON_KEY_MESSAGE);
+                    jsonLog = jsonObject.getString(Const.JSON_KEY_LOG);
+                    LogSuccess = jsonLog.equals(Const.JSON_KEY_LOG_SUCCESS);
+                    switch (jsonAction) {
+                        case "addReview":
+                            if (LogSuccess) {
+                                playControlActivity.UpdateReviewSuccess(jsonMessage);
+                            } else {
+                                playControlActivity.UpdateReviewFailed(jsonMessage);
+                            }
+                            break;
+                        case "getReview":
+                            //todo get review data
+                            break;
+                        case "addChapterReview":
+                            if (LogSuccess) {
+                                playControlActivity.UpdateChapterReviewSuccess(jsonMessage);
+                            } else {
+                                playControlActivity.UpdateChapterReviewFailed(jsonMessage);
+                            }
+                            break;
+                        case "getChapterReview":
+                            //todo get chapter review data
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String ms = context.getString(R.string.error_message_not_stable_internet);
+                Toast.makeText(context, ms, Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "onErrorResponse:" +error.getMessage());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                return hashMap;
+            }
+        };
+
+        requestQueue.add(request);
+    }
+
+
     //region Method to Update Record
-    private String FinalJSonObject;
+ /*   private String FinalJSonObject;
     private String finalResult ;
     private HttpParse httpParse = new HttpParse();
     private void HttpWebCall(final Activity activity, final HashMap<String, String> ResultHash, final String HttpUrl){
@@ -497,6 +565,7 @@ public class PresenterReview
         }
     }
     //endregion
+ */   //endregion
 
 
 
