@@ -22,11 +22,11 @@ import java.util.Map;
 import static com.bkic.lymenglong.audiobookbkic.utils.Const.HttpURL_API;
 
 
-public class PresenterRegisterLogic implements PresenterRegisterImp {
+public class PresenterRegister implements PresenterRegisterImp {
     private ViewRegisterActivity registerActivity;
-    private static String TAG = "PresenterRegisterLogic";
+    private static String TAG = "PresenterRegister";
 
-    PresenterRegisterLogic(ViewRegisterActivity registerActivity) {
+    PresenterRegister(ViewRegisterActivity registerActivity) {
         this.registerActivity = registerActivity;
     }
     @Override

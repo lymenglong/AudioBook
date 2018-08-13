@@ -144,7 +144,7 @@ public class PlayControl extends AppCompatActivity
         initGetChapterData();
         if(indexChapterMap==-1){
             finish();
-            return; // to fix error when refreshing and select chapter
+            return; // to fix error when opening and select chapter
         }
         initGetChapterDownloaded();
         initCheckChapterDownloadStatus();
@@ -361,9 +361,9 @@ public class PlayControl extends AppCompatActivity
             Boolean isDownloadedAudio = initCheckChapterDownloadStatus();
             if(isDownloadedAudio){
                 AudioUrl =      Environment.getExternalStorageDirectory().getPath()+ "/"
-                        + Utils.downloadDirectory + "/"
-                        + chapterFromIntent.getBookId() + "/"
-                        + chapterFromIntent.getId() + ".mp3";
+                        + Utils.downloadDirectory + "/" //download directory (AndroidBKIC)
+                        + chapterFromIntent.getBookId() + "/" //BookId directory
+                        + chapterFromIntent.getId() + ".mp3"; //File Name(ChapterId.mp3) Directory
             } else{
                 String ChapterUrlFromIndex = hashMapChapter.get(String.valueOf(indexChapterMap)).getFileUrl();
                 AudioUrl = HttpURL_Audio + ChapterUrlFromIndex;
@@ -484,7 +484,8 @@ public class PlayControl extends AppCompatActivity
         presenterOverrideTalkBack.DisableTouchForTalkBack(txtSongTotal);
         presenterOverrideTalkBack.DisableTouchForTalkBack(txtCurrentDuration);
 
-        ViewCompat.setImportantForAccessibility(getWindow().findViewById(R.id.seekBar), ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        //không cho phép talk back đọc seekbar
+//        ViewCompat.setImportantForAccessibility(getWindow().findViewById(R.id.seekBar), ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
         //todo fix talk back read wrong mm:ss
         ViewCompat.setImportantForAccessibility(getWindow().findViewById(R.id.text_current_duration_label), ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
         ViewCompat.setImportantForAccessibility(getWindow().findViewById(R.id.text_total_duration_label), ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);

@@ -231,6 +231,7 @@ public class PresenterPlayer
     @Override
     public void PlayMedia() {
         if (mediaIsPrepared && !isPreparingCancel) {
+            intSoundMax = mediaPlayer.getDuration();
             mediaPlayer.setOnBufferingUpdateListener(new OnBufferingUpdateListener() {
                 @Override
                 public void onBufferingUpdate(MediaPlayer mp, int percent) {
@@ -238,10 +239,11 @@ public class PresenterPlayer
                     playControlActivity.getSeekBar().setSecondaryProgress(AudioBuffered);
                     Log.d(TAG, "onBufferingUpdate: percent = " + percent);
                     if(percent == 100) isBufferComplete = true;
+                    if(isBufferComplete) return;
                     //Toast when buffered slow
-                    if(mediaPlayer.getCurrentPosition() >= AudioBuffered - 1000 && !isBufferComplete) {
+                    if(mediaPlayer.getCurrentPosition() >= AudioBuffered - 5000) { //5sec
                         if (!mToastIsShowing) {
-                            mToast = Toast.makeText(playControlActivity,R.string.buffering_data,Toast.LENGTH_SHORT);
+                            mToast = Toast.makeText(playControlActivity, R.string.error_message_not_stable_internet,Toast.LENGTH_SHORT);
                             mToast.show();
                             mToastIsShowing = true;
                         }
@@ -249,7 +251,19 @@ public class PresenterPlayer
 
                 }
             });
-            intSoundMax = mediaPlayer.getDuration();
+
+            mediaPlayer.setOnErrorListener(new OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mp, int what, int extra) {
+                    if(what == MediaPlayer.MEDIA_ERROR_SERVER_DIED)
+                        mp.reset();
+
+                    else if(what == MediaPlayer.MEDIA_ERROR_UNKNOWN)
+                        mp.reset();
+                    // Deal with any other errors you need to.
+                    return false;
+                }
+            });
 
             if (!mediaPlayer.isPlaying()) {
                 playControlActivity.getSeekBar().setMax(intSoundMax);

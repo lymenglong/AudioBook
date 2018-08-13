@@ -91,7 +91,7 @@ public class PresenterShowListHistory implements PresenterShowListHistoryImp {
             public void onErrorResponse(VolleyError error) {
                 pDialog.dismiss();
                 String ms = context.getString(R.string.error_message_not_stable_internet);
-                Toast.makeText(context, ms, Toast.LENGTH_SHORT).show();
+                listHistoryActivity.LoadListDataFailed(ms);
                 Log.e(TAG, "onErrorResponse:" +error.getMessage());
             }
         }) {

@@ -92,7 +92,7 @@ public class PresenterShowListFavorite implements PresenterShowListFavoriteImp {
             public void onErrorResponse(VolleyError error) {
                 pDialog.dismiss();
                 String ms = context.getString(R.string.error_message_not_stable_internet);
-                Toast.makeText(context, ms, Toast.LENGTH_SHORT).show();
+                listFavoriteActivity.LoadListDataFailed(ms);
                 Log.e(TAG, "onErrorResponse:" +error.getMessage());
             }
         }) {

@@ -58,8 +58,8 @@ public class UserInfoActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
-        initIntentFilter();
         initDataFromIntent();
+        initIntentFilter();
         initToolbar();
         initViews();
         initObjects();
@@ -72,7 +72,7 @@ public class UserInfoActivity
     //connectionReceiver
     private IntentFilter intentFilter;
     private ConnectivityReceiver receiver;
-    //downloadReceiver
+    //downloadReceiver to receive when download file complete
     private IntentFilter filter;
     private DownloadReceiver downloadReceiver;
 

@@ -305,7 +305,9 @@ public class ListHistory
 
     @Override
     public void LoadListDataFailed(String jsonMessage) {
+        progressBar.setVisibility(View.GONE);
         GetCursorData();
+        Toast.makeText(activity, jsonMessage, Toast.LENGTH_SHORT).show();
         Log.d(TAG, "LoadListDataFailed: "+ jsonMessage);
     }
 

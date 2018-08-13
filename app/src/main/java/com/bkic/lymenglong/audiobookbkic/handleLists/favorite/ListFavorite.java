@@ -296,6 +296,7 @@ public class ListFavorite
     @Override
     public void LoadListDataFailed(String jsonMessage){
 //        RemoveFavoriteDataInSQLite();
+        progressBar.setVisibility(View.GONE);
         GetCursorData();
         Log.d(TAG, "LoadListDataFailed: "+ jsonMessage);
         Toast.makeText(activity, jsonMessage, Toast.LENGTH_SHORT).show();

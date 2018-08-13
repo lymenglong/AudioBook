@@ -21,13 +21,9 @@ import com.bkic.lymenglong.audiobookbkic.checkInternet.ConnectivityReceiver;
 import com.bkic.lymenglong.audiobookbkic.R;
 import com.bkic.lymenglong.audiobookbkic.account.login.ViewLoginActivity;
 
-import java.util.HashMap;
-
-import static com.bkic.lymenglong.audiobookbkic.utils.Const.HttpURL_API;
-
 
 public class ViewRegisterActivity extends AppCompatActivity implements ViewRegisterImp, View.OnClickListener {
-    PresenterRegisterLogic presenterRegisterLogic;
+    PresenterRegister presenterRegister;
     private Activity registerActivity = ViewRegisterActivity.this;
 //    private NestedScrollView nestedScrollView;
 
@@ -69,7 +65,7 @@ public class ViewRegisterActivity extends AppCompatActivity implements ViewRegis
     }
 
     private void initObject() {
-        presenterRegisterLogic = new PresenterRegisterLogic(this);
+        presenterRegister = new PresenterRegister(this);
         inputValidation = new InputValidation(registerActivity);
     }
 
@@ -208,7 +204,7 @@ public class ViewRegisterActivity extends AppCompatActivity implements ViewRegis
     }
 
     private void RequestRegisterAccount(User userModel) {
-        presenterRegisterLogic.Register(userModel);
+        presenterRegister.Register(userModel);
         SetWaitingRegister(true);
     }
 

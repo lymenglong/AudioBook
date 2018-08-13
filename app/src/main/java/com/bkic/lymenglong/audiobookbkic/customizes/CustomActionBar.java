@@ -3,6 +3,7 @@ package com.bkic.lymenglong.audiobookbkic.customizes;
 import android.app.Activity;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.view.ViewCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -27,6 +28,8 @@ public class CustomActionBar implements CustomActionBarImp, View.OnClickListener
     public void eventToolbar(Activity activity, String text, boolean hasRefresh) {
         this.activity = activity;
         imBack = activity.findViewById(R.id.imBack);
+        //Không cho phép talk back doc nút back
+        ViewCompat.setImportantForAccessibility(activity.getWindow().findViewById(R.id.tvToolbar), ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
         View imRefresh = activity.findViewById(R.id.imRefresh);
         tvToolbar = activity.findViewById(R.id.tvToolbar);
 
