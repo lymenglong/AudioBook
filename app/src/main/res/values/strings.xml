@@ -131,7 +131,7 @@
     <!--region Message-->
     <string name="message_logout_failed">Bạn xác định không đăng xuất.</string>
     <string name="message_logout_success">Đăng Xuất Thành Công</string>
-    <string name="no_data">Chưa cấp nhật dữ liệu</string>
+    <string name="no_data">Chưa cập nhật dữ liệu</string>
     <string name="buffering_data">Đang tải…</string>
     <string name="loading_data">Đang tải…</string>
     <!--endregion-->
