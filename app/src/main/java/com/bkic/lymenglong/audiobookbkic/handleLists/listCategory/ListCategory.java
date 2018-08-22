@@ -68,6 +68,7 @@ public class ListCategory extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_list);
         initIntentFilter();
+        //disable toolbar title in talk back
         ViewCompat.setImportantForAccessibility(getWindow().findViewById(R.id.tvToolbar), ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
         getDataFromIntent();
         SetToolBarTitle();
