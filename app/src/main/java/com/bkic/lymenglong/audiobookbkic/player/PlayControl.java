@@ -503,7 +503,32 @@ public class PlayControl extends AppCompatActivity
         btnDownload.setOnClickListener(onClickListener);
         seekBar.setOnSeekBarChangeListener(presenterPlayer);
         imBackHome.setOnClickListener(onClickListener);
+       // btnDownload.setOnLongClickListener(longClickListener);
     }
+  /*  //Download all chapter by holding "Download" button
+    private View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View view) {
+
+
+            if (!ConnectivityReceiver.isConnected()) {
+                Toast.makeText(playControlActivity, getString(R.string.message_internet_not_connected), Toast.LENGTH_SHORT).show();
+            }
+            //check if my app has permission and than request if it does not have permission
+            int MyVersion = Build.VERSION.SDK_INT;
+            if (MyVersion > Build.VERSION_CODES.LOLLIPOP_MR1) {
+                if (!checkIfAlreadyHavePermission()) {
+                    requestForSpecificPermission();
+                } else {
+                    DownloadTask();
+                }
+            } else {
+                DownloadTask();
+                return true;
+            }
+            return true;
+        }
+    };*/
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
