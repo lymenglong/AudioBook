@@ -179,6 +179,16 @@
     <activity
         android:name=".search.ListBookSearch"
         android:screenOrientation="portrait"/>
+    <activity
+        android:name=".feedback.FeedBack"
+        android:label="@string/hint_feedback"
+        android:screenOrientation="portrait">
+        <intent-filter>
+            <action android:name="android.intent.action.RUN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
 
     <service
         android:name=".download.MyDownloadService"

@@ -31,6 +31,7 @@
     <string name="text_accounts">All Accounts</string>
     <string name="text_account_info">Thông Tin Tài Khoản</string>
     <string name="hint_welcome">Chào mừng bạn đến với ứng dụng sách nói</string>
+    <string name="hint_feedback"> Phản hồi và yêu cầu sách </string>
     <string name="hint_help">Hướng dẫn</string>
     <string name="hint_accountInfo">Thông tin tài khoản</string>
     <string name="hint_login">Xin mời đăng nhập tài khoản</string>
@@ -216,5 +217,12 @@
     <string name="message_no_key_word">Không có từ khóa</string>
     <string name="error_message_no_sd_card">Oops!! There is no SD Card.</string>
     <string name="error_message_not_stable_internet">Mạng không ổn định</string>
+
+    <!--feedback-->
+    <string name="feedback_subject">Bạn muốn yêu cầu hay phản hồi sách </string>
+    <string name="tv_subject">Chủ đề</string>
+    <string name="tv_content">Nội dung</string>
+    <string name="feedback_content"> Nhập nội dung ở đây </string>
+    <string name="btn_send_email"> Gửi phản hồi </string>
 
 </resources>

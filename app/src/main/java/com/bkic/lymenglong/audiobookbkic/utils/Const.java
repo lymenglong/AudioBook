@@ -59,6 +59,7 @@ public final class Const {
                     "('5', 'Tìm Kiếm'), " +
                     "('6', 'Tài Khoản'), " +
                     "('7', 'Hướng Dẫn'), " +
+                   // "('8', 'Phản Hồi '), " +
                     "('100', 'Thoát')" + //to make it's always at bottom
                     ";";
 
