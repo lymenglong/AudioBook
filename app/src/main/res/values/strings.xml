@@ -127,6 +127,7 @@
     <string name="prompt_help">Hướng Dẫn</string>
     <string name="welcome">Welcome</string>
     <string name="text">text</string>
+    <string name="prompt_feedback">Phản hồi và yêu cầu sách</string>
     <!--endregion-->
 
     <!--region Message-->

@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bkic.lymenglong.audiobookbkic.R;
 import com.bkic.lymenglong.audiobookbkic.account.showUserInfo.UserInfoActivity;
+import com.bkic.lymenglong.audiobookbkic.feedback.FeedBack;
 import com.bkic.lymenglong.audiobookbkic.handleLists.favorite.ListFavorite;
 import com.bkic.lymenglong.audiobookbkic.handleLists.history.ListHistory;
 import com.bkic.lymenglong.audiobookbkic.handleLists.listCategory.ListCategory;
@@ -164,11 +165,17 @@ public class MainAdapter extends RecyclerView.Adapter {
                     intent.putExtra("MenuTitle", menus.get(getAdapterPosition()).getTitle());
                     activity.startActivity(intent);
                 }
-                if (title.equals(activity.getString(R.string.prompt_search))){
+                if (title.equals(activity.getString(R.string.prompt_search))) {
                     Intent intent = new Intent(activity, ListBookSearch.class);
                     intent.putExtra("MenuId", menus.get(getAdapterPosition()).getId());
                     intent.putExtra("MenuTitle", menus.get(getAdapterPosition()).getTitle());
                     activity.startActivity(intent);
+                }
+                if (title.equals(activity.getString(R.string.prompt_feedback))){
+                        Intent intent = new Intent(activity, FeedBack.class);
+                        intent.putExtra("MenuId", menus.get(getAdapterPosition()).getId());
+                        intent.putExtra("MenuTitle", menus.get(getAdapterPosition()).getTitle());
+                        activity.startActivity(intent);
                 }
                 if (title.equals("Thoát")){
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
