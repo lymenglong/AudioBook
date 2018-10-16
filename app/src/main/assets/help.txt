@@ -1,8 +1,34 @@
-Thao tác - Cử chỉ
+1. Thao tác - Cử chỉ
     • Di chuyển đến mục tiếp theo trên màn hình - Vuốt sang phải
     • Di chuyển đến mục trước trên màn hình - Vuốt sang trái
     • Duyệt qua cài đặt điều hướng - Vuốt lên hoặc xuống
     • Chọn mục được đặt tiêu điểm - Nhấn đúp
 Tất cả các cử chỉ trong TalkBack đều sử dụng một ngón tay. TalkBack chỉ hiểu thao tác chạm hoặc cử chỉ của bạn khi bạn chỉ sử dụng một ngón tay trên màn hình.
 Khi bạn dùng hai hay nhiều ngón tay, thao tác chạm hoặc cử chỉ của bạn sẽ áp dụng trực tiếp cho ứng dụng chứ không phải cho TalkBack. Ví dụ: bạn có thể cuộn bằng cách kéo hai ngón tay.
-
+2. Chức năng từng danh mục
+    • Thể loại sách : Nơi chứa sách nói và được phân loại thành các thể loại cho người dùng dễ lựa chọn  ( yêu cầu kết nối mạng và ấn nút reset cho mỗi lần sử dụng để có thể thấy sách mới nhất)
+    • Lịch sử : Sau khi nghe sách nói được 1 khoảng thời gian nhất định, nếu người dùng muốn dừng lại ngày mai nghe tiếp có thể dừng sách và thoát ra. Lần tiếp theo mở lịch sử hoặc vào đúng mục sách đó có thể nghe tiếp
+    • Yêu thích : Sách sau khi được “thêm vào yêu thích “ sẽ vào đây để xem
+    • Tài khoản : Nơi người dùng quản lí tải khoản đăng nhập
+    • Hướng dẫn : Hướng dẫn các thao tác sử dụng talkback và các chức năng danh mục và 1 số chức năng đặc biệt ứng dụng
+    • Sách đã tải xuống : Sách sau khi được tải xuống sẽ được hiển thị trong mục này
+    • Tìm kiếm : Chức năng tìm kiếm bằng giọng nói, người dùng cần đọc chính xác tên sách để thực hiện tìm kiếm
+    • Phản hồi và yêu cầu sách : Nơi viết những phản hồi về sách kém chất lượng hoặc yêu cầu thêm sách mới (Dùng Gmail để gửi )
+    • Thoát : Đóng ứng dụng
+3. Chức năng các button của trình nghe nhạc (media player)
+    • Ghim sách vào yêu thích : Sách sẽ được chuyển vào mục “yêu thích” trên màn hình Home cho người dùng dễ dàng xem lại
+    • Chạy sách nói : Ấn vào nút này khi muốn chạy tiếp sách nói (thường được dùng sau khi ấn “dừng lại”)
+    • Dừng lại : Dừng đọc sách nói (ấn nút “ Chạy sách nói” để nghe tiếp)
+    • Nghe lại từ đầu: Sách nói sẽ được phát lại từ đầu
+    • Lùi lại 10 giây : Sách nói sẽ được lùi lại phía trước 10s
+    • Tiến tới 10 giây : Sách nói được tiến lên 10s
+    • Chương trước đây : Sách nói sẽ chuyển về chương trước đây của 1 cuốn sách
+    • Chương tiếp theo : Sách nói sẽ được chuyển đến chương tiếp theo của 1 cuốn sách
+    • Tải xuống : Tải chương sách hiện tại xuống lưu trữ trong máy. Người dùng có thể nghe chương này mà ko cần kết nối internet
+4. Một số chức năng đặc biệt
+    • Quay lại nút : Quay lại mục trước đó
+    • Làm mới nút : Người dùng nên dùng chức năng này mỗi khi vào " Thể loại sách ". Sách mới chỉ có thể cập nhật sau khi người dùng ấn vào mục " làm mới nút"
+    • Quay lại trang chủ nút : Quay lại trang chủ sách nói
+    • Khi người dùng muốn xóa sách trong mục lịch sử, yêu thích hoặc sách đã tải xuống, chỉ cần ấn và giữ sách đó trong khoảng 2s, 1 thông báo sẽ hiện lên và sau khi ấn mục " xóa" sách sẽ được xóa khỏi danh sách.
+    • Mỗi khi bạn mở 1 cuốn sách, để giảm tải việc quá nhiều người dùng gây nghẽn mạng, sách chỉ tải tối đa 10 chương, người dùng nên vuốt xuống cho đến cuối để biết có bao nhiêu chương, rồi sau đó mới quay lại chương cần đọc ( Nhiều người dùng bị mắc lỗi bấm vào nghe luôn từ chương 1 và cứ bấm chương tiếp theo nên chỉ nghe được đến chương 10 là kết thúc)
+    •
