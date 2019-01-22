@@ -32,7 +32,7 @@ public class HelpActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
         initIntentFilter();
-        ViewCompat.setImportantForAccessibility(getWindow().findViewById(R.id.tvToolbar), ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        ViewCompat.setImportantForAccessibility(getWindow().findViewById(R.id.tvToolbar), ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
         getDataFromIntent();
         initView();
         initObject();
