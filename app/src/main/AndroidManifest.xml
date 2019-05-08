@@ -19,180 +19,180 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
-<application
-    android:name=".checkInternet.MyApplication"
-    android:allowBackup="true"
-    android:icon="@mipmap/ic_launcher"
-    android:label="@string/app_name"
-    android:roundIcon="@mipmap/ic_launcher_round"
-    android:supportsRtl="true"
-    android:theme="@style/AppTheme">
-    <!--region Test-->
-    <service android:name=".player.MediaPlayerService" />
-    <activity
-        android:name=".checkInternet.MainActivity"
-        android:label="@string/hint_home_screen_test"
-        android:screenOrientation="portrait">
-        <intent-filter>
-            <action android:name="android.intent.action.RUN" />
+    <application
+        android:name=".checkInternet.MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <!--region Test-->
+        <service android:name=".player.MediaPlayerService" />
+        <activity
+            android:name=".checkInternet.MainActivity"
+            android:label="@string/hint_home_screen_test"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.RUN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
-    <receiver
-        android:name=".checkInternet.ConnectivityReceiver"
-        android:enabled="true">
-        <!--<intent-filter>
-            <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-        </intent-filter>-->
-    </receiver>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <receiver
+            android:name=".checkInternet.ConnectivityReceiver"
+            android:enabled="true">
+            <!--<intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>-->
+        </receiver>
 
-    <activity
-        android:name=".checkInternet.SecondActivity"
-        android:label="@string/title_activity_second"
-        android:parentActivityName=".checkInternet.MainActivity"
-        android:theme="@style/AppTheme.NoActionBar"
-        android:screenOrientation="portrait"
-        tools:targetApi="jelly_bean">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".checkInternet.MainActivity" />
-    </activity>
-    <!--endregion-->
-    <activity
-        android:name=".splashScreen.SplashScreen"
-        android:screenOrientation="portrait">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+        <activity
+            android:name=".checkInternet.SecondActivity"
+            android:label="@string/title_activity_second"
+            android:parentActivityName=".checkInternet.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+            tools:targetApi="jelly_bean">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".checkInternet.MainActivity" />
+        </activity>
+        <!--endregion-->
+        <activity
+            android:name=".splashScreen.SplashScreen"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
-    <activity
-        android:name=".account.login.ViewLoginActivity"
-        android:label="@string/hint_login"
-        android:screenOrientation="portrait"
-        android:windowSoftInputMode="adjustResize">
-        <intent-filter>
-            <action android:name="android.intent.action.RUN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".account.login.ViewLoginActivity"
+            android:label="@string/hint_login"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.RUN" />
 
-            <category android:name="android.intent.category.DEFAULT" />
-        </intent-filter>
-    </activity>
-    <activity
-        android:name=".main.MainActivity"
-        android:label="@string/hint_home_screen"
-        android:screenOrientation="portrait">
-        <intent-filter>
-            <action android:name="android.intent.action.RUN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".main.MainActivity"
+            android:label="@string/hint_home_screen"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.RUN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
-    <activity
-        android:name=".account.register.ViewRegisterActivity"
-        android:label="@string/hint_register"
-        android:screenOrientation="portrait"
-        android:windowSoftInputMode="adjustResize">
-    <intent-filter>
-        <action android:name="android.intent.action.RUN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".account.register.ViewRegisterActivity"
+            android:label="@string/hint_register"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.RUN" />
 
-        <category android:name="android.intent.category.LAUNCHER" />
-    </intent-filter>
-    </activity>
-    <activity
-        android:name=".handleLists.history.ListHistory"
-        android:windowSoftInputMode="adjustResize|stateHidden"
-        android:screenOrientation="portrait"/>
-    <activity
-        android:name=".handleLists.history.ListHistoryChapter"
-        android:windowSoftInputMode="adjustResize|stateHidden"
-        android:screenOrientation="portrait"/>
-    <activity
-        android:name=".handleLists.listCategory.ListCategory"
-        android:windowSoftInputMode="adjustResize|stateHidden"
-        android:screenOrientation="portrait"/>
-    <activity
-        android:name=".handleLists.listBook.ListBook"
-        android:windowSoftInputMode="adjustResize|stateHidden"
-        android:screenOrientation="portrait"/>
-    <activity
-        android:name=".help.HelpActivity"
-        android:label="@string/hint_help"
-        android:screenOrientation="portrait">
-        <intent-filter>
-            <action android:name="android.intent.action.RUN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".handleLists.history.ListHistory"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".handleLists.history.ListHistoryChapter"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".handleLists.listCategory.ListCategory"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".handleLists.listBook.ListBook"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".help.HelpActivity"
+            android:label="@string/hint_help"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.RUN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
-    <activity
-        android:name=".account.showUserInfo.UserInfoActivity"
-        android:label="@string/hint_accountInfo"
-        android:screenOrientation="portrait"
-        android:windowSoftInputMode="adjustResize">
-        <intent-filter>
-            <action android:name="android.intent.action.RUN" />
+        <activity
+            android:name=".account.showUserInfo.UserInfoActivity"
+            android:label="@string/hint_accountInfo"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.RUN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
-    <activity
-        android:name=".player.PlayControl"
-        android:screenOrientation="portrait">
-        <intent-filter>
-            <action android:name="android.intent.action.RUN"/>
-            <category android:name="android.intent.category.LAUNCHER"/>
-        </intent-filter>
-    </activity>
-    <activity
-        android:name=".reading.ViewReading"
-        android:screenOrientation="portrait">
-    </activity>
-    <activity
-        android:name=".handleLists.favorite.ListFavorite"
-        android:screenOrientation="portrait"/>
-    <activity
-        android:name=".handleLists.listChapter.ListChapter"
-        android:screenOrientation="portrait"/>
-    <activity
-        android:name=".download.MainActivityDownload"
-        android:screenOrientation="portrait">
-        <intent-filter>
-            <action android:name="android.intent.action.RUN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
-    <activity
-        android:name=".handleLists.listOffline.ListOfflineBook"
-        android:screenOrientation="portrait"/>
-    <activity android:name=".handleLists.listOffline.ListOfflineChapter"
-        android:screenOrientation="portrait"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".player.PlayControl"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.RUN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".reading.ViewReading"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".handleLists.favorite.ListFavorite"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".handleLists.listChapter.ListChapter"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".download.MainActivityDownload"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.RUN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".handleLists.listOffline.ListOfflineBook"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".handleLists.listOffline.ListOfflineChapter"
+            android:screenOrientation="portrait"/>
 
-    <activity android:name=".download.MainActivityDownloadManager">
-        <intent-filter>
-            <action android:name="android.intent.action.RUN"/>
-            <category android:name="android.intent.category.LAUNCHER"/>
-        </intent-filter>
-    </activity>
-    <activity
-        android:name=".search.ListBookSearch"
-        android:screenOrientation="portrait"/>
-    <activity
-        android:name=".feedback.FeedBack"
-        android:label="@string/hint_feedback"
-        android:screenOrientation="portrait">
-        <intent-filter>
-            <action android:name="android.intent.action.RUN" />
+        <activity android:name=".download.MainActivityDownloadManager">
+            <intent-filter>
+                <action android:name="android.intent.action.RUN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".search.ListBookSearch"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".feedback.FeedBack"
+            android:label="@string/hint_feedback"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.RUN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
-    <service
-        android:name=".download.MyDownloadService"
-        android:enabled="true" />
+        <service
+            android:name=".download.MyDownloadService"
+            android:enabled="true" />
 
-</application>
+    </application>
 </manifest>
